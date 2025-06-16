@@ -27,9 +27,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} font-sans antialiased`}>
+      <body className={`${inter.variable} font-sans antialiased`} suppressHydrationWarning>
         <ThemeProvider>
           <main className="mx-auto max-w-(--breakpoint-sm) px-6 py-24">
+            <p>1</p>
             {children}
           </main>
           <Analytics />
