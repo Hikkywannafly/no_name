@@ -1,14 +1,11 @@
-import React from 'react'
+import { FaUserAlt } from "react-icons/fa";
 
-import { FaUserAlt } from 'react-icons/fa'
-type Props = {}
+const HeaderUser = () => {
+  return (
+    <div className="flex max-h-[35px] items-center justify-center rounded-full bg-gray-800 p-3">
+      <FaUserAlt className="h-5 w-5" />
+    </div>
+  );
+};
 
-const HeaderUser = (props: Props) => {
-    return (
-        <div className='bg-gray-800 items-center rounded-full p-3  max-h-[35px]  '>
-            <FaUserAlt className='w-8 h-8' />
-        </div>
-    )
-}
-
-export default HeaderUser
+export default HeaderUser;

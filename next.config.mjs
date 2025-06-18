@@ -9,4 +9,39 @@ const withSerwist = withSerwistInit({
 
 export default withSerwist({
   // Your Next.js config
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'storage-ct.lrclib.net',
+        port: '',
+        pathname: '/file/cuutruyen/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cuutruyen.net',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'nettruyen.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'truyenqq.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'truyenfull.vn',
+        port: '',
+        pathname: '/**',
+      },
+      // Thêm các domain khác nếu cần
+    ],
+  },
 });
