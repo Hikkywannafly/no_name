@@ -1,12 +1,12 @@
-"use client"
-import * as FadeIn from "@/components/motion/fade";
+"use client";
+import { WideContainer } from "@/components/layout/WideLayout";
 import BaseLayout from "./baseLayout";
 export default function Home() {
   return (
-    <FadeIn.Container className="flex flex-col gap-6">
-      <BaseLayout>
-        <p>he</p>
-      </BaseLayout>
-    </FadeIn.Container>
+    <BaseLayout>
+      <WideContainer>
+        <p> hello</p>
+      </WideContainer>
+    </BaseLayout>
   );
 }

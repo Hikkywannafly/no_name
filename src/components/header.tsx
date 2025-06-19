@@ -1,3 +1,4 @@
+"use client";
 import { HeaderSearch, HeaderUser } from "@/components/icons";
 import HamburgerMenu from "@/components/icons/HamburgerMenu";
 import DropDown from "@/components/shared/DropDown";

@@ -3,8 +3,7 @@ import type { Metadata } from "next";
 const APP_NAME = "No Name";
 const APP_DEFAULT_TITLE = "No Name";
 const APP_TITLE_TEMPLATE = "%s - No Name";
-const APP_DESCRIPTION =
-  "An application dont have a name";
+const APP_DESCRIPTION = "An application dont have a name";
 
 export const OpenGraph: Metadata = {
   applicationName: APP_NAME,
