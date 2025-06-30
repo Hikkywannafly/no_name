@@ -77,7 +77,6 @@ export class CuuTruyenParser {
       const response =
         await this.http.get<ApiResponse<MangaListResponse[]>>(url);
       const data = response.data.data;
-      console.log(response);
       return data.map((manga: MangaListResponse) => ({
         id: this.generateUid(manga.id),
         url: `/api/v2/mangas/${manga.id}`,
