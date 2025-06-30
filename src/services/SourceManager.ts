@@ -1,4 +1,4 @@
-import { CuuTruyenParser } from "@/provider/CuuTruyenPasrer";
+import { CuuTruyenParser } from "@/provider/CuuTruyen/CuuTruyenPasrer";
 import type {
   MangaMergeStrategy,
   MangaSource,
