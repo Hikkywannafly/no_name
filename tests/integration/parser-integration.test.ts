@@ -1,5 +1,5 @@
-import { CuuTruyenParser } from "../../src/provider/CuuTruyenPasrer";
-import { MangaState, SortOrder } from "../../src/provider/type";
+import { CuuTruyenParser } from "../../src/provider/CuuTruyen/CuuTruyenPasrer";
+import { MangaState, SortOrder } from "../../src/provider/CuuTruyen/type";
 
 // Integration tests - these make real API calls
 // Only run these tests when you want to test against the actual API
