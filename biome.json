@@ -11,7 +11,8 @@
       "node_modules",
       ".next",
       "public/sw.js",
-      "src/provider/MangaDex/**"
+      "src/provider/MangaDex/**",
+      "tests/**"
     ]
   },
   "formatter": {
@@ -32,7 +33,8 @@
       "node_modules",
       "build",
       "public/sw.js",
-      "src/provider/MangaDex/**"
+      "src/provider/MangaDex/**",
+      "tests/**"
     ]
   },
   "organizeImports": {
@@ -47,7 +49,8 @@
       "node_modules",
       "build",
       "public/sw.js",
-      "src/provider/MangaDex/**"
+      "src/provider/MangaDex/**",
+      "tests/**"
     ]
   },
   "linter": {

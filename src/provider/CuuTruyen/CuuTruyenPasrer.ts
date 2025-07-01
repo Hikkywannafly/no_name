@@ -205,8 +205,9 @@ export class CuuTruyenParser {
         url = `${baseUrl}/api/v2/tags/${tag.key}`;
       } else if (filter.states?.size === 1) {
         const state = Array.from(filter.states)[0];
-        url = `${baseUrl}/api/v2/tags/${state === MangaState.ONGOING ? "dang-tien-hanh" : "da-hoan-thanh"
-          }`;
+        url = `${baseUrl}/api/v2/tags/${
+          state === MangaState.ONGOING ? "dang-tien-hanh" : "da-hoan-thanh"
+        }`;
       } else {
         url = `${baseUrl}/api/v2/mangas`;
         switch (order) {
