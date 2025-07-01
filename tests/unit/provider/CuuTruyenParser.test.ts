@@ -1,10 +1,10 @@
-import { CuuTruyenParser } from "../../../src/provider/CuuTruyenPasrer";
+import { CuuTruyenParser } from "../../../src/provider/CuuTruyen/CuuTruyenPasrer";
 import {
   ContentRating,
   MangaState,
   type ParserConfig,
   SortOrder,
-} from "../../../src/provider/type";
+} from "../../../src/provider/CuuTruyen/type";
 
 // Mock axios
 const mockGet = jest.fn();

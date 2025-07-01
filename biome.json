@@ -7,7 +7,12 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "ignore": ["node_modules", ".next", "public/sw.js"]
+    "ignore": [
+      "node_modules",
+      ".next",
+      "public/sw.js",
+      "src/provider/MangaDex/**"
+    ]
   },
   "formatter": {
     "enabled": true,
@@ -26,7 +31,8 @@
       ".turbo",
       "node_modules",
       "build",
-      "public/sw.js"
+      "public/sw.js",
+      "src/provider/MangaDex/**"
     ]
   },
   "organizeImports": {
@@ -40,7 +46,8 @@
       ".turbo",
       "node_modules",
       "build",
-      "public/sw.js"
+      "public/sw.js",
+      "src/provider/MangaDex/**"
     ]
   },
   "linter": {

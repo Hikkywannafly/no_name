@@ -60,14 +60,14 @@ export class SourceManager {
         for (const manga of mangas) {
           results.push({
             id: `${sourceName}_${manga.id}`,
-            mangaId: "", // Sẽ được set sau khi merge
+            mangaId: "",
             sourceName,
             sourceId: manga.id,
             sourceUrl: manga.publicUrl,
             title: manga.title,
             description: manga.description || "",
             coverUrl: manga.coverUrl,
-            bannerUrl: null, // Có thể có hoặc không
+            bannerUrl: null,
             largeCoverUrl: manga.largeCoverUrl,
             rating: manga.rating,
             viewCount: null,
@@ -85,15 +85,11 @@ export class SourceManager {
     return results;
   }
 
-  /**
-   * Lấy thông tin chi tiết manga từ tất cả nguồn
-   */
   async getMangaDetails(mangaId: string): Promise<MangaSource[]> {
     const results: MangaSource[] = [];
 
     for (const [sourceName, parser] of this.parsers) {
       try {
-        // Giả sử có method để lấy manga theo ID
         const manga = await parser.getDetails({
           id: mangaId,
           source: sourceName,
