@@ -1,27 +1,17 @@
 "use client";
 import { WideContainer } from "@/components/layout/WideLayout";
-import { Manga } from "mangadex-full-api";
-import { useEffect } from "react";
+import { useSearchManga } from "@/hooks/MangaDex/useSearchManga";
+
 import BaseLayout from "./baseLayout";
 
 export default function Home() {
   // const [mangaList, setMangaList] = useState<MangaSource[]>([]);
 
-  useEffect(() => {
-    async function fetchMangaDex() {
-      const mangas = await Manga.search({
-        limit: 10,
-        order: { followedCount: "desc" },
-        hasAvailableChapters: true,
-        includes: ["cover_art", "author", "artist", "tag"],
-
-        availableTranslatedLanguage: ["en"],
-      });
-      console.log(mangas);
-    }
-    fetchMangaDex();
-  }, []);
-
+  const { mangaList } = useSearchManga({
+    limit: 10,
+    availableTranslatedLanguage: ["vi"],
+  });
+  console.log(mangaList);
   return (
     <div>
       <BaseLayout>
