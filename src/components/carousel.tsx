@@ -19,7 +19,7 @@ export default function MangaCarousel() {
   } = useFeaturedManga({});
   console.log("mangas", mangas);
   return (
-    <div className="relative mx-auto w-full max-w-5xl">
+    <div className="-mx-[50vw] relative right-1/2 left-1/2 w-screen">
       {isLoading ? (
         <>
           <span>Is loading</span>
@@ -49,7 +49,7 @@ export default function MangaCarousel() {
                     >
                       <Image
                         fill
-                        unoptimized
+
                         src={getCoverArt(manga)}
                         title="Cover Art"
                         alt={
@@ -60,7 +60,6 @@ export default function MangaCarousel() {
                       />
                     </AspectRatio>
                   </div>
-                  <div className="flex-shrink-0"></div>
                 </div>
               </SwiperSlide>
             ))}

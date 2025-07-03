@@ -32,7 +32,7 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <ThemeProvider>
-          <main className="px-6 py-24">{children}</main>
+          <main>{children}</main>
           <Analytics />
         </ThemeProvider>
       </body>

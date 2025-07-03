@@ -7,7 +7,9 @@ export default function Home() {
     <>
       <MangaCarousel />
       <BaseLayout>
-        <WideContainer></WideContainer>
+        <WideContainer>
+
+        </WideContainer>
       </BaseLayout>
     </>
   );

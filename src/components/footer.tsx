@@ -3,7 +3,7 @@ import { ThemeSwitcher } from "@/components/theme";
 
 const Footer = () => {
   return (
-    <div className="flex w-full items-center justify-between border-t border-dashed pt-2">
+    <div className="flex w-full items-center justify-between pt-2">
       <div className="px-[2px] text-muted-foreground text-xs">
         Built with{" "}
         <Link

@@ -11,7 +11,7 @@ type NavItemProps = {
 };
 const NavItem = ({ label }: NavItemProps) => (
   <li className="">
-    <div className="flex transform cursor-pointer items-center font-bold opacity-80 transition-all duration-300 hover:text-highlight">
+    <div className="flex items-center whitespace-nowrap font-bold opacity-80 transition-all duration-300 hover:text-highlight">
       {label}
     </div>
   </li>
@@ -24,7 +24,7 @@ const Header = () => {
   return (
     <React.Fragment>
       <header className="fixed top-0 left-0 z-[999] w-full bg-gradient-to-b from-black/60 via-black/40 to-transparent p-4 px-2 transition duration-500 ">
-        <div className="mx-auto flex h-full w-full items-center justify-between md:max-w-[644px] lg:max-w-[1200px] ">
+        <div className="mx-auto flex h-full w-full items-center justify-between lg:max-w-[1200px] ">
           <div className="flex items-center ">
             <button
               className="mr-2 block md:hidden"
@@ -36,21 +36,21 @@ const Header = () => {
             </button>
             <Link
               href="/"
-              className="transform cursor-pointer font-semibold text-xl opacity-80 transition duration-300 "
+              className="cursor-pointer whitespace-nowrap font-semibold text-xl opacity-80"
             >
               NONAME
             </Link>
           </div>
 
           <nav className="hidden md:block">
-            <ul className="flex items-center space-x-8">
+            <ul className=" flex flex-row items-center gap-4 space-x-4 overflow-x-auto px-2 md:space-x-8">
               <NavItem label="Light Novel" />
               <li
                 onClick={() => setIsOpenGenre(!isOpenGenre)}
                 className="relative transform cursor-pointer transition duration-300"
               >
                 <div
-                  className={`flex items-center gap-1 font-bold opacity-80 ${isOpenGenre ? "text-highlight" : null}`}
+                  className={`flex items-center gap-1 whitespace-nowrap font-bold opacity-80 ${isOpenGenre ? "text-highlight" : null}`}
                 >
                   Thể loại <BsCaretDownFill className="h-3 w-3 font-bold" />
                 </div>
@@ -67,7 +67,7 @@ const Header = () => {
                 className="relative transform cursor-pointer transition duration-300 "
               >
                 <div
-                  className={`flex items-center gap-1 font-bold opacity-80 ${isOpenRanking ? "text-highlight" : null}`}
+                  className={`flex items-center gap-1 whitespace-nowrap font-bold opacity-80 ${isOpenRanking ? "text-highlight" : null}`}
                 >
                   Xếp hạng <BsCaretDownFill className="h-3 w-3 font-bold" />
                 </div>
@@ -80,11 +80,11 @@ const Header = () => {
               </li>
 
               <NavItem label="Đăng truyện" />
-              <NavItem label="Discord" />
+              {/* <NavItem label="Discord" /> */}
             </ul>
           </nav>
 
-          <div className="z-30 flex gap-3 ">
+          <div className="z-30 flex gap-3 whitespace-nowrap">
             <HeaderSearch />
             <HeaderUser />
           </div>
@@ -120,7 +120,7 @@ const Header = () => {
                 options={GENRES_COMICS}
                 show={true}
                 isMore={false}
-                onClose={() => {}}
+                onClose={() => { }}
               />
             </div>
             <div className="py-2">
@@ -131,7 +131,7 @@ const Header = () => {
                 options={RANKING_COMICS}
                 show={true}
                 isMore={false}
-                onClose={() => {}}
+                onClose={() => { }}
               />
             </div>
             <button
