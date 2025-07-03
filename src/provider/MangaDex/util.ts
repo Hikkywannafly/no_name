@@ -21,12 +21,9 @@ import type { AuthenticationToken } from "./authentication";
  * CONSTANT DECLARATIONS
  ************************/
 
-const MANGADEX_API_URL = "https://api.mangadex.org";
-// const CORS = Constants.CORS_URL;
-// const CORS_V2 = Constants.CORS_V2_URL;
-
-const CORS = "https://services.f-ck.me";
-const CORS_V2 = "https://api-proxy.truyendex.xyz";
+const MANGADEX_API_URL = process.env["NEXT_PUBLIC_MANGADEX_API_URL"]
+const CORS = process.env["NEXT_PUBLIC_CORS"]
+const CORS_V2 = process.env["NEXT_PUBLIC_CORS_V2"]
 
 // process.env["NODE_TLS_REJECT_UNAUTHORIZED"] =
 //   process.env.NODE_ENV === "production" ? "1" : "0";
