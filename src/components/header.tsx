@@ -19,14 +19,21 @@ const NavItem = ({ label }: NavItemProps) => (
 const Header = () => {
   const [isOpenGenre, setIsOpenGenre] = useState(false);
   const [isOpenRanking, setIsOpenRanking] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
     <React.Fragment>
       <header className="fixed top-0 left-0 z-[999] w-full bg-gradient-to-b from-black/60 via-black/40 to-transparent p-4 px-2 transition duration-500 ">
         <div className="mx-auto flex h-full w-full items-center justify-between md:max-w-[644px] lg:max-w-[1200px] ">
-          {/* <div className='absolute inset-0 '> </div> */}
           <div className="flex items-center ">
-            <HamburgerMenu />
+            <button
+              className="mr-2 block md:hidden"
+              onClick={() => setIsMobileMenuOpen(true)}
+              aria-label="Open menu"
+              type="button"
+            >
+              <HamburgerMenu />
+            </button>
             <Link
               href="/"
               className="transform cursor-pointer font-semibold text-xl opacity-80 transition duration-300 "
@@ -35,7 +42,7 @@ const Header = () => {
             </Link>
           </div>
 
-          <nav className=" hidden md:block">
+          <nav className="hidden md:block">
             <ul className="flex items-center space-x-8">
               <NavItem label="Light Novel" />
               <li
@@ -83,6 +90,59 @@ const Header = () => {
           </div>
         </div>
       </header>
+
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 z-[1000] flex flex-col bg-black/80 md:hidden">
+          <div className="flex items-center justify-between border-white/10 border-b p-4">
+            <span className="font-semibold text-white text-xl">NONAME</span>
+            <button
+              className="text-2xl text-white"
+              onClick={() => setIsMobileMenuOpen(false)}
+              aria-label="Close menu"
+              type="button"
+            >
+              ×
+            </button>
+          </div>
+          <nav className="flex flex-1 flex-col gap-2 p-6 text-white">
+            <button className="py-2 text-left" onClick={() => setIsMobileMenuOpen(false)} type="button">
+              Light Novel
+            </button>
+            <div className="py-2">
+              <div className="flex items-center gap-1 font-bold opacity-80">
+                Thể loại <BsCaretDownFill className="h-3 w-3 font-bold" />
+              </div>
+              <DropDown
+                options={GENRES_COMICS}
+                show={true}
+                isMore={false}
+                onClose={() => { }}
+              />
+            </div>
+            <div className="py-2">
+              <div className="flex items-center gap-1 font-bold opacity-80">
+                Xếp hạng <BsCaretDownFill className="h-3 w-3 font-bold" />
+              </div>
+              <DropDown
+                options={RANKING_COMICS}
+                show={true}
+                isMore={false}
+                onClose={() => { }}
+              />
+            </div>
+            <button className="py-2 text-left" onClick={() => setIsMobileMenuOpen(false)} type="button">
+              Đăng truyện
+            </button>
+            <button className="py-2 text-left" onClick={() => setIsMobileMenuOpen(false)} type="button">
+              Discord
+            </button>
+          </nav>
+          <div className="flex justify-center gap-4 pb-6">
+            <HeaderSearch />
+            <HeaderUser />
+          </div>
+        </div>
+      )}
     </React.Fragment>
   );
 };

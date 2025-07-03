@@ -4,7 +4,7 @@ import { extendRelationship } from "@/utils/mangadex";
 import { useMemo } from "react";
 import useSWR from "swr/immutable";
 
-export const useSearchManga = (
+const useSearchManga = (
     options: MangadexApi.Manga.GetSearchMangaRequestOptions,
 
     { enabled }: { enabled: boolean } = { enabled: true },
@@ -34,3 +34,4 @@ export const useSearchManga = (
     }, [success]);
     return { data, error, isLoading, mutate, mangaList };
 };
+export default useSearchManga;
