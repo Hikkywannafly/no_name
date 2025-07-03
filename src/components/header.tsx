@@ -105,7 +105,11 @@ const Header = () => {
             </button>
           </div>
           <nav className="flex flex-1 flex-col gap-2 p-6 text-white">
-            <button className="py-2 text-left" onClick={() => setIsMobileMenuOpen(false)} type="button">
+            <button
+              className="py-2 text-left"
+              onClick={() => setIsMobileMenuOpen(false)}
+              type="button"
+            >
               Light Novel
             </button>
             <div className="py-2">
@@ -116,7 +120,7 @@ const Header = () => {
                 options={GENRES_COMICS}
                 show={true}
                 isMore={false}
-                onClose={() => { }}
+                onClose={() => {}}
               />
             </div>
             <div className="py-2">
@@ -127,13 +131,21 @@ const Header = () => {
                 options={RANKING_COMICS}
                 show={true}
                 isMore={false}
-                onClose={() => { }}
+                onClose={() => {}}
               />
             </div>
-            <button className="py-2 text-left" onClick={() => setIsMobileMenuOpen(false)} type="button">
+            <button
+              className="py-2 text-left"
+              onClick={() => setIsMobileMenuOpen(false)}
+              type="button"
+            >
               Đăng truyện
             </button>
-            <button className="py-2 text-left" onClick={() => setIsMobileMenuOpen(false)} type="button">
+            <button
+              className="py-2 text-left"
+              onClick={() => setIsMobileMenuOpen(false)}
+              type="button"
+            >
               Discord
             </button>
           </nav>
