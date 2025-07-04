@@ -1,4 +1,4 @@
-import type { DropDownItem } from "@/components/shared/dropDown";
+import type { DropDownItem } from "@/components/shared/DropDown";
 
 // vi - VietNamese
 
