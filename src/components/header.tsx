@@ -56,7 +56,10 @@ const Header = () => {
             <ul className=" flex flex-row items-center gap-4 space-x-4 px-2 md:space-x-8">
               <NavItem label="Light Novel" />
               <li
-                onClick={() => handleDropdown("genre")}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDropdown("genre");
+                }}
                 className="relative transform cursor-pointer transition duration-300"
               >
                 <div

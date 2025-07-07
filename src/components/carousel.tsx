@@ -33,10 +33,10 @@ export default function MangaCarousel() {
             navigation
             pagination={{ clickable: true }}
             loop={true}
-            // autoplay={{
-            //   delay: 5000,
-            //   disableOnInteraction: false,
-            // }}
+            autoplay={{
+              delay: 155000,
+              disableOnInteraction: false,
+            }}
             className="my-swiper-container" // Add a custom class for styling
           >
             {mangas.map((manga) => (
