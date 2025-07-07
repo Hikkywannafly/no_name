@@ -1,7 +1,5 @@
 import type { DropDownItem } from "@/components/shared/DropDown";
 
-// vi - VietNamese
-
 export const GENRES_COMICS: DropDownItem[] = [
   { label: "Action", href: "Action" },
   { label: "Adventure", href: "Adventure" },
@@ -79,3 +77,12 @@ export const CHARACTERS_ROLES: DropDownItem[] = [
 ];
 
 export const REVALIDATE_TIME = 24 * 60 * 60; // 24 hours
+
+export class Constants {
+  static readonly router = {
+    manga: (id: string) => `/manga/${id}`,
+  }
+  api = {
+
+  }
+}
