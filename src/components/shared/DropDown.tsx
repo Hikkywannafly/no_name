@@ -1,6 +1,6 @@
 import { useClickOutside } from "@/hooks/useClickOutside";
 import Link from "next/link";
-import { type FC, useRef, useState } from "react";
+import { type FC, useCallback, useRef, useState } from "react";
 import { IoIosArrowForward } from "react-icons/io";
 
 export type DropDownItem = {
@@ -18,21 +18,27 @@ type DropDownState = {
   onClose: () => void;
 };
 
-export interface DropDownProps extends DropDownConfig, DropDownState {}
+export interface DropDownProps extends DropDownConfig, DropDownState { }
 
 const DropDown: FC<DropDownProps> = ({ options, show, isMore, onClose }) => {
   const [offsetTop, setOffsetTop] = useState<number | null>(null);
   const effectActive = useRef<HTMLLIElement>(null);
   const dropdownRef = useRef<HTMLUListElement>(null);
 
-  useClickOutside(
-    dropdownRef,
-    () => {
-      onClose();
-      setOffsetTop(null);
-    },
-    show,
-  );
+  const handleClose = useCallback(() => {
+    onClose();
+    setOffsetTop(null);
+  }, [onClose]);
+
+  useClickOutside(dropdownRef, handleClose, show);
+
+  const handleMouseEnter = useCallback((e: React.MouseEvent<HTMLLIElement>) => {
+    const target = e.currentTarget;
+    setOffsetTop(target.offsetTop);
+    if (effectActive.current) {
+      effectActive.current.style.transform = `translateY(${target.offsetTop}px)`;
+    }
+  }, []);
 
   if (!show) return null;
 
@@ -45,13 +51,7 @@ const DropDown: FC<DropDownProps> = ({ options, show, isMore, onClose }) => {
       {options.map((item, index) => (
         <li
           key={index}
-          onMouseEnter={(e) => {
-            const target = e.currentTarget;
-            setOffsetTop(target.offsetTop);
-            if (effectActive.current) {
-              effectActive.current.style.transform = `translateY(${target.offsetTop}px)`;
-            }
-          }}
+          onMouseEnter={handleMouseEnter}
         >
           <div>
             <Link
@@ -68,9 +68,8 @@ const DropDown: FC<DropDownProps> = ({ options, show, isMore, onClose }) => {
       ))}
       <li
         ref={effectActive}
-        className={`slide -z-10 absolute top-[-3px] h-7 w-[85%] rounded-lg bg-slate-600 px-6 duration-150 ${
-          offsetTop === null ? "opacity-0" : ""
-        }`}
+        className={`slide -z-10 absolute top-[-3px] h-7 w-[85%] rounded-lg bg-slate-600 px-6 duration-150 ${offsetTop === null ? "opacity-0" : ""
+          }`}
       />
     </ul>
   );

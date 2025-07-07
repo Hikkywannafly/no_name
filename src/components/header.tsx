@@ -4,11 +4,13 @@ import HamburgerMenu from "@/components/icons/HamburgerMenu";
 import DropDown from "@/components/shared/DropDown";
 import { GENRES_COMICS, RANKING_COMICS } from "@/constants";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { BsCaretDownFill } from "react-icons/bs";
+
 type NavItemProps = {
   label: string;
 };
+
 const NavItem = ({ label }: NavItemProps) => (
   <li className="">
     <div className="flex items-center whitespace-nowrap font-bold opacity-80 transition-all duration-300 hover:text-highlight">
@@ -16,10 +18,18 @@ const NavItem = ({ label }: NavItemProps) => (
     </div>
   </li>
 );
+
 const Header = () => {
-  const [isOpenGenre, setIsOpenGenre] = useState(false);
-  const [isOpenRanking, setIsOpenRanking] = useState(false);
+  const [dropdown, setDropdown] = useState<{ genre: boolean; ranking: boolean }>({ genre: false, ranking: false });
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const handleDropdown = useCallback((key: "genre" | "ranking") => {
+    setDropdown((prev) => ({ ...prev, [key]: !prev[key] }));
+  }, []);
+
+  const closeDropdown = useCallback((key: "genre" | "ranking") => {
+    setDropdown((prev) => ({ ...prev, [key]: false }));
+  }, []);
 
   return (
     <React.Fragment>
@@ -43,42 +53,40 @@ const Header = () => {
           </div>
 
           <nav className="hidden md:block">
-            <ul className=" flex flex-row items-center gap-4 space-x-4 overflow-x-auto px-2 md:space-x-8">
+            <ul className=" flex flex-row items-center gap-4 space-x-4 px-2 md:space-x-8">
               <NavItem label="Light Novel" />
               <li
-                onClick={() => setIsOpenGenre(!isOpenGenre)}
+                onClick={() => handleDropdown("genre")}
                 className="relative transform cursor-pointer transition duration-300"
               >
                 <div
-                  className={`flex items-center gap-1 whitespace-nowrap font-bold opacity-80 ${isOpenGenre ? "text-highlight" : null}`}
+                  className={`flex items-center gap-1 whitespace-nowrap font-bold opacity-80 ${dropdown.genre ? "text-highlight" : null}`}
                 >
                   Thể loại <BsCaretDownFill className="h-3 w-3 font-bold" />
                 </div>
                 <DropDown
                   options={GENRES_COMICS}
-                  show={isOpenGenre}
+                  show={dropdown.genre}
                   isMore={false}
-                  onClose={() => setIsOpenGenre(false)}
+                  onClose={() => closeDropdown("genre")}
                 />
               </li>
-
               <li
-                onClick={() => setIsOpenRanking(!isOpenRanking)}
+                onClick={() => handleDropdown("ranking")}
                 className="relative transform cursor-pointer transition duration-300 "
               >
                 <div
-                  className={`flex items-center gap-1 whitespace-nowrap font-bold opacity-80 ${isOpenRanking ? "text-highlight" : null}`}
+                  className={`flex items-center gap-1 whitespace-nowrap font-bold opacity-80 ${dropdown.ranking ? "text-highlight" : null}`}
                 >
                   Xếp hạng <BsCaretDownFill className="h-3 w-3 font-bold" />
                 </div>
                 <DropDown
                   options={RANKING_COMICS}
-                  show={isOpenRanking}
+                  show={dropdown.ranking}
                   isMore={false}
-                  onClose={() => setIsOpenRanking(false)}
+                  onClose={() => closeDropdown("ranking")}
                 />
               </li>
-
               <NavItem label="Đăng truyện" />
               {/* <NavItem label="Discord" /> */}
             </ul>
