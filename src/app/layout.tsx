@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/theme";
 import { Analytics } from "@vercel/analytics/react";
 
 import { OpenGraph } from "@/lib/og";
+import NextTopLoader from "nextjs-toploader";
 import "./globals.css";
 
 const inter = Inter({
@@ -32,6 +33,16 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <ThemeProvider>
+          <NextTopLoader
+            zIndex={1000}
+            easing="ease-in-out"
+            speed={400}
+            height={4}
+            showSpinner={false}
+            template={`
+        <div class="bar bg-web-title" role="bar"><div class="peg"></div></div> 
+  <div class="spinner text-web-title" role="spinner"><div class="spinner-icon"></div></div>`}
+          />
           <main>{children}</main>
           <Analytics />
         </ThemeProvider>
