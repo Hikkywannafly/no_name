@@ -41,23 +41,43 @@ export default function MangaCarousel() {
           >
             {mangas.map((manga) => (
               <SwiperSlide key={manga.id}>
-                <div className="relative flex min-h-[350px] items-center overflow-hidden rounded-lg bg-gradient-to-r from-black/80 to-transparent p-8">
-                  <div className="-z-10 absolute inset-0">
-                    <AspectRatio
-                      ratio={16 / 9}
-                      className="relative w-full overflow-hidden rounded-lg"
-                    >
-                      <Image
-                        fill
-                        src={getCoverArt(manga)}
-                        title="Cover Art"
-                        alt={
-                          manga.attributes?.title?.vn ||
-                          manga.attributes?.title?.en ||
-                          "Unknown Title"
-                        }
-                      />
-                    </AspectRatio>
+                <div className="relative flex h-[350px] items-center overflow-hidden rounded-lg bg-gradient-to-r from-black/80 to-transparent p-8">
+                  <div className="absolute inset-0 h-full w-full">
+
+                    <Image
+                      fill
+                      src={getCoverArt(manga)}
+                      title="Cover Art"
+                      className="h-full w-full object-cover opacity-80 blur-md"
+                      style={{ zIndex: 0 }}
+                      alt={
+                        manga.attributes?.title?.vn ||
+                        manga.attributes?.title?.en ||
+                        "Unknown Title"
+                      }
+                    />
+                  </div>
+                  <div className="relative z-10 mx-auto mt-[50px] flex w-full items-center gap-6 lg:max-w-[1200px]">
+                    <div className="h-60 w-40 shrink-0 overflow-hidden rounded-lg shadow-lg">
+                      <AspectRatio
+                        ratio={2 / 3}
+                        className="relative overflow-hidden rounded-lg shadow-lg"
+                      >
+                        <Image
+                          src={getCoverArt(manga)}
+                          alt="Manga Cover"
+                          fill
+                          className="h-full w-full rounded-lg object-cover shadow-lg"
+                        />
+                      </AspectRatio>
+
+                    </div>
+                    <div className="flex w-full flex-col justify-center">
+                      <h2 className="mb-2 font-bold text-2xl text-white">
+                        {manga.attributes?.title?.vn || manga.attributes?.title?.en || "Unknown Title"}
+                      </h2>
+
+                    </div>
                   </div>
                 </div>
               </SwiperSlide>

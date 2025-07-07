@@ -34,7 +34,7 @@ const Header = () => {
   return (
     <React.Fragment>
       <header className="fixed top-0 left-0 z-[999] w-full bg-gradient-to-b from-black/60 via-black/40 to-transparent p-4 px-2 transition duration-500 ">
-        <div className="mx-auto flex h-full w-full items-center justify-between lg:max-w-[1200px] ">
+        <div className="mx-auto flex h-full w-full items-center justify-between lg:max-w-[1200px]">
           <div className="flex items-center ">
             <button
               className="mr-2 block md:hidden"
