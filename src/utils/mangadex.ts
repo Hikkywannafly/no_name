@@ -13,6 +13,7 @@ export const extendRelationship = (
 };
 
 export const getCoverArt = (manga?: ExtendManga | undefined) => {
+  console.log("getcoverart", manga);
   if (!manga) {
     return "";
   }

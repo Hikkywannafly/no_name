@@ -1,5 +1,8 @@
+import BaseLayout from "@/app/baseLayout";
+import { Manga } from "@/components/manga/manga";
 import { MangadexApi } from "@/provider";
-
+import type { ExtendManga } from "@/types/mangadex";
+import { extendRelationship } from "@/utils/mangadex";
 type MangaPageProps = {
   params: { "manga-id": string };
 };
@@ -9,12 +12,17 @@ export default async function MangaPage({ params }: MangaPageProps) {
 
   const {
     data: { data: manga },
-  } = await MangadexApi.Manga.getMangaId(mangaID);
+  } = await MangadexApi.Manga.getMangaId(mangaID, {
+    includes: [MangadexApi.Static.Includes.COVER_ART],
+  });
 
-  console.log("Manga Data:", manga);
+  console.log("Manga Data:", extendRelationship(manga));
   return (
-    <>
-      <h1>Manga ID: {mangaID}</h1>
-    </>
+    <BaseLayout showHeader={true} showFooter={true}>
+      <Manga
+        magaId={mangaID}
+        prefetchManga={extendRelationship(manga) as ExtendManga}
+      />
+    </BaseLayout>
   );
 }

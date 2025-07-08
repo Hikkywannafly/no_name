@@ -20,7 +20,7 @@ export default function MangaCarousel() {
     // error,
     // mutate,
   } = useFeaturedManga({});
-  console.log("mangas", mangas);
+  console.log("Manga Carousel Data:", mangas);
   return (
     <div className="-mx-[50vw] relative right-1/2 left-1/2 w-screen">
       {isLoading ? (
