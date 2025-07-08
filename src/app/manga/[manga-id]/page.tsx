@@ -1,12 +1,20 @@
+import { MangadexApi } from "@/provider";
 
-import type { ExtendManga } from "@/types/mangadex";
-export default function MangaPage({ params, manga }: { params: { "manga-id": string }, manga: ExtendManga }) {
-    const mangaID = params["manga-id"];
-    console.log("Manga Page", mangaID, manga);
-    return (
-        <>
-            <h1>Manga ID: {mangaID}</h1>
+type MangaPageProps = {
+  params: { "manga-id": string };
+};
 
-        </>
-    );
+export default async function MangaPage({ params }: MangaPageProps) {
+  const mangaID = await params["manga-id"];
+
+  const {
+    data: { data: manga },
+  } = await MangadexApi.Manga.getMangaId(mangaID);
+
+  console.log("Manga Data:", manga);
+  return (
+    <>
+      <h1>Manga ID: {mangaID}</h1>
+    </>
+  );
 }

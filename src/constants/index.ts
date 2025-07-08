@@ -81,8 +81,6 @@ export const REVALIDATE_TIME = 24 * 60 * 60; // 24 hours
 export class Constants {
   static readonly router = {
     manga: (id: string) => `/manga/${id}`,
-  }
-  api = {
-
-  }
+  };
+  api = {};
 }

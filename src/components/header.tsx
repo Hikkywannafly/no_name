@@ -20,7 +20,10 @@ const NavItem = ({ label }: NavItemProps) => (
 );
 
 const Header = () => {
-  const [dropdown, setDropdown] = useState<{ genre: boolean; ranking: boolean }>({ genre: false, ranking: false });
+  const [dropdown, setDropdown] = useState<{
+    genre: boolean;
+    ranking: boolean;
+  }>({ genre: false, ranking: false });
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleDropdown = useCallback((key: "genre" | "ranking") => {
@@ -131,7 +134,7 @@ const Header = () => {
                 options={GENRES_COMICS}
                 show={true}
                 isMore={false}
-                onClose={() => { }}
+                onClose={() => {}}
               />
             </div>
             <div className="py-2">
@@ -142,7 +145,7 @@ const Header = () => {
                 options={RANKING_COMICS}
                 show={true}
                 isMore={false}
-                onClose={() => { }}
+                onClose={() => {}}
               />
             </div>
             <button

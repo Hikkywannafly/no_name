@@ -34,8 +34,6 @@ const HeaderSearch = () => {
     // </div>
     <div className="flex items-center justify-between rounded-2xl bg-gray-800 px-2">
       <IoIosSearch className="h-8 w-8" />
-
-
     </div>
   );
 };

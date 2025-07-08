@@ -18,7 +18,7 @@ type DropDownState = {
   onClose: () => void;
 };
 
-export interface DropDownProps extends DropDownConfig, DropDownState { }
+export interface DropDownProps extends DropDownConfig, DropDownState {}
 
 const DropDown: FC<DropDownProps> = ({ options, show, isMore, onClose }) => {
   const [offsetTop, setOffsetTop] = useState<number | null>(null);
@@ -55,10 +55,7 @@ const DropDown: FC<DropDownProps> = ({ options, show, isMore, onClose }) => {
         onMouseLeave={() => setOffsetTop(null)}
       >
         {options.map((item, index) => (
-          <li
-            key={index}
-            onMouseEnter={handleMouseEnter}
-          >
+          <li key={index} onMouseEnter={handleMouseEnter}>
             <div>
               <Link
                 href={item.href}

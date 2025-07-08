@@ -29,7 +29,7 @@ export const SkeletonItem: React.FC<skeletonItemProps> = ({
   return (
     <div
       className={classNames(
-        container && "animate-pulse bg-white/20",
+        container && "animate-pulse bg-white/40",
         className,
       )}
       {...props}

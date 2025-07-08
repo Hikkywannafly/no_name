@@ -2,6 +2,7 @@
 
 // 1. Import Swiper components
 import Image from "@/components/shared/image";
+import Skeleton from "@/components/shared/sekeleton";
 import { Constants } from "@/constants";
 import { useFeaturedManga } from "@/hooks/MangaDex";
 import { getCoverArt } from "@/utils/mangadex";
@@ -24,7 +25,12 @@ export default function MangaCarousel() {
     <div className="-mx-[50vw] relative right-1/2 left-1/2 w-screen">
       {isLoading ? (
         <>
-          <span>Is loading</span>
+          {/* skeleton */}
+          <div className="flex h-[350px] items-center justify-center">
+            <div className="flex h-full w-full animate-pulse items-center justify-center rounded-lg bg-gray-200">
+              <Skeleton className="h-full w-full" />
+            </div>
+          </div>
         </>
       ) : (
         <Swiper
@@ -57,12 +63,14 @@ export default function MangaCarousel() {
                     }
                   />
                 </div>
-                <Link className="relative z-10 mx-auto mt-[50px] flex w-full items-center gap-6 lg:max-w-[1200px]" href={Constants.router.manga(manga.id)}>
-
+                <Link
+                  className="relative z-10 mx-auto mt-[50px] flex w-full items-center gap-6 lg:max-w-[1200px]"
+                  href={Constants.router.manga(manga.id)}
+                >
                   <div className="h-60 w-40 shrink-0 overflow-hidden rounded-lg shadow-lg">
                     <AspectRatio
                       ratio={2 / 3}
-                      className="relative overflow-hidden rounded-lg shadow-lg"
+                      className="overflow-hidden rounded-lg shadow-lg"
                     >
                       <Image
                         src={getCoverArt(manga)}
@@ -71,21 +79,19 @@ export default function MangaCarousel() {
                         className="h-full w-full rounded-lg object-cover shadow-lg"
                       />
                     </AspectRatio>
-
                   </div>
                   <div className="flex w-full flex-col justify-center">
                     <h2 className="mb-2 font-bold text-2xl text-white">
-                      {manga.attributes?.title?.vn || manga.attributes?.title?.en || "Unknown Title"}
+                      {manga.attributes?.title?.vn ||
+                        manga.attributes?.title?.en ||
+                        "Unknown Title"}
                     </h2>
-
-
                   </div>
                 </Link>
               </div>
             </SwiperSlide>
           ))}
         </Swiper>
-
       )}
     </div>
   );
