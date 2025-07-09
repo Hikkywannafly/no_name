@@ -5,7 +5,7 @@ import Image from "@/components/shared/image";
 import Skeleton from "@/components/shared/sekeleton";
 import { Constants } from "@/constants";
 import { useFeaturedManga } from "@/hooks/MangaDex";
-import { getCoverArt } from "@/utils/mangadex";
+import { getCoverArt, getMangaTitle } from "@/utils/mangadex";
 import Link from "next/link";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -21,6 +21,7 @@ export default function MangaCarousel() {
     // mutate,
   } = useFeaturedManga({});
   console.log("Manga Carousel Data:", mangas);
+  console.log("Manga title", mangas.map((manga) => manga.attributes?.altTitles || "Unknown Title"));
   return (
     <div className="-mx-[50vw] relative right-1/2 left-1/2 w-screen">
       {isLoading ? (
@@ -82,9 +83,10 @@ export default function MangaCarousel() {
                   </div>
                   <div className="flex w-full flex-col justify-center">
                     <h2 className="mb-2 font-bold text-2xl text-white">
-                      {manga.attributes?.title?.vn ||
-                        manga.attributes?.title?.en ||
-                        "Unknown Title"}
+                      {
+                        getMangaTitle(manga) ||
+                        "Unknown Title"
+                      }
                     </h2>
                   </div>
                 </Link>
