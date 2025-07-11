@@ -1,5 +1,4 @@
 import BaseLayout from "@/app/baseLayout";
-import { WideContainer } from "@/components/layout/WideLayout";
 import { Manga } from "@/components/manga/manga";
 import { MangadexApi } from "@/provider";
 import type { ExtendManga } from "@/types/mangadex";
@@ -24,11 +23,6 @@ export default async function MangaPage({ params }: MangaPageProps) {
         magaId={mangaID}
         prefetchManga={extendRelationship(manga) as ExtendManga}
       />
-
-      <WideContainer>
-
-      </WideContainer>
-
     </BaseLayout>
   );
 }

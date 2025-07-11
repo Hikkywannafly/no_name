@@ -1,7 +1,7 @@
 "use client";
 import { HeaderSearch, HeaderUser } from "@/components/icons";
 import HamburgerMenu from "@/components/icons/HamburgerMenu";
-import DropDown from "@/components/shared/DropDown";
+import DropDown from "@/components/shared/dropDown";
 import { GENRES_COMICS, RANKING_COMICS } from "@/constants";
 import Link from "next/link";
 import React, { useCallback, useState } from "react";

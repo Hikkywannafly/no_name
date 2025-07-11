@@ -1,4 +1,4 @@
-import type { DropDownItem } from "@/components/shared/DropDown";
+import type { DropDownItem } from "@/components/shared/dropDown";
 
 export const GENRES_COMICS: DropDownItem[] = [
   { label: "Action", href: "Action" },

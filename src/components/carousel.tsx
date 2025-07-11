@@ -21,7 +21,10 @@ export default function MangaCarousel() {
     // mutate,
   } = useFeaturedManga({});
   console.log("Manga Carousel Data:", mangas);
-  console.log("Manga title", mangas.map((manga) => manga.attributes?.altTitles || "Unknown Title"));
+  console.log(
+    "Manga title",
+    mangas.map((manga) => manga.attributes?.altTitles || "Unknown Title"),
+  );
   return (
     <div className="-mx-[50vw] relative right-1/2 left-1/2 w-screen">
       {isLoading ? (
@@ -63,6 +66,7 @@ export default function MangaCarousel() {
                       "Unknown Title"
                     }
                   />
+                  <div className="absolute inset-0 z-10 bg-black/60" />
                 </div>
                 <Link
                   className="relative z-10 mx-auto mt-[50px] flex w-full items-center gap-6 lg:max-w-[1200px]"
@@ -83,10 +87,7 @@ export default function MangaCarousel() {
                   </div>
                   <div className="flex w-full flex-col justify-center">
                     <h2 className="mb-2 font-bold text-2xl text-white">
-                      {
-                        getMangaTitle(manga) ||
-                        "Unknown Title"
-                      }
+                      {getMangaTitle(manga) || "Unknown Title"}
                     </h2>
                   </div>
                 </Link>
