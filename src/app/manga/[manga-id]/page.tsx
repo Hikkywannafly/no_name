@@ -1,4 +1,5 @@
 import BaseLayout from "@/app/baseLayout";
+import { Chapter } from "@/components/manga/chapter";
 import { Manga } from "@/components/manga/manga";
 import { MangadexApi } from "@/provider";
 import type { ExtendManga } from "@/types/mangadex";
@@ -8,7 +9,7 @@ type MangaPageProps = {
 };
 
 export default async function MangaPage({ params }: MangaPageProps) {
-  const mangaID = await params["manga-id"];
+  const mangaID = params["manga-id"];
 
   const {
     data: { data: manga },
@@ -16,12 +17,16 @@ export default async function MangaPage({ params }: MangaPageProps) {
     includes: [MangadexApi.Static.Includes.COVER_ART],
   });
 
-  console.log("Manga Data:", extendRelationship(manga));
+  console.log("Manga chapter Data:", manga);
   return (
     <BaseLayout showHeader={true} showFooter={true}>
       <Manga
-        magaId={mangaID}
+        mangaId={mangaID}
         prefetchManga={extendRelationship(manga) as ExtendManga}
+      />
+      <Chapter
+        mangaId={mangaID}
+        name={"Yomei Senkoku Kara Hajimaru Fiance-sama to no Saigo no Ichinen"}
       />
     </BaseLayout>
   );

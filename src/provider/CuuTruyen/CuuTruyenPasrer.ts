@@ -66,6 +66,57 @@ export class CuuTruyenParser {
     };
   }
 
+  async searchMangaID(name: string): Promise<any> {
+    const url = `https://${this.config.domain[0]}/api/v2/mangas/quick_search?q=${this.urlEncode(name)}`;
+    // const url = `https://${this.config.domain[0]}/api/v2/mangas/quick_search?q=2242}`;
+    try {
+      const response =
+        await this.http.get<ApiResponse<MangaListResponse[]>>(url);
+      const data = response.data.data[0];
+      const newData = {
+        id: this.generateUid(data.id),
+        url: `/api/v2/mangas/${data.id}`,
+        publicUrl: `https://${this.config.domain[0]}/manga/${data.id}`,
+        title: data.name,
+        coverUrl: data.cover_mobile_url,
+        largeCoverUrl: data.cover_url,
+        source: this.config.source,
+        rating: this.RATING_UNKNOWN,
+        sda: name,
+      };
+      return newData;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 500) {
+        return [];
+      }
+      throw error;
+    }
+  }
+
+  async getChapterList(name: string): Promise<any[]> {
+    const url = `https://${this.config.domain[0]}/api/v2/mangas/quick_search?q=${this.urlEncode(name)}`;
+    try {
+      const response =
+        await this.http.get<ApiResponse<MangaListResponse[]>>(url);
+      const data = response.data.data;
+      return data.map((manga: MangaListResponse) => ({
+        id: this.generateUid(manga.id),
+        url: `/api/v2/mangas/${manga.id}`,
+        publicUrl: `https://${this.config.domain[0]}/manga/${manga.id}`,
+        title: manga.name,
+        coverUrl: manga.cover_mobile_url,
+        largeCoverUrl: manga.cover_url,
+        source: this.config.source,
+        rating: this.RATING_UNKNOWN,
+      }));
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 500) {
+        return [];
+      }
+      throw error;
+    }
+  }
+
   async getListPage(
     page: number,
     order: SortOrder,
@@ -252,8 +303,6 @@ export class CuuTruyenParser {
   }
 
   private getAvailableTags(): Set<MangaTag> {
-    // This is a simplified version of the tags list
-    // You should expand this with all the tags from the original parser
     return new Set([
       { title: "School Life", key: "school-life", source: this.config.source },
       { title: "Action", key: "action", source: this.config.source },

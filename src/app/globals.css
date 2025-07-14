@@ -107,7 +107,17 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.horizontal-scroll::-webkit-scrollbar {
+  height: 8px;
+}
+
+.horizontal-scroll {
+  scroll-behavior: smooth;
+  overscroll-behavior-x: contain;
 }

@@ -22,10 +22,9 @@ export const getCoverArt = (manga?: ExtendManga | undefined) => {
   return "";
 };
 
-
 export const getMangaTitle = (
   manga: ExtendManga | null | undefined,
-  options?: { local?: string; allTitle?: boolean }
+  options?: { local?: string; allTitle?: boolean },
 ): string | string[] => {
   if (!manga) return "";
   if (options?.allTitle && manga.attributes.altTitles) {
@@ -56,5 +55,4 @@ export const getTagName = (tag: Tag) => {
     tag.attributes.name.th ||
     "No name"
   );
-
-} 
+};

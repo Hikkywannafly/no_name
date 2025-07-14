@@ -19,9 +19,6 @@ export class MangaMerger {
     this.mergeStrategy = mergeStrategy;
   }
 
-  /**
-   * Merge thông tin manga từ nhiều nguồn
-   */
   mergeManga(sources: MangaSource[]): Manga {
     if (sources.length === 0) {
       throw new Error("Không có nguồn dữ liệu để merge");

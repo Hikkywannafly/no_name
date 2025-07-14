@@ -8,7 +8,7 @@ import rehypeRaw from "rehype-raw";
 import Link from "next/link";
 import type { Options } from "react-markdown";
 
-const PREVIEW_CHAR_LIMIT = 300; // bạn có thể đổi sang số dòng nếu muốn
+const PREVIEW_CHAR_LIMIT = 300;
 
 export default function Markdown({ content }: { content: string }) {
   const [expanded, setExpanded] = useState(false);
@@ -19,7 +19,7 @@ export default function Markdown({ content }: { content: string }) {
     : content;
 
   return (
-    <div className="w-full [&_pre]:whitespace-pre-wrap [&_pre]:break-words">
+    <div className="group relative w-full [&_pre]:whitespace-pre-wrap [&_pre]:break-words">
       <ReactMarkdown
         rehypePlugins={[rehypeRaw, rehypeHighlight]}
         components={components}
@@ -27,15 +27,22 @@ export default function Markdown({ content }: { content: string }) {
         {expanded || !isLong ? content : previewContent}
       </ReactMarkdown>
       {isLong && !expanded && (
-        <div className="mt-2 text-center">
-          <button
-            type="button"
-            className="font-semibold text-blue-500 hover:underline"
-            onClick={() => setExpanded(true)}
-          >
-            Read more
-          </button>
-        </div>
+        <button
+          type="button"
+          className="absolute bottom-0 h-12 w-full bg-gradient-to-t from-black/95 via-black/65 to-transparent text-center opacity-0 transition duration-300 group-hover:opacity-100"
+          onClick={() => setExpanded(true)}
+        >
+          Đọc thêm
+        </button>
+      )}
+      {expanded && (
+        <button
+          type="button"
+          className="absolute bottom-0 h-12 w-full bg-gradient-to-t from-black/95 via-black/65 to-transparent text-center opacity-0 transition duration-300 group-hover:opacity-100"
+          onClick={() => setExpanded(false)}
+        >
+          Rút gọn
+        </button>
       )}
     </div>
   );
