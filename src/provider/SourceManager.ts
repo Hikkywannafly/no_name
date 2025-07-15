@@ -4,7 +4,7 @@ import type {
   MangaSource,
   SourceConfig,
 } from "@/types/manga";
-import { MangaMerger } from "./MangaMerger";
+import { MangaMerger } from "../provider/MangaMerger";
 
 export class SourceManager {
   private parsers: Map<string, any> = new Map();

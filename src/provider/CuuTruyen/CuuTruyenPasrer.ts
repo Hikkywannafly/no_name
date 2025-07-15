@@ -163,7 +163,7 @@ export class CuuTruyenParser {
     ]);
 
     const details = detailsResponse.data.data;
-    console.log(details);
+    console.log("Cuutruyen Paser details ", details);
     const tags = new Set<MangaTag>(
       (details.tags || []).map((tag: { name: string; slug: string }) => ({
         title: this.toTitleCase(tag.name),
@@ -185,7 +185,8 @@ export class CuuTruyenParser {
     const author = details.author?.name?.split(",")[0] || null;
     const title = details.name || manga.title;
     const team = details.team?.name || null;
-
+    const panorama_url = details.panorama_url;
+    const panorama_mobile_url = details.panorama_mobile_url;
     const chapters = chaptersResponse.data.data
       .map((chapter: ChapterListResponse) => ({
         id: this.generateUid(chapter.id),
@@ -199,7 +200,7 @@ export class CuuTruyenParser {
         source: this.config.source,
       }))
       .reverse();
-    console.log(chapters);
+    console.log("Cuutruyen Paser chapter ", chapters);
     return {
       ...manga,
       title,
@@ -212,6 +213,8 @@ export class CuuTruyenParser {
       authors: new Set(author ? [author] : []),
       description: details.full_description || null,
       tags: newTags,
+      largeCoverUrl: panorama_url || " ",
+      coverUrl: panorama_mobile_url || " ",
       state,
       chapters,
     };
@@ -256,9 +259,8 @@ export class CuuTruyenParser {
         url = `${baseUrl}/api/v2/tags/${tag.key}`;
       } else if (filter.states?.size === 1) {
         const state = Array.from(filter.states)[0];
-        url = `${baseUrl}/api/v2/tags/${
-          state === MangaState.ONGOING ? "dang-tien-hanh" : "da-hoan-thanh"
-        }`;
+        url = `${baseUrl}/api/v2/tags/${state === MangaState.ONGOING ? "dang-tien-hanh" : "da-hoan-thanh"
+          }`;
       } else {
         url = `${baseUrl}/api/v2/mangas`;
         switch (order) {

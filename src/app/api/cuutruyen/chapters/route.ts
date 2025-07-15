@@ -1,5 +1,5 @@
-import { type NextRequest, NextResponse } from "next/server";
 import { CuuTruyenParser } from "@/provider/CuuTruyen/CuuTruyenPasrer";
+import { type NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
   try {
     const manga = await parser.searchMangaID(name);
     const mangaWithChapters = await parser.getDetails(manga);
-    return NextResponse.json({ chapters: mangaWithChapters.chapters || [] });
+    return NextResponse.json({ data: mangaWithChapters || [] });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

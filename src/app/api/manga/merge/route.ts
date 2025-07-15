@@ -1,5 +1,5 @@
 import { MERGE_STRATEGY, SOURCE_CONFIGS } from "@/config/sources";
-import { SourceManager } from "@/services/SourceManager";
+import { SourceManager } from "@/provider/SourceManager";
 import type { MangaSource } from "@/types/manga";
 import { type NextRequest, NextResponse } from "next/server";
 

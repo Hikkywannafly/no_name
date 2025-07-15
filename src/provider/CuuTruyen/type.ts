@@ -107,6 +107,8 @@ export interface MangaDetailResponse {
   author?: { name: string };
   team?: { name: string };
   tags?: { name: string; slug: string }[];
+  panorama_url?: string;
+  panorama_mobile_url?: string;
 }
 
 export interface ChapterListResponse {

@@ -32,10 +32,6 @@ export default function useChapterList(
   const { data, isLoading, error } = useSWR([mangaId, options], () =>
     MangadexApi.Manga.getMangaIdFeed(mangaId, options),
   );
-
-  // data?.data.data.forEach(
-  //     (c) => Utils.Mangadex.extendRelationship(c) as ExtendChapter,
-  // );
   if (data?.data.data) {
     for (const c of data.data.data) {
       extendRelationship(c);
