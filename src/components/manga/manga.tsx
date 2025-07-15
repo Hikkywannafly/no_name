@@ -1,39 +1,97 @@
-"use client"
+"use client";
 
+import { useState } from "react";
 import { WideContainer } from "@/components/layout/wideLayout";
 import HorizontalChapterPagination from "@/components/manga/chapterPagition";
 import Image from "@/components/shared/image";
 import Markdown from "@/components/shared/markDown";
 import { TagItem } from "@/components/shared/tag";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useMangadex } from "@/context/useManga";
 import useCuuTruyenData from "@/hooks/CuuTruyen/useCuuTruyenData";
 import useChapterList from "@/hooks/MangaDex/useChapterList";
 import type { ExtendManga } from "@/types/mangadex";
+import { convertCuuTruyen1 } from "@/utils";
 import { getCoverArt, getMangaTitle, getTagName } from "@/utils/mangadex";
 import { AspectRatio } from "@radix-ui/react-aspect-ratio";
+
 interface MangaProps {
-  mangaId: string
-  name?: string
-  prefetchManga?: ExtendManga
+  mangaId: string;
+  name?: string;
+  prefetchManga?: ExtendManga;
+}
+
+interface DescriptionSource {
+  label: string;
+  value: string;
+  description: string;
+  language?: string;
 }
 
 export function Manga(props: MangaProps) {
-  const { mangaId, prefetchManga } = props
-  const { mangas } = useMangadex()
-  const manga = mangas[mangaId] || prefetchManga
-  const { chapters: mangaDexData } = useChapterList(mangaId, { translatedLanguage: ["vi"] });
-  const { data: cuuTruyenData } = useCuuTruyenData(getMangaTitle(manga, { local: "en" }).toString());
-  const sources = [
-    { label: "CuuTruyen", value: "cuutruyen", chapters: cuuTruyenData.chapters || [] },
+  const { mangaId, prefetchManga } = props;
+  const { mangas } = useMangadex();
+  const manga = mangas[mangaId] || prefetchManga;
+  const { chapters: mangaDexData } = useChapterList(mangaId, {
+    translatedLanguage: ["vi"],
+  });
+  const { data: cuuTruyenData } = useCuuTruyenData(
+    getMangaTitle(manga, { local: "en" }).toString(),
+  );
+
+  // Description sources
+  const descriptionSources: DescriptionSource[] = [
+    {
+      label: "CuuTruyen (Tiếng Việt)",
+      value: "cuutruyen",
+      description: cuuTruyenData.description || "",
+      language: "vi",
+    },
+    {
+      label: "MangaDex (Tiếng Việt)",
+      value: "mangadx-vi",
+      description: manga?.attributes?.description?.vi || "",
+      language: "vi",
+    },
+    {
+      label: "MangaDex (English)",
+      value: "mangadx-en",
+      description: manga?.attributes?.description?.en || "",
+      language: "en",
+    },
+  ].filter((source) => source.description.trim() !== "");
+
+  const [selectedDescriptionSource, setSelectedDescriptionSource] = useState(
+    descriptionSources.length > 0 ? descriptionSources[0].value : "",
+  );
+
+  const currentDescription =
+    descriptionSources.find(
+      (source) => source.value === selectedDescriptionSource,
+    )?.description || "No description available.";
+
+  const chapterSources = [
+    {
+      label: "CuuTruyen",
+      value: "cuutruyen",
+      chapters: cuuTruyenData.chapters || [],
+    },
     { label: "MangaDex", value: "mangadex", chapters: mangaDexData },
   ];
-  // const [selectedSource] = useState(
-  //   sources.reduce((max, s) => (s.chapters.length > max.chapters.length ? s : max), sources[0]).value
-  // );
+
+  const unified = convertCuuTruyen1(cuuTruyenData);
+
   console.log("Manga Data:", mangaDexData, manga);
   console.log("CuuTruyen Data:", cuuTruyenData);
+  console.log("Unified Manga:", unified);
+
   return (
     <div className="w-full">
       {/* Hero Background Section */}
@@ -49,7 +107,6 @@ export function Manga(props: MangaProps) {
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-black/60" />
         </div>
-
         {/* Content overlay */}
         <div className="absolute right-0 bottom-0 left-0 ">
           <WideContainer classNames="lg:max-w-[1200px]">
@@ -67,7 +124,6 @@ export function Manga(props: MangaProps) {
                   </AspectRatio>
                 </div>
               </div>
-
               {/* Manga Info */}
               <div className="flex-1 space-y-4 text-center md:text-left">
                 <div className="flex flex-col gap-3 sm:flex-row">
@@ -89,57 +145,65 @@ export function Manga(props: MangaProps) {
                         <SelectItem value="plan-to-read" className="text-white">
                           Plan to Read
                         </SelectItem>
-                        <SelectItem value="dropped" className="text-white hover:bg-gray-700">
+                        <SelectItem
+                          value="dropped"
+                          className="text-white hover:bg-gray-700"
+                        >
                           Dropped
                         </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                 </div>
-
                 <div className="space-y-2">
-                  <h1 className="font-bold text-2xl text-white md:text-3xl lg:text-4xl">{getMangaTitle(manga)}</h1>
-                  <p className="text-gray-300 text-sm md:text-base">{getMangaTitle(manga, { allTitle: true })}</p>
+                  <h1 className="font-bold text-2xl text-white md:text-3xl lg:text-4xl">
+                    {getMangaTitle(manga)}
+                  </h1>
+                  <p className="text-gray-300 text-sm md:text-base">
+                    {getMangaTitle(manga, { allTitle: true })}
+                  </p>
                 </div>
-
-                {/* Genre Tags */}
-                {/* <div className="flex flex-wrap justify-center gap-2 md:justify-start">
-                  {manga?.attributes?.tags?.slice(0, 3).map((tag) => (
-                    <span
-                      key={tag.id}
-                      className="rounded-full bg-white/20 px-3 py-1 text-sm text-white backdrop-blur-sm"
-                    >
-                      {getTagName(tag)}
-                    </span>
-                  ))}
-                </div> */}
-
-                {/* Action Buttons */}
-
               </div>
             </div>
           </WideContainer>
         </div>
-      </div >
+      </div>
       <div className=" text-white">
         <WideContainer classNames="lg:max-w-[1200px] py-8 md:py-12">
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+          {/* Description with Source Selection */}
+          <div className="space-y-4">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <h2 className="font-semibold text-xl">Mô tả</h2>
+              {descriptionSources.length > 1 && (
+                <Select
+                  value={selectedDescriptionSource}
+                  onValueChange={setSelectedDescriptionSource}
+                >
+                  <SelectTrigger className="w-full border-gray-600 bg-gray-800 text-white sm:w-64">
+                    <SelectValue placeholder="Chọn nguồn mô tả" />
+                  </SelectTrigger>
+                  <SelectContent className="border-gray-600 bg-gray-800">
+                    {descriptionSources.map((source) => (
+                      <SelectItem
+                        key={source.value}
+                        value={source.value}
+                        className="text-white hover:bg-gray-700"
+                      >
+                        {source.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            </div>
+            <div className="text-gray-300 leading-relaxed">
+              <Markdown content={currentDescription} />
+            </div>
+          </div>
+
+          <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-3">
             {/* Main Content */}
             <div className="space-y-6 lg:col-span-2">
-              {/* Description */}
-              <div className="space-y-3">
-                <h2 className="font-semibold text-xl">Mô tả</h2>
-                <div className="text-gray-300 leading-relaxed">
-                  <Markdown
-                    content={
-                      manga?.attributes?.description?.vi ||
-                      manga?.attributes?.description?.en ||
-                      "No description available."
-                    }
-                  />
-                </div>
-              </div>
-
               {/* All Tags */}
               <div className="space-y-3">
                 <h2 className="font-semibold text-xl">Tags</h2>
@@ -156,45 +220,56 @@ export function Manga(props: MangaProps) {
                 </div>
               </div>
             </div>
-
             {/* Sidebar Info */}
             <div className="space-y-6">
               <div className="space-y-4 rounded-lg bg-gray-800 p-6">
                 <h3 className="font-semibold text-lg">Information</h3>
-
                 <div className="space-y-3">
                   <div className="flex justify-between">
                     <span className="text-gray-400">Status</span>
-                    <span className="text-green-400">{manga?.attributes?.status || "Unknown"}</span>
+                    <span className="text-green-400">
+                      {manga?.attributes?.status || "Unknown"}
+                    </span>
                   </div>
-
                   <div className="flex justify-between">
                     <span className="text-gray-400">Year</span>
                     <span>{manga?.attributes?.year || "Unknown"}</span>
                   </div>
-
                   <div className="flex justify-between">
                     <span className="text-gray-400">Country</span>
-                    <span className="uppercase">{manga?.attributes?.originalLanguage || "JP"}</span>
+                    <span className="uppercase">
+                      {manga?.attributes?.originalLanguage || "JP"}
+                    </span>
                   </div>
                 </div>
-
                 <div className="border-gray-700 border-t pt-4">
                   <Select>
                     <SelectTrigger className="w-full border-gray-600 bg-gray-700 text-white">
                       <SelectValue placeholder="Add to reading list" />
                     </SelectTrigger>
                     <SelectContent className="border-gray-600 bg-gray-800">
-                      <SelectItem value="reading" className="text-white hover:bg-gray-700">
+                      <SelectItem
+                        value="reading"
+                        className="text-white hover:bg-gray-700"
+                      >
                         Currently Reading
                       </SelectItem>
-                      <SelectItem value="completed" className="text-white hover:bg-gray-700">
+                      <SelectItem
+                        value="completed"
+                        className="text-white hover:bg-gray-700"
+                      >
                         Completed
                       </SelectItem>
-                      <SelectItem value="plan-to-read" className="text-white hover:bg-gray-700">
+                      <SelectItem
+                        value="plan-to-read"
+                        className="text-white hover:bg-gray-700"
+                      >
                         Plan to Read
                       </SelectItem>
-                      <SelectItem value="dropped" className="text-white hover:bg-gray-700">
+                      <SelectItem
+                        value="dropped"
+                        className="text-white hover:bg-gray-700"
+                      >
                         Dropped
                       </SelectItem>
                     </SelectContent>
@@ -203,26 +278,20 @@ export function Manga(props: MangaProps) {
               </div>
             </div>
           </div>
-
-          <div className="mt-4 flex w-full flex-row items-center justify-between">
+          <div className="mt-8 flex w-full flex-row items-center justify-between">
             <h2 className="font-semibold text-xl">Chương truyện</h2>
             <div className="">
-
-              {/* <Select value={selectedSource} onValueChange={setSelectedSource}>
-                {sources.map((src) => (
-                  <SelectItem key={src.value} value={src.value}>
-                    {src.label} ({src.chapters.length})
-                  </SelectItem>
-                ))}
-              </Select> */}
-
               <Select>
                 <SelectTrigger className="w-full bg-gray-800 text-white">
                   <SelectValue placeholder="Select Source" />
                 </SelectTrigger>
                 <SelectContent className="bg-gray-800">
-                  {sources.map((src) => (
-                    <SelectItem key={src.value} value={src.value} className="text-white hover:bg-gray-700">
+                  {chapterSources.map((src) => (
+                    <SelectItem
+                      key={src.value}
+                      value={src.value}
+                      className="text-white hover:bg-gray-700"
+                    >
                       {src.label} ({src.chapters.length})
                     </SelectItem>
                   ))}
@@ -233,12 +302,9 @@ export function Manga(props: MangaProps) {
           <HorizontalChapterPagination
             chapters={cuuTruyenData?.chapters || []}
             rangeSize={10}
-          // onChapterSelect={(chapter) => {
-          //   console.log("Selected chapter:", chapter);
-          // }}
           />
         </WideContainer>
       </div>
-    </div >
-  )
+    </div>
+  );
 }

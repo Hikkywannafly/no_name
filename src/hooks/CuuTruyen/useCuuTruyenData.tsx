@@ -1,5 +1,6 @@
 import type { Manga } from "@/provider/CuuTruyen/type";
 import useSWR from "swr";
+// import {convertCuuTruyen1} from "@/utils";
 
 export default function useCuuTruyenData(name: string | null) {
   const fetcher = (url: string) => fetch(url).then((res) => res.json());
