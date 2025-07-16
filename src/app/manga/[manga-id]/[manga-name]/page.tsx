@@ -3,11 +3,11 @@ import { Manga } from "@/components/manga/manga";
 import { getMediaDetails } from "@/provider/Anilist";
 import { MediaType } from "@/types/anilist";
 type MangaPageProps = {
-  params: { "manga-id": string; "manga-name": string };
+  params: { "manga-id": number; "manga-name": string };
 };
 
 export default async function MangaPage({ params }: MangaPageProps) {
-  const { "manga-id": mangaId, "manga-name": mangaName } = await params;
+  const { "manga-id": mangaId, "manga-name": mangaName } = params;
   const mangaData = await getMediaDetails({
     id: Number(mangaId),
     type: MediaType.Manga,
