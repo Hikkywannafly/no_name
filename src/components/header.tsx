@@ -51,7 +51,7 @@ const Header = () => {
               href="/"
               className="cursor-pointer whitespace-nowrap font-semibold text-xl opacity-80"
             >
-              NONAME
+              NONAMEE
             </Link>
           </div>
 
@@ -134,7 +134,7 @@ const Header = () => {
                 options={GENRES_COMICS}
                 show={true}
                 isMore={false}
-                onClose={() => {}}
+                onClose={() => { }}
               />
             </div>
             <div className="py-2">
@@ -145,7 +145,7 @@ const Header = () => {
                 options={RANKING_COMICS}
                 show={true}
                 isMore={false}
-                onClose={() => {}}
+                onClose={() => { }}
               />
             </div>
             <button
