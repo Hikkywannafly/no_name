@@ -7,7 +7,7 @@ export const SOURCE_CONFIGS: SourceConfig[] = [
     displayName: "Cứu Truyện",
     baseUrl: "https://cuutruyen.net",
     isActive: true,
-    priority: 10, 
+    priority: 10,
     supportedLanguages: ["vi"],
     features: {
       hasBanner: false,

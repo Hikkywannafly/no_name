@@ -43,7 +43,6 @@ export default function Markdown({
   };
 
   const components: Options["components"] = {
-    // Enhanced link component
     a: ({ href, children, ...props }) => {
       const isExternal = href?.startsWith("http");
       const linkProps = isExternal
@@ -123,7 +122,6 @@ export default function Markdown({
       );
     },
 
-    // Enhanced headings
     h1: ({ children, ...props }) => (
       <h1
         className="mt-8 mb-4 border-gray-700 border-b pb-2 font-bold text-3xl text-white"
@@ -237,7 +235,7 @@ export default function Markdown({
 
       {/* Gradient overlay and Read more button - only show when content is truncated */}
       {isLong && !expanded && (
-        <div className="absolute right-0 bottom-0 left-0 flex h-20 items-end justify-center bg-gradient-to-t from-black via-black/80 to-transparent pb-4">
+        <div className="absolute right-0 bottom-0 left-0 flex h-20 items-end justify-center from-black via-black/20 to-transparent pb-4 hover:bg-gradient-to-t">
           <button
             type="button"
             onClick={() => setExpanded(true)}
@@ -250,11 +248,11 @@ export default function Markdown({
 
       {/* Simple collapse button for expanded content - only on hover, no permanent gradient */}
       {expanded && isLong && (
-        <div className="mt-4 flex justify-center">
+        <div className="mt-4 flex justify-center from-black via-black/20 to-transparent pb-4 hover:bg-gradient-to-t">
           <button
             type="button"
             onClick={() => setExpanded(false)}
-            className="font-medium text-gray-400 opacity-0 transition-opacity duration-300 hover:text-white group-hover:opacity-100"
+            className="font-medium text-gray-400 opacity-0 transition-opacity duration-300 hover:text-white group-hover:opacity-100 "
           >
             Rút gọn
           </button>

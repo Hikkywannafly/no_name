@@ -2,9 +2,9 @@ import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 
 import { ThemeProvider } from "@/components/theme";
-import { Analytics } from "@vercel/analytics/react";
-
+import { AnilistContextProvider } from "@/context/useAnilist";
 import { OpenGraph } from "@/lib/og";
+import { Analytics } from "@vercel/analytics/react";
 import NextTopLoader from "nextjs-toploader";
 import "./globals.css";
 
@@ -32,20 +32,22 @@ export default function RootLayout({
         className={`${inter.variable} font-sans antialiased`}
         suppressHydrationWarning
       >
-        <ThemeProvider>
-          <NextTopLoader
-            zIndex={1000}
-            easing="ease-in-out"
-            speed={400}
-            height={4}
-            showSpinner={false}
-            template={`
+        <AnilistContextProvider>
+          <ThemeProvider>
+            <NextTopLoader
+              zIndex={1000}
+              easing="ease-in-out"
+              speed={400}
+              height={4}
+              showSpinner={false}
+              template={`
         <div class="bar bg-web-title" role="bar"><div class="peg"></div></div> 
   <div class="spinner text-web-title" role="spinner"><div class="spinner-icon"></div></div>`}
-          />
-          <main>{children}</main>
-          <Analytics />
-        </ThemeProvider>
+            />
+            <main>{children}</main>
+            <Analytics />
+          </ThemeProvider>
+        </AnilistContextProvider>
       </body>
     </html>
   );

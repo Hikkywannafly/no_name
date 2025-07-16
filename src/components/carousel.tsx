@@ -4,8 +4,11 @@
 import Image from "@/components/shared/image";
 import Skeleton from "@/components/shared/sekeleton";
 import { Constants } from "@/constants";
-import { useFeaturedManga } from "@/hooks/MangaDex";
-import { getCoverArt, getMangaTitle } from "@/utils/mangadex";
+import useMedia from "@/hooks/Anilist/useMedia";
+import { useIsMobile } from "@/hooks/useIsMoblie";
+import type {} from "@/types/anilist";
+import { MediaSort, MediaType } from "@/types/anilist";
+import { getTitle } from "@/utils";
 import Link from "next/link";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -14,17 +17,14 @@ import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { AspectRatio } from "./ui";
 export default function MangaCarousel() {
-  const {
-    mangaList: mangas,
-    isLoading,
-    // error,
-    // mutate,
-  } = useFeaturedManga({});
-  console.log("Manga Carousel Data:", mangas);
-  console.log(
-    "Manga title",
-    mangas.map((manga) => manga.attributes?.altTitles || "Unknown Title"),
-  );
+  const { isMobile } = useIsMobile();
+
+  const { data: mangas, isLoading } = useMedia({
+    type: MediaType.Manga,
+    sort: [MediaSort.Trending_desc, MediaSort.Popularity_desc],
+    perPage: 10,
+  });
+  console.log("devices", isMobile);
   return (
     <div className="-mx-[50vw] relative right-1/2 left-1/2 w-screen">
       {isLoading ? (
@@ -48,37 +48,41 @@ export default function MangaCarousel() {
             delay: 155000,
             disableOnInteraction: false,
           }}
-          className="my-swiper-container" // Add a custom class for styling
+          className="my-swiper-container"
         >
-          {mangas.map((manga) => (
+          {mangas?.map((manga) => (
             <SwiperSlide key={manga.id}>
               <div className="relative flex h-[350px] items-center overflow-hidden rounded-lg bg-gradient-to-r from-black/80 to-transparent p-8">
                 <div className="absolute inset-0 h-full w-full">
                   <Image
                     fill
-                    src={getCoverArt(manga)}
-                    title="Cover Art"
-                    className="h-full w-full object-cover opacity-80 blur-md"
-                    style={{ zIndex: 0 }}
-                    alt={
-                      manga.attributes?.title?.vn ||
-                      manga.attributes?.title?.en ||
-                      "Unknown Title"
+                    src={
+                      manga.bannerImage ||
+                      "https://via.placeholder.com/1920x1080?text=No+Banner"
                     }
+                    title="Cover Art"
+                    className="h-full w-full object-cover opacity-80 blur-sm"
+                    style={{ zIndex: 0 }}
+                    priority
+                    alt={"Unknown Title"}
                   />
                   <div className="absolute inset-0 z-10 bg-black/60" />
                 </div>
                 <Link
                   className="relative z-10 mx-auto mt-[50px] flex w-full items-center gap-6 lg:max-w-[1200px]"
-                  href={Constants.router.manga(manga.id)}
+                  href={`${Constants.router.manga(manga.id, getTitle(manga))}`}
                 >
+                  `
                   <div className="h-60 w-40 shrink-0 overflow-hidden rounded-lg shadow-lg">
                     <AspectRatio
                       ratio={2 / 3}
                       className="overflow-hidden rounded-lg shadow-lg"
                     >
                       <Image
-                        src={getCoverArt(manga)}
+                        src={
+                          manga.coverImage?.large ||
+                          "https://via.placeholder.com/400x600?text=No+Cover"
+                        }
                         alt="Manga Cover"
                         fill
                         className="h-full w-full rounded-lg object-cover shadow-lg"
@@ -87,7 +91,7 @@ export default function MangaCarousel() {
                   </div>
                   <div className="flex w-full flex-col justify-center">
                     <h2 className="mb-2 font-bold text-2xl text-white">
-                      {getMangaTitle(manga) || "Unknown Title"}
+                      {getTitle(manga, "vi")}
                     </h2>
                   </div>
                 </Link>
@@ -99,15 +103,3 @@ export default function MangaCarousel() {
     </div>
   );
 }
-
-// You can add custom styles for Swiper navigation/pagination in your global CSS
-/*
-.my-swiper-container .swiper-button-next,
-.my-swiper-container .swiper-button-prev {
-  color: #fff;
-}
-
-.my-swiper-container .swiper-pagination-bullet-active {
-  background-color: #fff;
-}
-*/

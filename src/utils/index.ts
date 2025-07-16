@@ -1,9 +1,10 @@
 // import type { Chapter, ChapterRange } from "../types/chapter"
 import type { Manga, MangaChapter } from "@/provider/CuuTruyen/type";
+import type { Media } from "@/types/anilist";
 import type { ChapterSource } from "@/types/manga";
-import type { ExtendChapter } from "@/types/mangadex";
+import type { ExtendChapter, ExtendManga } from "@/types/mangadex";
 import type { UnifiedChapter, UnifiedManga } from "@/types/unified";
-
+import { getCoverArt, getMangaTitle } from "@/utils/mangadex";
 export function groupChaptersIntoRanges(
   chapters: any[],
   rangeSize = 10,
@@ -105,3 +106,33 @@ export function convertCuuTruyen1(manga: Manga): UnifiedManga {
     })),
   };
 }
+
+export function convertMangaDex(
+  manga: ExtendManga,
+  chapters: ExtendChapter[] = [],
+): UnifiedManga {
+  return {
+    id: manga.id,
+    title: getMangaTitle(manga).toString(),
+    coverUrl: getCoverArt(manga),
+    description:
+      manga.attributes.description.vi ||
+      manga.attributes.description.en ||
+      Object.values(manga.attributes.description)[0] ||
+      null,
+    source: "mangadex",
+    chapters: convertMangaDexChapters(chapters),
+  };
+}
+
+export const getTitle = (data: Media, locale?: string) => {
+  const translations = data?.translations || [];
+
+  const translation = translations.find((trans) => trans.locale === locale);
+
+  if (!translation) {
+    return data?.title?.userPreferred;
+  }
+
+  return translation.title || data?.title?.userPreferred;
+};

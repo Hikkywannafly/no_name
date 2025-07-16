@@ -1,5 +1,5 @@
 import type { DropDownItem } from "@/components/shared/dropDown";
-
+import slugify from "slugify";
 export const GENRES_COMICS: DropDownItem[] = [
   { label: "Action", href: "Action" },
   { label: "Adventure", href: "Adventure" },
@@ -80,7 +80,8 @@ export const REVALIDATE_TIME = 24 * 60 * 60; // 24 hours
 
 export class Constants {
   static readonly router = {
-    manga: (id: string) => `/manga/${id}`,
+    manga: (id: number, name: string) =>
+      `/manga/${id}/${slugify(name, { lower: true, strict: true })}`,
   };
   api = {};
 }
