@@ -2,14 +2,20 @@ import BaseLayout from "@/app/baseLayout";
 import { Manga } from "@/components/manga/manga";
 import { getMediaDetails } from "@/provider/Anilist";
 import { MediaType } from "@/types/anilist";
-type MangaPageProps = {
-  params: { "manga-id": number; "manga-name": string };
+
+type PageProps = {
+  params: {
+    "manga-id": string;
+    "manga-name": string;
+  };
 };
 
-export default async function MangaPage({ params }: MangaPageProps) {
-  const { "manga-id": mangaId, "manga-name": mangaName } = params;
+export default async function MangaPage({ params }: PageProps) {
+  const mangaId = Number(params["manga-id"]);
+  const mangaName = params["manga-name"];
+
   const mangaData = await getMediaDetails({
-    id: Number(mangaId),
+    id: mangaId,
     type: MediaType.Manga,
   });
 
@@ -17,7 +23,7 @@ export default async function MangaPage({ params }: MangaPageProps) {
     <BaseLayout showHeader={true} showFooter={true}>
       <div className="">
         <Manga
-          mangaId={Number(mangaId)}
+          mangaId={mangaId}
           name={mangaName}
           prefetchManga={mangaData}
         />
