@@ -1,1 +1,1 @@
-export { AspectRatio } from "./aspect-radio";
+export { AspectRatio } from "./aspect-ratio";

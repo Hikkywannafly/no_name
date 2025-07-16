@@ -8,14 +8,6 @@ type MangaPageProps = {
 
 export default async function MangaPage({ params }: MangaPageProps) {
   const { "manga-id": mangaId, "manga-name": mangaName } = await params;
-  // manga name bi the nay muhanui-mabeopsa toi muon ko con dang slug nua
-  // const mangaName = params["manga-name"].split("-").join(" ");
-
-  // const {
-  //   data: { data: manga },
-  // } = await MangadexApi.Manga.getMangaId(mangaID, {
-  //   includes: [MangadexApi.Static.Includes.COVER_ART],
-  // });
   const mangaData = await getMediaDetails({
     id: Number(mangaId),
     type: MediaType.Manga,

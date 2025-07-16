@@ -18,21 +18,13 @@ import useCuuTruyenData from "@/hooks/CuuTruyen/useCuuTruyenData";
 import type { Media } from "@/types/anilist";
 import { convertCuuTruyen1 } from "@/utils";
 import { AspectRatio } from "@radix-ui/react-aspect-ratio";
-import { useState } from "react";
+import { memo, useCallback, useMemo, useState } from "react";
 interface MangaProps {
   mangaId: number;
   name?: string;
   prefetchManga?: Media;
 }
-
-interface DescriptionSource {
-  label: string;
-  value: string;
-  description: string;
-  language?: string;
-}
-
-export function Manga(props: MangaProps) {
+export const Manga = memo(function Manga(props: MangaProps) {
   const { mangaId, prefetchManga } = props;
   const { mediaCache } = useAnilist();
 
@@ -51,75 +43,85 @@ export function Manga(props: MangaProps) {
   //   translatedLanguage: ["vi"],
   // });
   const { data: cuuTruyenData } = useCuuTruyenData(
-    manga?.title?.userPreferred ||
-      manga?.title?.english ||
-      manga?.title?.native ||
-      "",
+    manga?.title?.userPreferred || "",
+    // manga?.title?.english ||
+    // manga?.title?.native ||
   );
   console.log("Manga Data:", manga);
 
-  // Description sources
-  const descriptionSources: DescriptionSource[] = [
-    {
-      label: "Anilist (English)",
-      value: "anilist-en",
-      description: manga?.description || "",
-      language: "en",
-    },
-    {
-      label: "CuuTruyen (Tiếng Việt)",
-      value: "cuutruyen",
-      description: cuuTruyenData.description || "",
-      language: "vi",
-    },
-    // {
-    //   label: "MangaDex (Tiếng Việt)",
-    //   value: "mangadx-vi",
-    //   description: manga?.attributes?.description?.vi || "",
-    //   language: "vi",
-    // },
-    // {
-    //   label: "MangaDex (English)",
-    //   value: "mangadx-en",
-    //   description: manga?.attributes?.description?.en || "",
-    //   language: "en",
-    // },
-  ].filter((source) => source.description.trim() !== "");
-
+  // Memoize expensive calculations
+  const descriptionSources = useMemo(
+    () =>
+      [
+        {
+          label: "Anilist (English)",
+          value: "anilist-en",
+          description: manga?.description || "",
+          language: "en",
+        },
+        {
+          label: "CuuTruyen (Tiếng Việt)",
+          value: "cuutruyen",
+          description: cuuTruyenData.description || "",
+          language: "vi",
+        },
+      ].filter((source) => source.description.trim() !== ""),
+    [manga?.description, cuuTruyenData.description],
+  );
+  const defaultDescriptionSource = useMemo(
+    () => (descriptionSources.length > 0 ? descriptionSources[0].value : ""),
+    [descriptionSources],
+  );
   const [selectedDescriptionSource, setSelectedDescriptionSource] = useState(
-    descriptionSources.length > 0 ? descriptionSources[0].value : "",
+    defaultDescriptionSource,
   );
 
-  const currentDescription =
-    descriptionSources.find(
-      (source) => source.value === selectedDescriptionSource,
-    )?.description || "No description available.";
-
-  const chapterSources = [
-    {
-      label: "CuuTruyen",
-      value: "cuutruyen",
-      chapters: cuuTruyenData.chapters || [],
-    },
-    // { label: "MangaDex", value: "mangadex", chapters: mangaDexData },
-    // Add more sources here if needed
-  ];
-
-  // Find the source with the most chapters for default selection
-  const defaultChapterSource = chapterSources.reduce(
-    (max, src) => (src.chapters.length > max.chapters.length ? src : max),
-    chapterSources[0],
+  const currentDescription = useMemo(
+    () =>
+      descriptionSources.find(
+        (source) => source.value === selectedDescriptionSource,
+      )?.description || "No description available.",
+    [descriptionSources, selectedDescriptionSource],
   );
 
-  // State for selected chapter source
-  const [selectedChapterSource, setSelectedChapterSource] = useState(
-    defaultChapterSource.value,
+  const chapterSources = useMemo(
+    () => [
+      {
+        label: "CuuTruyen",
+        value: "cuutruyen",
+        chapters: cuuTruyenData.chapters || [],
+      },
+      // { label: "MangaDex", value: "mangadex", chapters: mangaDexData },
+      // Add more sources here if needed
+    ],
+    [cuuTruyenData.chapters],
+  );
+  const defaultChapterSource = useMemo(
+    () =>
+      chapterSources.reduce(
+        (max, src) => (src.chapters.length > max.chapters.length ? src : max),
+        chapterSources[0],
+      ).value,
+    [chapterSources],
+  );
+  const [selectedChapterSource, setSelectedChapterSource] =
+    useState(defaultChapterSource);
+
+  const handleDescriptionChange = useCallback(
+    (value: string) => setSelectedDescriptionSource(value),
+    [],
+  );
+  const handleChapterSourceChange = useCallback(
+    (value: string) => setSelectedChapterSource(value),
+    [],
   );
 
-  // Find the chapters for the selected source
-  const selectedChapters =
-    chapterSources.find((src) => src.value === selectedChapterSource)
-      ?.chapters || [];
+  const selectedChapters = useMemo(
+    () =>
+      chapterSources.find((src) => src.value === selectedChapterSource)
+        ?.chapters || [],
+    [chapterSources, selectedChapterSource],
+  );
 
   const unified = convertCuuTruyen1(cuuTruyenData);
 
@@ -169,7 +171,10 @@ export function Manga(props: MangaProps) {
                     Đọc ngay
                   </Button>
                   <div className="">
-                    <Select>
+                    <Select
+                      value={selectedDescriptionSource}
+                      onValueChange={handleDescriptionChange}
+                    >
                       <SelectTrigger className="w-full text-white">
                         <SelectValue placeholder="Add to reading list" />
                       </SelectTrigger>
@@ -222,7 +227,7 @@ export function Manga(props: MangaProps) {
               {descriptionSources.length > 1 && (
                 <Select
                   value={selectedDescriptionSource}
-                  onValueChange={setSelectedDescriptionSource}
+                  onValueChange={handleDescriptionChange}
                 >
                   <SelectTrigger className="w-full border-gray-600 bg-gray-800 text-white sm:w-64">
                     <SelectValue placeholder="Chọn nguồn mô tả" />
@@ -285,7 +290,10 @@ export function Manga(props: MangaProps) {
                   </div>
                 </div> */}
                 <div className="border-gray-700 border-t pt-4">
-                  <Select>
+                  <Select
+                    value={selectedChapterSource}
+                    onValueChange={handleChapterSourceChange}
+                  >
                     <SelectTrigger className="w-full border-gray-600 bg-gray-700 text-white">
                       <SelectValue placeholder="Add to reading list" />
                     </SelectTrigger>
@@ -326,7 +334,7 @@ export function Manga(props: MangaProps) {
             <div className="">
               <Select
                 value={selectedChapterSource}
-                onValueChange={setSelectedChapterSource}
+                onValueChange={handleChapterSourceChange}
               >
                 <SelectTrigger className="w-full text-white">
                   <SelectValue placeholder="Select Source" />
@@ -355,4 +363,4 @@ export function Manga(props: MangaProps) {
       </div>
     </div>
   );
-}
+});
