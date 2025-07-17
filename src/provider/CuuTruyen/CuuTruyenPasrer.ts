@@ -1,12 +1,11 @@
-import axios, { type AxiosInstance } from "axios";
-
+// import {SOURCE_CONFIGS} from "@/config/sources";
 import {
   type ApiResponse,
   type ChapterDetailResponse,
   type ChapterListResponse,
   ContentRating,
   type Manga,
-  type MangaChapter,
+  // type MangaChapter,
   type MangaDetailResponse,
   type MangaListFilter,
   type MangaListFilterCapabilities,
@@ -18,6 +17,7 @@ import {
   type ParserConfig,
   SortOrder,
 } from "@/provider/CuuTruyen/type";
+import axios, { type AxiosInstance } from "axios";
 
 export class CuuTruyenParser {
   private readonly config: ParserConfig;
@@ -52,7 +52,8 @@ export class CuuTruyenParser {
   }
 
   private generateUid(id: number): string {
-    return `${this.config.source}_${id}`;
+    // return `${this.config.source}_${id}`;
+    return `${id}`;
   }
 
   private urlEncode(str: string): string {
@@ -163,7 +164,6 @@ export class CuuTruyenParser {
     ]);
 
     const details = detailsResponse.data.data;
-    console.log("Cuutruyen Paser details ", details);
     const tags = new Set<MangaTag>(
       (details.tags || []).map((tag: { name: string; slug: string }) => ({
         title: this.toTitleCase(tag.name),
@@ -200,7 +200,6 @@ export class CuuTruyenParser {
         source: this.config.source,
       }))
       .reverse();
-    console.log("Cuutruyen Paser chapter ", chapters);
     return {
       ...manga,
       title,
@@ -220,25 +219,42 @@ export class CuuTruyenParser {
     };
   }
 
-  async getPages(chapter: MangaChapter): Promise<MangaPage[]> {
-    const response = await this.http.get<ApiResponse<ChapterDetailResponse>>(
-      `https://${this.config.domain[0]}${chapter.url}`,
+  async getPages(chapter: any): Promise<MangaPage[] | any> {
+    const res = await this.http.get<ApiResponse<ChapterDetailResponse>>(
+      `https://${this.config.domain[0]}/api/v2/chapters/${chapter}`,
     );
-
-    return response.data.data.pages.map(
+    console.log("Cuutruyen Paser getPages res", res.data);
+    return res.data.data.pages.map(
       (page: { id: number; image_url: string; drm_data?: string }) => {
-        const imageUrl = new URL(page.image_url);
-        console.log(imageUrl);
-        if (page.drm_data) {
-          imageUrl.hash = this.DRM_DATA_KEY + page.drm_data;
-        }
+        // const imageUrl = new URL(page.image_url);
+        // if (page.drm_data) {
+        //   imageUrl.hash = this.DRM_DATA_KEY + page.drm_data;
+        // }
+
+        // export interface Page {
+        //   id: string;
+        //   chapterSourceId: string; // Reference to ChapterSource
+        //   pageNumber?: number;
+        //   imageUrl?: string;
+        //   drmData: string | null;
+        //   width?: number | null;
+        //   height?: number | null;
+        //   fileSize?: number | null;
+        //   createdAt?: Date;
+        // }
 
         return {
           id: this.generateUid(page.id),
-          url: imageUrl.toString(),
-          preview: null,
-          source: this.config.source,
-        };
+          chapterSourceId: chapter,
+          pageNumber: page.id, // Assuming page.id is the page number
+          imageUrl: page.image_url.toString(),
+          drmData: page.drm_data || null,
+          width: null, // Width not provided in the response
+          height: null, // Height not provided in the response
+          fileSize: null, // File size not provided in the response
+          createdAt: new Date(), // Assuming current date as createdAt
+        }
+
       },
     );
   }
@@ -259,9 +275,8 @@ export class CuuTruyenParser {
         url = `${baseUrl}/api/v2/tags/${tag.key}`;
       } else if (filter.states?.size === 1) {
         const state = Array.from(filter.states)[0];
-        url = `${baseUrl}/api/v2/tags/${
-          state === MangaState.ONGOING ? "dang-tien-hanh" : "da-hoan-thanh"
-        }`;
+        url = `${baseUrl}/api/v2/tags/${state === MangaState.ONGOING ? "dang-tien-hanh" : "da-hoan-thanh"
+          }`;
       } else {
         url = `${baseUrl}/api/v2/mangas`;
         switch (order) {

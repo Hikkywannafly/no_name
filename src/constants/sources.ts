@@ -1,6 +1,5 @@
 import type { MangaMergeStrategy, SourceConfig } from "@/types/manga";
 
-// Cấu hình các nguồn manga
 export const SOURCE_CONFIGS: SourceConfig[] = [
   {
     name: "cuutruyen",
@@ -18,6 +17,7 @@ export const SOURCE_CONFIGS: SourceConfig[] = [
       supportsDRM: true,
     },
   },
+
   {
     name: "nettruyen",
     displayName: "Net Truyện",
@@ -68,7 +68,6 @@ export const SOURCE_CONFIGS: SourceConfig[] = [
   },
 ];
 
-// Chiến lược merge dữ liệu
 export const MERGE_STRATEGY: MangaMergeStrategy = {
   title: "MOST_COMPLETE", // Lấy title dài nhất (thường đầy đủ nhất)
   description: "MOST_COMPLETE", // Lấy description dài nhất
@@ -78,20 +77,45 @@ export const MERGE_STRATEGY: MangaMergeStrategy = {
   tags: "UNION", // Gộp tất cả tags từ các nguồn
 };
 
-// Helper function để lấy cấu hình nguồn
 export function getSourceConfig(sourceName: string): SourceConfig | undefined {
   return SOURCE_CONFIGS.find((config) => config.name === sourceName);
 }
 
-// Helper function để lấy danh sách nguồn đang hoạt động
 export function getActiveSources(): SourceConfig[] {
   return SOURCE_CONFIGS.filter((config) => config.isActive);
 }
 
-// Helper function để lấy nguồn có priority cao nhất
+
 export function getHighestPrioritySource(): SourceConfig | undefined {
   const activeSources = getActiveSources();
   return activeSources.reduce((highest, current) =>
     current.priority > highest.priority ? current : highest,
   );
+}
+
+export const sourceInfo = {
+  cuutruyen: {
+    name: "source1",
+    baseUrl: "https://cuutruyen.net",
+    logo: "/logos/cuutruyen.png",
+    description: "Nơi lưu trữ và đọc truyện tranh miễn phí.",
+  },
+  nettruyen: {
+    name: "Net Truyện",
+    baseUrl: "https://nettruyen.com",
+    logo: "/logos/nettruyen.png",
+    description: "Kho truyện tranh lớn nhất Việt Nam.",
+  },
+  truyenqq: {
+    name: "Truyện QQ",
+    baseUrl: "https://truyenqq.com",
+    logo: "/logos/truyenqq.png",
+    description: "Đọc truyện tranh online chất lượng cao.",
+  },
+  truyenfull: {
+    name: "Truyện Full",
+    baseUrl: "https://truyenfull.vn",
+    logo: "/logos/truyenfull.png",
+    description: "Truyện ngắn, tiểu thuyết và nhiều thể loại khác.",
+  },
 }

@@ -1,4 +1,4 @@
-import { MERGE_STRATEGY, SOURCE_CONFIGS } from "@/config/sources";
+import { MERGE_STRATEGY, SOURCE_CONFIGS } from "@/constants/sources";
 import { SourceManager } from "@/provider/SourceManager";
 import type { MangaSource } from "@/types/manga";
 import { type NextRequest, NextResponse } from "next/server";
@@ -49,7 +49,6 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Helper function to group manga by title similarity
 function groupMangaByTitle(mangas: MangaSource[]): MangaSource[][] {
   const groups: MangaSource[][] = [];
   const processed = new Set<string>();
@@ -60,7 +59,6 @@ function groupMangaByTitle(mangas: MangaSource[]): MangaSource[][] {
     const group = [manga];
     processed.add(manga.id);
 
-    // Find similar titles
     for (const other of mangas) {
       if (processed.has(other.id)) continue;
 
@@ -80,6 +78,5 @@ function isSimilarTitle(title1: string, title2: string): boolean {
   const normalized1 = title1.toLowerCase().replace(/[^a-z0-9]/g, "");
   const normalized2 = title2.toLowerCase().replace(/[^a-z0-9]/g, "");
 
-  // Simple similarity check - can be improved with more sophisticated algorithms
   return normalized1.includes(normalized2) || normalized2.includes(normalized1);
 }

@@ -1,4 +1,4 @@
-import { MERGE_STRATEGY, SOURCE_CONFIGS } from "@/config/sources";
+import { MERGE_STRATEGY, SOURCE_CONFIGS } from "@/constants/sources";
 import { SourceManager } from "@/provider/SourceManager";
 import { type NextRequest, NextResponse } from "next/server";
 

@@ -66,13 +66,13 @@ export interface ChapterSource {
 export interface Page {
   id: string;
   chapterSourceId: string; // Reference to ChapterSource
-  pageNumber: number;
-  imageUrl: string;
+  pageNumber?: number;
+  imageUrl?: string;
   drmData: string | null;
-  width: number | null;
-  height: number | null;
-  fileSize: number | null;
-  createdAt: Date;
+  width?: number | null;
+  height?: number | null;
+  fileSize?: number | null;
+  createdAt?: Date;
 }
 
 // Source configuration

@@ -2,9 +2,12 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import {} from "@/components/ui/select";
+import { } from "@/components/ui/select";
+import { Constants } from "@/constants";
+// import type { UnifiedChapter } from "@/types/unified";
 // import type { Chapter, ChapterRange } from "../types/chapter"
 import { formatUploadDate, groupChaptersIntoRanges } from "@/utils";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 interface HorizontalChapterPaginationProps {
@@ -40,7 +43,6 @@ export default function HorizontalChapterPagination({
 
   return (
     <div className="w-full text-white">
-      {/* Horizontal Scrollable Range Pagination */}
       <div className="mb-6">
         <ScrollArea className="w-full whitespace-nowrap pb-3">
           <div className="flex space-x-2 p-2">
@@ -48,11 +50,10 @@ export default function HorizontalChapterPagination({
               <Button
                 key={`${range.startChapter}-${range.endChapter}`}
                 variant={selectedRangeIndex === index ? "default" : "secondary"}
-                className={`flex-shrink-0 rounded px-4 py-2 font-medium text-sm transition-colors ${
-                  selectedRangeIndex === index
-                    ? "bg-red-600 text-white "
-                    : "bg-black/50 text-white "
-                }`}
+                className={`flex-shrink-0 rounded px-4 py-2 font-medium text-sm transition-colors ${selectedRangeIndex === index
+                  ? "bg-red-600 text-white "
+                  : "bg-black/50 text-white "
+                  }`}
                 onClick={() => handleRangeSelect(index)}
               >
                 {range.label}
@@ -65,29 +66,34 @@ export default function HorizontalChapterPagination({
       <div className="space-y-3">
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
           {chapterRanges[selectedRangeIndex]?.chapters.map((chapter: any) => (
-            <Card
+            <Link
               key={chapter.id}
-              className="cursor-pointer bg-black/50 p-4 transition-colors hover:bg-gray-700"
-              onClick={() => handleChapterClick(chapter)}
-            >
-              <div className="flex flex-col space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="font-semibold text-white">
-                    Chapter {chapter.number}
-                  </span>
-                  <span className="text-gray-400 text-xs">
-                    {formatUploadDate(chapter.uploadDate)}
-                  </span>
+              className="no-underline"
+              href={Constants.router.chapter(chapter.id, chapter.source)} >
+              <Card
+                key={chapter.id}
+                className="cursor-pointer bg-black/50 p-4 transition-colors hover:bg-gray-700"
+                onClick={() => handleChapterClick(chapter)}
+              >
+                <div className="flex flex-col space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="font-semibold text-white">
+                      Chapter {chapter.number}
+                    </span>
+                    <span className="text-gray-400 text-xs">
+                      {formatUploadDate(chapter.uploadDate)}
+                    </span>
+                  </div>
+                  {chapter.title && (
+                    <div className="text-gray-300 text-sm">{chapter.title}</div>
+                  )}
+                  <div className="flex items-center justify-between text-gray-500 text-xs">
+                    <span>{chapter.scanlator}</span>
+                    <span className="capitalize">{chapter.source}</span>
+                  </div>
                 </div>
-                {chapter.title && (
-                  <div className="text-gray-300 text-sm">{chapter.title}</div>
-                )}
-                <div className="flex items-center justify-between text-gray-500 text-xs">
-                  <span>{chapter.scanlator}</span>
-                  <span className="capitalize">{chapter.source}</span>
-                </div>
-              </div>
-            </Card>
+              </Card>
+            </Link>
           ))}
         </div>
       </div>

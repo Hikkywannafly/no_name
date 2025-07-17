@@ -1,6 +1,6 @@
+import { sourceInfo } from "@/constants/sources";
 import { CuuTruyenParser } from "@/provider/CuuTruyen/CuuTruyenPasrer";
 import { type NextRequest, NextResponse } from "next/server";
-
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const name = searchParams.get("name");
@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
     domain: ["cuutruyen.net"],
     userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
     pageSize: 20,
-    source: "cuutruyen",
+    source: sourceInfo.cuutruyen.name,
     locale: "vi",
   });
 

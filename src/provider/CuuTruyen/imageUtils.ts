@@ -43,7 +43,7 @@ export async function unscrambleImage(
     );
     sourceY += height;
   }
-  console.log("Unscrambled image data:", resultData);
+
   return result;
 }
 

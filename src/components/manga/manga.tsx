@@ -49,9 +49,6 @@ export const Manga = memo(function Manga(props: MangaProps) {
   const { data: cuuTruyenData, isLoading: cuuTruyenLoading } = useCuuTruyenData(
     manga?.title?.userPreferred || "",
   );
-  console.log("Manga Data:", manga);
-
-  // Memoize expensive calculations
   const descriptionSources = useMemo(
     () =>
       [
