@@ -12,6 +12,36 @@ function Select({
   return <SelectPrimitive.Root data-slot="select" {...props} />;
 }
 
+function SelectLoading({
+  loadingText,
+  triggerClassName,
+  ...props
+}: React.ComponentProps<typeof SelectPrimitive.Root> & {
+  loadingText?: string;
+  triggerClassName?: string;
+}) {
+  return (
+    <SelectPrimitive.Root {...props}>
+      <SelectTrigger className={cn("gap-2 bg-black/50", triggerClassName)}>
+        <img
+          src="/loading-spin-white.svg"
+          alt="Loading"
+          className="h-4 w-4 animate-spin"
+        />
+        <span className="text-muted-foreground text-sm">{loadingText}</span>
+      </SelectTrigger>
+
+      {loadingText && (
+        <SelectContent>
+          <SelectItem value="placeholder" disabled>
+            {loadingText}
+          </SelectItem>
+        </SelectContent>
+      )}
+    </SelectPrimitive.Root>
+  );
+}
+
 function SelectGroup({
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Group>) {
@@ -177,6 +207,7 @@ export {
   SelectGroup,
   SelectItem,
   SelectLabel,
+  SelectLoading,
   SelectScrollDownButton,
   SelectScrollUpButton,
   SelectSeparator,

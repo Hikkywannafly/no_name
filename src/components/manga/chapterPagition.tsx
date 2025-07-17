@@ -1,5 +1,4 @@
 "use client";
-
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
@@ -36,14 +35,14 @@ export default function HorizontalChapterPagination({
   };
 
   if (chapterRanges.length === 0) {
-    return <div className="text-white">Loading chapters...</div>;
+    return <div className="text-white">Không có chương nào :( </div>;
   }
 
   return (
     <div className="w-full text-white">
       {/* Horizontal Scrollable Range Pagination */}
       <div className="mb-6">
-        <ScrollArea className="w-full whitespace-nowrap">
+        <ScrollArea className="w-full whitespace-nowrap pb-3">
           <div className="flex space-x-2 p-2">
             {chapterRanges.map((range, index) => (
               <Button
@@ -51,8 +50,8 @@ export default function HorizontalChapterPagination({
                 variant={selectedRangeIndex === index ? "default" : "secondary"}
                 className={`flex-shrink-0 rounded px-4 py-2 font-medium text-sm transition-colors ${
                   selectedRangeIndex === index
-                    ? "bg-red-600 text-white hover:bg-red-700"
-                    : "bg-gray-700 text-white hover:bg-gray-600"
+                    ? "bg-red-600 text-white "
+                    : "bg-black/50 text-white "
                 }`}
                 onClick={() => handleRangeSelect(index)}
               >
@@ -63,13 +62,12 @@ export default function HorizontalChapterPagination({
           <ScrollBar orientation="horizontal" className="bg-gray-800" />
         </ScrollArea>
       </div>
-
       <div className="space-y-3">
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
           {chapterRanges[selectedRangeIndex]?.chapters.map((chapter: any) => (
             <Card
               key={chapter.id}
-              className="cursor-pointer border-gray-700 bg-gray-800 p-4 transition-colors hover:bg-gray-700"
+              className="cursor-pointer bg-black/50 p-4 transition-colors hover:bg-gray-700"
               onClick={() => handleChapterClick(chapter)}
             >
               <div className="flex flex-col space-y-2">
@@ -81,11 +79,9 @@ export default function HorizontalChapterPagination({
                     {formatUploadDate(chapter.uploadDate)}
                   </span>
                 </div>
-
                 {chapter.title && (
                   <div className="text-gray-300 text-sm">{chapter.title}</div>
                 )}
-
                 <div className="flex items-center justify-between text-gray-500 text-xs">
                   <span>{chapter.scanlator}</span>
                   <span className="capitalize">{chapter.source}</span>

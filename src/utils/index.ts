@@ -136,3 +136,7 @@ export const getTitle = (data: Media, locale?: string) => {
 
   return translation.title || data?.title?.userPreferred;
 };
+
+export function numberWithCommas(x: any): any {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}

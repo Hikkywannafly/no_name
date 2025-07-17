@@ -1,1 +1,1 @@
-export { default as MangaCarousel } from "./carousel";
+export { default as MangaCarousel } from "./mangaSlide";
