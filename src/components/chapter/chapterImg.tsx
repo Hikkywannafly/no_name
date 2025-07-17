@@ -32,11 +32,15 @@ export default function ChapterImage({ imageUrl, drmData, title }: ChapterImageP
     if (!src) return <p>Loading image...</p>;
 
     return (
-        <Image
-            src={src}
-            alt={title || "Chapter Image"}
-            width={200}
-            height={300}
-        />
+        <div className="flex items-center justify-center">
+
+            <Image
+                src={src}
+                alt={title || "Chapter Image"}
+                width={1024}
+                height={1469}
+            />
+        </div>
+
     );
 }
