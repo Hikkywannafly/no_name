@@ -20,8 +20,9 @@ import { useAnilist } from "@/context/useAnilist";
 // import useMediaDetails from "@/hooks/Anilist/useMediaDetail";
 // import { MediaType } from "@/types/anilist";
 import useCuuTruyenData from "@/hooks/CuuTruyen/useCuuTruyenData";
+import useTruyenQQData from "@/hooks/TruyenQQ/useTruyenQQData";
 import type { Media } from "@/types/anilist";
-import { convertCuuTruyen1, numberWithCommas } from "@/utils";
+import { numberWithCommas } from "@/utils";
 import { AspectRatio } from "@radix-ui/react-aspect-ratio";
 import { memo, useCallback, useMemo, useState } from "react";
 interface MangaProps {
@@ -47,8 +48,14 @@ export const Manga = memo(function Manga(props: MangaProps) {
   //   translatedLanguage: ["vi"],
   // });
   const { data: cuuTruyenData, isLoading: cuuTruyenLoading } = useCuuTruyenData(
+    // `${manga?.title?.userPreferred}|${manga?.title?.english}` || "",
+    `${manga?.title?.userPreferred}` || `${manga?.title?.english}` || "",
+  );
+  const { data: truyenQQData, isLoading: truyenQQLoading } = useTruyenQQData(
     manga?.title?.userPreferred || "",
   );
+
+  console.log("TruyenQQ Data:", truyenQQData);
   const descriptionSources = useMemo(
     () =>
       [
@@ -59,14 +66,27 @@ export const Manga = memo(function Manga(props: MangaProps) {
           language: "en",
         },
         {
-          label: "CuuTruyen (Tiếng Việt)",
+          label: "CuuTruyen",
           value: "cuutruyen",
           description: cuuTruyenData.description || "",
           loading: cuuTruyenLoading,
           language: "vi",
         },
+        {
+          label: "TruyenQQ ",
+          value: "truyenqq",
+          description: truyenQQData?.description || "",
+          loading: truyenQQLoading,
+          language: "vi",
+        },
       ].filter((source) => source.description.trim() !== ""),
-    [manga?.description, cuuTruyenData.description, cuuTruyenLoading],
+    [
+      manga?.description,
+      cuuTruyenData.description,
+      cuuTruyenLoading,
+      truyenQQData?.description,
+      truyenQQLoading,
+    ],
   );
   const defaultDescriptionSource = useMemo(
     () => (descriptionSources.length > 0 ? descriptionSources[0].value : ""),
@@ -91,10 +111,19 @@ export const Manga = memo(function Manga(props: MangaProps) {
         chapters: cuuTruyenData.chapters || [],
         loading: cuuTruyenLoading,
       },
-      // { label: "MangaDex", value: "mangadex", chapters: mangaDexData },
-      // Add more sources here if needed
+      {
+        label: "TruyenQQ",
+        value: "truyenqq",
+        chapters: truyenQQData?.chapters || [],
+        loading: truyenQQLoading,
+      },
     ],
-    [cuuTruyenData.chapters, cuuTruyenLoading],
+    [
+      cuuTruyenData.chapters,
+      cuuTruyenLoading,
+      truyenQQData?.chapters,
+      truyenQQLoading,
+    ],
   );
   const defaultChapterSource = useMemo(
     () =>
@@ -123,8 +152,7 @@ export const Manga = memo(function Manga(props: MangaProps) {
     () => chapterSources.find((src) => src.value === selectedChapterSource),
     [chapterSources, selectedChapterSource],
   );
-  const unified = convertCuuTruyen1(cuuTruyenData);
-  console.log("Unified Manga:", unified);
+
   return (
     <div className="w-full">
       <div className="relative w-full">

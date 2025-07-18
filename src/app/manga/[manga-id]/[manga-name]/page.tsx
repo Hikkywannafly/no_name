@@ -3,6 +3,10 @@ import { Manga } from "@/components/manga/manga";
 import { getMediaDetails } from "@/provider/Anilist";
 import { MediaType } from "@/types/anilist";
 
+// export async function getServerSideProps() {
+
+// }
+
 export default async function MangaPage({
   params,
 }: {

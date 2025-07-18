@@ -26,12 +26,19 @@ export default function Markdown({
 }: MarkdownProps) {
   const [expanded, setExpanded] = useState(false);
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
+  const cleanContent = content
+    .replace(/\n\s*\n\s*\n/g, "\n\n") // Remove excessive line breaks
+    .replace(/^\s+|\s+$/g, "") // Trim whitespace
+    .replace(/\s+/g, " ") // Normalize spaces
+    .replace(
+      /\. ([A-ZÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ])/g,
+      ". $1",
+    );
 
-  const isLong = content.length > PREVIEW_CHAR_LIMIT;
+  const isLong = cleanContent.length > PREVIEW_CHAR_LIMIT;
   const previewContent = isLong
-    ? `${content.slice(0, PREVIEW_CHAR_LIMIT)}...`
-    : content;
-
+    ? `${cleanContent.slice(0, PREVIEW_CHAR_LIMIT)}...`
+    : cleanContent;
   const copyToClipboard = async (text: string, id: string) => {
     try {
       await navigator.clipboard.writeText(text);
@@ -229,7 +236,7 @@ export default function Markdown({
           rehypePlugins={[rehypeRaw, rehypeHighlight]}
           components={components}
         >
-          {expanded || !isLong ? content : previewContent}
+          {expanded || !isLong ? cleanContent : previewContent}
         </ReactMarkdown>
       </div>
 

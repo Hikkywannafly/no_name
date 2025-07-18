@@ -6,9 +6,9 @@ import type { ExtendChapter, ExtendManga } from "@/types/mangadex";
 import type { UnifiedChapter, UnifiedManga } from "@/types/unified";
 import { getCoverArt, getMangaTitle } from "@/utils/mangadex";
 export function groupChaptersIntoRanges(
-  chapters: any[],
+  chapters: any[] | MangaChapter[],
   rangeSize = 10,
-): any[] {
+): any[] | MangaChapter[] {
   // Sort chapters by number
   const sortedChapters = [...chapters].sort((a, b) => {
     const numA = Number.parseFloat(a.number) || 0;

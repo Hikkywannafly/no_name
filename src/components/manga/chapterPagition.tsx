@@ -2,10 +2,9 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { } from "@/components/ui/select";
+import {} from "@/components/ui/select";
 import { Constants } from "@/constants";
-// import type { UnifiedChapter } from "@/types/unified";
-// import type { Chapter, ChapterRange } from "../types/chapter"
+
 import { formatUploadDate, groupChaptersIntoRanges } from "@/utils";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -48,12 +47,13 @@ export default function HorizontalChapterPagination({
           <div className="flex space-x-2 p-2">
             {chapterRanges.map((range, index) => (
               <Button
-                key={`${range.startChapter}-${range.endChapter}`}
+                key={`${range.startChapter}-${range.endChapter}-${index}`}
                 variant={selectedRangeIndex === index ? "default" : "secondary"}
-                className={`flex-shrink-0 rounded px-4 py-2 font-medium text-sm transition-colors ${selectedRangeIndex === index
-                  ? "bg-red-600 text-white "
-                  : "bg-black/50 text-white "
-                  }`}
+                className={`flex-shrink-0 rounded px-4 py-2 font-medium text-sm transition-colors ${
+                  selectedRangeIndex === index
+                    ? "bg-red-600 text-white "
+                    : "bg-black/50 text-white "
+                }`}
                 onClick={() => handleRangeSelect(index)}
               >
                 {range.label}
@@ -69,7 +69,8 @@ export default function HorizontalChapterPagination({
             <Link
               key={chapter.id}
               className="no-underline"
-              href={Constants.router.chapter(chapter.id, chapter.source)} >
+              href={Constants.router.chapter(chapter.id, chapter.source)}
+            >
               <Card
                 key={chapter.id}
                 className="cursor-pointer bg-black/50 p-4 transition-colors hover:bg-gray-700"
