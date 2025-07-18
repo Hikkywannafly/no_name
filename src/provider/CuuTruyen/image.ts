@@ -31,7 +31,10 @@ export async function unscrambleImage(
     const destStart = destY * imageData.width * 4;
     const rowLength = imageData.width * 4 * height;
 
-    resultData.set(sourceData.slice(sourceStart, sourceStart + rowLength), destStart);
+    resultData.set(
+      sourceData.slice(sourceStart, sourceStart + rowLength),
+      destStart,
+    );
     sourceY += height;
   }
 

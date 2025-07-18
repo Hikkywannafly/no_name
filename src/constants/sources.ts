@@ -85,7 +85,6 @@ export function getActiveSources(): SourceConfig[] {
   return SOURCE_CONFIGS.filter((config) => config.isActive);
 }
 
-
 export function getHighestPrioritySource(): SourceConfig | undefined {
   const activeSources = getActiveSources();
   return activeSources.reduce((highest, current) =>
@@ -118,4 +117,4 @@ export const sourceInfo = {
     logo: "/logos/truyenfull.png",
     description: "Truyện ngắn, tiểu thuyết và nhiều thể loại khác.",
   },
-}
+};

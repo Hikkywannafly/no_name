@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import {} from "@/components/ui/select";
+import { } from "@/components/ui/select";
 import { Constants } from "@/constants";
 
 import { formatUploadDate, groupChaptersIntoRanges } from "@/utils";
@@ -49,11 +49,10 @@ export default function HorizontalChapterPagination({
               <Button
                 key={`${range.startChapter}-${range.endChapter}-${index}`}
                 variant={selectedRangeIndex === index ? "default" : "secondary"}
-                className={`flex-shrink-0 rounded px-4 py-2 font-medium text-sm transition-colors ${
-                  selectedRangeIndex === index
-                    ? "bg-red-600 text-white "
-                    : "bg-black/50 text-white "
-                }`}
+                className={`flex-shrink-0 rounded px-4 py-2 font-medium text-sm transition-colors ${selectedRangeIndex === index
+                  ? "bg-red-600 text-white "
+                  : "bg-black/50 text-white "
+                  }`}
                 onClick={() => handleRangeSelect(index)}
               >
                 {range.label}
@@ -79,14 +78,18 @@ export default function HorizontalChapterPagination({
                 <div className="flex flex-col space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="font-semibold text-white">
-                      Chapter {chapter.number}
+                      Chương {chapter.number}
                     </span>
                     <span className="text-gray-400 text-xs">
-                      {formatUploadDate(chapter.uploadDate)}
+                      {formatUploadDate(chapter.uploadDate) || chapter.uploadDate || "Unknown"}
                     </span>
                   </div>
                   {chapter.title && (
-                    <div className="text-gray-300 text-sm">{chapter.title}</div>
+                    <div className="group relative overflow-hidden">
+                      <div className="group-hover:-translate-x-full transform whitespace-nowrap text-gray-300 text-sm transition-transform duration-[4000ms] ease-linear ">
+                        {chapter.title}
+                      </div>
+                    </div>
                   )}
                   <div className="flex items-center justify-between text-gray-500 text-xs">
                     <span>{chapter.scanlator}</span>

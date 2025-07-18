@@ -30,7 +30,7 @@ export interface MangaChapter {
   volume: number;
   url: string;
   scanlator: string | null;
-  uploadDate: Date | null;
+  uploadDate: Date | null | string;
   branch: string | null;
   source: string;
 }
