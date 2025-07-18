@@ -1,16 +1,16 @@
 import { type NextRequest, NextResponse } from 'next/server';
 
-export const ALLOWED_HOSTNAMES = [
-    'truyenvua.com',
-    'truyenqq.com',
-    'truyenqqgo.com',
-    'i125.truyenvua.com',
-    'i.truyenvua.com',
-    'i.truyenqq.com',
-    "vercel.app",
-    "localhost",
-    'truyenvua.vercel.app',
-];
+// const ALLOWED_HOSTNAMES = [
+//     'truyenvua.com',
+//     'truyenqq.com',
+//     'truyenqqgo.com',
+//     'i125.truyenvua.com',
+//     'i.truyenvua.com',
+//     'i.truyenqq.com',
+//     'vercel.app',
+//     'localhost',
+//     'truyenvua.vercel.app',
+// ];
 
 export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
@@ -18,8 +18,14 @@ export async function GET(req: NextRequest) {
     if (!url) {
         return new NextResponse('Missing url', { status: 400 });
     }
-    // if (!ALLOWED_HOSTNAMES.includes(parsed.hostname)) {
-    //     return new NextResponse('Domain not allowed', { status: 403 });
+    // let parsed: URL;
+    // try {
+    //     parsed = new URL(url);
+    // } catch {
+    //     return new NextResponse('Invalid url', { status: 400 });
+    // }
+    // if (!ALLOWED_HOSTNAMES.some(host => parsed.hostname.endsWith(host))) {
+    //   return new NextResponse('Domain not allowed', { status: 403 });
     // }
     try {
         const response = await fetch(url, {
