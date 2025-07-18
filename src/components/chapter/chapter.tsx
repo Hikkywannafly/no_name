@@ -1,10 +1,12 @@
 "use client";
 import ChapterImage from "@/components/chapter/chapterImg";
-// import Image from "@/components/shared/image";
+import Image from "@/components/shared/image";
 import useCuuTruyenChapter from "@/hooks/CuuTruyen/useCuuTruyenChapter";
+import useTruyenQQChapter from "@/hooks/TruyenQQ/useTruyenQQChapter";
 import { memo } from "react";
+
 interface ChapterProps {
-  mangaId: number;
+  mangaId: string;
   source?: string;
   prefetchManga?: any;
   nextChapter?: string;
@@ -12,47 +14,46 @@ interface ChapterProps {
 }
 
 export const Chapter = memo(function Manga(props: ChapterProps) {
-  const { mangaId } = props;
-  const { data: chapters } = useCuuTruyenChapter(mangaId.toString());
+  const { mangaId, source } = props;
 
-  console.log("Chapters Data:", chapters);
+  let chapters: any[] = [];
+  if (source === "source1") {
+    const { data: cuuTruyenChapters } = useCuuTruyenChapter(mangaId.toString());
+    chapters = cuuTruyenChapters;
+
+  } else if (source === "source2") {
+    const { data: truyenQQChapters } = useTruyenQQChapter(mangaId);
+    chapters = truyenQQChapters;
+    console.log("TruyenQQ Chapters:", truyenQQChapters);
+  }
 
   return (
-    <div>
+    <div className="container flex flex-col items-center justify-center p-4">
       <h1>Chapter</h1>
-      <p>Manga ID: {props.mangaId}</p>
-      <p>Source: {props.source}</p>
+      <p>Manga ID: {mangaId}</p>
+      <p>Source: {source}</p>
       <p>Next Chapter: {props.nextChapter}</p>
-      {/* {
-                chapters && chapters.length > 0 ? (
-                    <ul>
-                        {chapters.map((chapter: any) => (
-                            <li key={chapter.id}>
-
-                                <Image
-                                    src={chapter.imageUrl}
-                                    alt={chapter.title || "Chapter Image"}
-                                    width={200}
-                                    height={300}
-                                />
-                            </li>
-                        ))}
-                    </ul>
-                ) : (
-                    <p>No chapters available.</p>
-                )
-            } */}
       {chapters && chapters.length > 0 ? (
-        <ul className="flex flex-wrap gap-4">
+        <ul className={source === "source1" ? "flex w-full flex-wrap gap-4" : ""}>
           {chapters.map((chapter: any) => (
             <li key={chapter.id}>
-              <ChapterImage
-                imageUrl={chapter.imageUrl}
-                drmData={chapter.drmData}
-                title={chapter.title || "Chapter Image"}
-                width={1024}
-                height={1469}
-              />
+              {source === "source1" ? (
+                <ChapterImage
+                  imageUrl={chapter.url}
+                  drmData={chapter.drmData}
+                  title={chapter.title || "Chapter Image"}
+                  width={1024}
+                  height={1469}
+                />
+              ) : (
+                <Image
+                  src={`/api/proxy?url=${chapter.url}`}
+                  alt={chapter.title || "Chapter Image"}
+                  width={1024}
+                  height={1469}
+                />
+
+              )}
             </li>
           ))}
         </ul>

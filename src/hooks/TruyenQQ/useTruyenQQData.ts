@@ -7,7 +7,6 @@ export default function useTruyenQQData(name: string | null) {
     name ? `/api/truyenqq/list?name=${encodeURIComponent(name)}` : null,
     fetcher,
   );
-  console.log("TruyenQQ Data:", data);
   return {
     data: (data?.data || []) as Manga,
     isLoading,

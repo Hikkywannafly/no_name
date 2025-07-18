@@ -69,7 +69,7 @@ export class TruyenQQParser {
             const href = firstBookA.attr("href");
             return href ? href.toString() : null;
         };
-        console.log("Trying full name:", name);
+
         let href = await trySearch(name);
         if (href) {
             return await this.getDetails(href);
@@ -84,11 +84,9 @@ export class TruyenQQParser {
         //         return await this.getDetails(href);
         //     }
         // }
-
         if (nameParts.length > 1) {
             const halfLength = Math.floor(nameParts.length / 2);
             const halfName = nameParts.slice(0, halfLength).join(" ");
-            console.log("Trying half name:", halfName);
             href = await trySearch(halfName);
             if (href) {
                 return await this.getDetails(href);
@@ -164,48 +162,6 @@ export class TruyenQQParser {
         return mangaList;
     }
 
-    // async getListPage(
-    //     name: string,
-    // ): Promise<any> {
-
-    //     const url = `https://${this.config.domain[0]}/tim-kiem/trang-1.html?q=${encodeURIComponent(name)}`
-    //     const res = await this.http.get(url);
-
-    //     const $ = cheerio.load(res.data);
-    //     const firstBookA = $('#main_homepage .list_grid.grid li .book_avatar a');
-    //     const href = firstBookA.attr('href');
-
-    //     console.log("Href ảnh bìa:", href, name);
-
-    //     // const mangaList: Manga[] = [];
-    //     // $("#main_homepage li").each((_, li) => {
-    //     //     const $li = $(li);
-    //     //     const a = $li.find("a").first();
-    //     //     const href = a.attr("href") || "";
-    //     //     const title = $li.find(".book_name").text().trim();
-    //     //     const img = $li.find("img").attr("src") || "";
-    //     //     if (href && title && img) {
-    //     //         mangaList.push({
-    //     //             id: this.generateUid(href),
-    //     //             url: href,
-    //     //             publicUrl: `https://${this.config.domain[0]}${href}`,
-    //     //             title,
-    //     //             altTitles: new Set(),
-    //     //             coverUrl: img,
-    //     //             largeCoverUrl: img,
-    //     //             authors: new Set(),
-    //     //             tags: new Set(),
-    //     //             state: null,
-    //     //             description: null,
-    //     //             contentRating: ContentRating.SAFE,
-    //     //             source: this.config.source,
-    //     //             rating: this.RATING_UNKNOWN,
-    //     //         });
-    //     //     }
-    //     // });
-    //     // return mangaList;
-    // }
-
     async getDetails(mangaUrl: string): Promise<Manga> {
         const url = `https://${this.config.domain[0]}${mangaUrl}`;
         const res = await this.http.get(url);
@@ -263,7 +219,7 @@ export class TruyenQQParser {
                 const dateText = $div.find(".time-chap").text().trim();
                 const match = name.match(/(Chương|Chapter)\s*(\d+(?:\.\d+)?)/i);
                 return {
-                    id: this.generateUid(href),
+                    id: href.split("/").pop()?.replace(".html", "") || "",
                     title: "",
                     number: match ? Number.parseFloat(match[2]) : 0,
                     volume: 0,
@@ -294,8 +250,8 @@ export class TruyenQQParser {
         };
     }
 
-    async getPages(chapter: MangaChapter): Promise<MangaPage[]> {
-        const url = `https://${this.config.domain[0]}${chapter.url}`;
+    async getPages(chapterUrl: string): Promise<MangaPage[]> {
+        const url = `https://${this.config.domain[0]}/truyen-tranh/${chapterUrl}.html`;
         const res = await this.http.get(url);
         const $ = cheerio.load(res.data);
         const pages: MangaPage[] = [];

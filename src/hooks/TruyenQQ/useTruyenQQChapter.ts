@@ -1,0 +1,16 @@
+import type { Page } from "@/types/manga";
+import useSWR from "swr";
+export default function useTruyenQQChapter(name: string | null) {
+  const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
+  const { data, isLoading, error } = useSWR(
+    name ? `/api/truyenqq/chapter?name=${encodeURIComponent(name)}` : null,
+    fetcher,
+  );
+
+  return {
+    data: (data?.data || []) as Page[],
+    isLoading,
+    error,
+  };
+}

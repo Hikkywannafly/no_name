@@ -106,7 +106,7 @@ export const sourceInfo = {
     description: "Kho truyện tranh lớn nhất Việt Nam.",
   },
   truyenqq: {
-    name: "Truyện QQ",
+    name: "source2",
     baseUrl: "https://truyenqq.com",
     logo: "/logos/truyenqq.png",
     description: "Đọc truyện tranh online chất lượng cao.",

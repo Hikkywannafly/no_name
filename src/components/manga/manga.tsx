@@ -86,6 +86,7 @@ export const Manga = memo(function Manga(props: MangaProps) {
       truyenQQLoading,
     ],
   );
+  // console.log("truyen test", truyenQQData.chapters, cuuTruyenData.chapters);
   const defaultDescriptionSource = useMemo(
     () => (descriptionSources.length > 0 ? descriptionSources[0].value : ""),
     [descriptionSources],

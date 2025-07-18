@@ -248,7 +248,7 @@ export class CuuTruyenParser {
           id: this.generateUid(page.id),
           chapterSourceId: chapter,
           pageNumber: page.id, // Assuming page.id is the page number
-          imageUrl: page.image_url.toString(),
+          url: page.image_url.toString(),
           drmData: page.drm_data || null,
           width: null, // Width not provided in the response
           height: null, // Height not provided in the response
