@@ -54,8 +54,6 @@ export const Manga = memo(function Manga(props: MangaProps) {
   const { data: truyenQQData, isLoading: truyenQQLoading } = useTruyenQQData(
     manga?.title?.userPreferred || "",
   );
-
-  console.log("TruyenQQ Data:", truyenQQData);
   const descriptionSources = useMemo(
     () =>
       [
@@ -266,7 +264,7 @@ export const Manga = memo(function Manga(props: MangaProps) {
                   value={selectedDescriptionSource}
                   onValueChange={handleDescriptionChange}
                 >
-                  <SelectTrigger className="w-full bg-black/50 text-white sm:w-64">
+                  <SelectTrigger className="w-full bg-black/50 text-white sm:w-42">
                     <SelectValue placeholder="Chọn nguồn mô tả" />
                   </SelectTrigger>
                   <SelectContent className=" bg-black">
@@ -329,9 +327,9 @@ export const Manga = memo(function Manga(props: MangaProps) {
                       value={selectedChapterSource}
                       onValueChange={handleChapterSourceChange}
                     >
-                      <SelectTrigger className="w-full bg-black text-white">
+                      <SelectTrigger className="w-full bg-black/50 text-white">
                         <SelectValue placeholder="Chọn nguồn" />
-                        <SelectContent>
+                        <SelectContent className="bg-black">
                           {chapterSources
                             .sort(
                               (a, b) => b.chapters.length - a.chapters.length,
@@ -340,7 +338,7 @@ export const Manga = memo(function Manga(props: MangaProps) {
                               <SelectItem
                                 key={src.value}
                                 value={src.value}
-                                className="bg-black text-white hover:bg-gray-700"
+                                className="text-white "
                               >
                                 {src.label} ({src.chapters.length})
                                 {src.loading && (

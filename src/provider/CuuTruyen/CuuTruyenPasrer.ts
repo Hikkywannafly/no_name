@@ -17,6 +17,7 @@ import {
   type ParserConfig,
   SortOrder,
 } from "@/provider/CuuTruyen/type";
+import { formatUploadDate } from "@/utils";
 import axios, { type AxiosInstance } from "axios";
 
 export class CuuTruyenParser {
@@ -195,7 +196,7 @@ export class CuuTruyenParser {
         volume: 0,
         url: `/api/v2/chapters/${chapter.id}`,
         scanlator: team,
-        uploadDate: chapter.created_at ? new Date(chapter.created_at) : null,
+        uploadDate: chapter.created_at ? formatUploadDate(chapter.created_at) : null,
         branch: null,
         source: this.config.source,
       }))
@@ -274,9 +275,8 @@ export class CuuTruyenParser {
         url = `${baseUrl}/api/v2/tags/${tag.key}`;
       } else if (filter.states?.size === 1) {
         const state = Array.from(filter.states)[0];
-        url = `${baseUrl}/api/v2/tags/${
-          state === MangaState.ONGOING ? "dang-tien-hanh" : "da-hoan-thanh"
-        }`;
+        url = `${baseUrl}/api/v2/tags/${state === MangaState.ONGOING ? "dang-tien-hanh" : "da-hoan-thanh"
+          }`;
       } else {
         url = `${baseUrl}/api/v2/mangas`;
         switch (order) {

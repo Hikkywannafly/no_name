@@ -34,7 +34,7 @@ export function groupChaptersIntoRanges(
 
   return ranges;
 }
-export function formatUploadDate(dateString: string): string {
+export function formatUploadDate(dateString: string): string | null {
   const date = new Date(dateString);
   return date.toLocaleDateString("vi-VN", {
     year: "numeric",

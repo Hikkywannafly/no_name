@@ -5,7 +5,7 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { } from "@/components/ui/select";
 import { Constants } from "@/constants";
 
-import { formatUploadDate, groupChaptersIntoRanges } from "@/utils";
+import { groupChaptersIntoRanges } from "@/utils";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -81,7 +81,7 @@ export default function HorizontalChapterPagination({
                       Chương {chapter.number}
                     </span>
                     <span className="text-gray-400 text-xs">
-                      {formatUploadDate(chapter.uploadDate) || chapter.uploadDate || "Unknown"}
+                      {chapter.uploadDate || "Unknown"}
                     </span>
                   </div>
                   {chapter.title && (
