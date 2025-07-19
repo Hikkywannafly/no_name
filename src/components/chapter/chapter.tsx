@@ -3,6 +3,7 @@ import ChapterImage from "@/components/chapter/chapterImg";
 import Image from "@/components/shared/image";
 import useCuuTruyenChapter from "@/hooks/CuuTruyen/useCuuTruyenChapter";
 import useTruyenQQChapter from "@/hooks/TruyenQQ/useTruyenQQChapter";
+import type { UPage } from "@/types/manga";
 import { memo } from "react";
 
 interface ChapterProps {
@@ -16,7 +17,7 @@ interface ChapterProps {
 export const Chapter = memo(function Manga(props: ChapterProps) {
   const { mangaId, source } = props;
 
-  let chapters: any[] = [];
+  let chapters: UPage[] = [];
   if (source === "source1") {
     const { data: cuuTruyenChapters } = useCuuTruyenChapter(mangaId.toString());
     chapters = cuuTruyenChapters;

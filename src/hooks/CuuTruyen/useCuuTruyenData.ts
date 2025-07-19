@@ -1,4 +1,3 @@
-
 import useSWR from "swr";
 export default function useCuuTruyenData(name: string | null) {
   const fetcher = (url: string) => fetch(url).then((res) => res.json());
@@ -9,7 +8,7 @@ export default function useCuuTruyenData(name: string | null) {
   );
 
   return {
-    data: (data?.data || []),
+    data: data?.data || [],
     isLoading,
     error,
   };

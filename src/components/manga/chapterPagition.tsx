@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { } from "@/components/ui/select";
+import {} from "@/components/ui/select";
 import { Constants } from "@/constants";
 
 import type { UChapter } from "@/types/manga";
@@ -57,10 +57,11 @@ export default function HorizontalChapterPagination({
               <Button
                 key={`${range.startChapter}-${range.endChapter}-${index}`}
                 variant={selectedRangeIndex === index ? "default" : "secondary"}
-                className={`flex-shrink-0 rounded px-4 py-2 font-medium text-sm transition-colors ${selectedRangeIndex === index
-                  ? "bg-red-600 text-white "
-                  : "bg-black/50 text-white "
-                  }`}
+                className={`flex-shrink-0 rounded px-4 py-2 font-medium text-sm transition-colors ${
+                  selectedRangeIndex === index
+                    ? "bg-red-600 text-white "
+                    : "bg-black/50 text-white "
+                }`}
                 onClick={() => handleRangeSelect(index)}
               >
                 {range.label}
@@ -76,7 +77,10 @@ export default function HorizontalChapterPagination({
             <Link
               key={chapter.id}
               className="no-underline"
-              href={Constants.router.chapter(chapter.id, chapter.sourceName || "undefined")}
+              href={Constants.router.chapter(
+                chapter.id,
+                chapter.sourceName || "undefined",
+              )}
             >
               <Card
                 key={chapter.id}

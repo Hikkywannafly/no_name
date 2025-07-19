@@ -69,11 +69,25 @@ export interface Page {
   chapterSourceId: string; // Reference to ChapterSource
   pageNumber?: number;
   imageUrl?: string;
-  drmData: string | null;
+  drmData?: string | null;
   width?: number | null;
   height?: number | null;
   fileSize?: number | null;
   createdAt?: Date;
+}
+
+export interface UPage {
+  id: string;
+  chapterSourceId?: string; // Reference to ChapterSource
+  pageNumber?: number;
+  imageUrl?: string;
+  drmData?: string | null;
+  width?: number | null;
+  height?: number | null;
+  fileSize?: number | null;
+  chapterSource?: UChapterSource;
+  createdAt?: Date;
+  extraData?: Record<string, any>;
 }
 
 // Source configuration

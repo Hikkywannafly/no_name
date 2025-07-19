@@ -9,13 +9,12 @@ import {
   type MangaListFilterCapabilities,
   type MangaListFilterOptions,
   type MangaListResponse,
-  type MangaPage,
   MangaState,
   type MangaTag,
   type ParserConfig,
   SortOrder,
 } from "@/provider/CuuTruyen/type";
-import type { UChapter, UManga } from "@/types/manga";
+import type { UChapter, UManga, UPage } from "@/types/manga";
 import { formatUploadDate } from "@/utils";
 import axios, { type AxiosInstance } from "axios";
 
@@ -31,7 +30,7 @@ export class CuuTruyenParser {
     this.http = axios.create({
       headers: {
         "User-Agent": config.userAgent,
-        "referer": `https://${config.domain[0]}/`,
+        referer: `https://${config.domain[0]}/`,
       },
     });
   }
@@ -73,7 +72,8 @@ export class CuuTruyenParser {
   async searchMangaID(name: string): Promise<UManga | null> {
     const url = `https://${this.config.domain[0]}/api/v2/mangas/quick_search?q=${this.urlEncode(name)}`;
     try {
-      const response = await this.http.get<ApiResponse<MangaListResponse[]>>(url);
+      const response =
+        await this.http.get<ApiResponse<MangaListResponse[]>>(url);
       const data = response.data.data[0];
       if (!data) return null;
       const urlNew = `/api/v2/mangas/${data.id}`;
@@ -86,7 +86,6 @@ export class CuuTruyenParser {
       throw error;
     }
   }
-
 
   async getDetails(url: string): Promise<UManga> {
     const [chaptersResponse, detailsResponse] = await Promise.all([
@@ -111,17 +110,17 @@ export class CuuTruyenParser {
       : MangaState.ONGOING;
 
     const newTags: string[] = Array.from(tags)
-      .filter(tag => tag.key !== "da-hoan-thanh" && tag.key !== "dang-tien-hanh")
-      .map(tag => tag.key);
+      .filter(
+        (tag) => tag.key !== "da-hoan-thanh" && tag.key !== "dang-tien-hanh",
+      )
+      .map((tag) => tag.key);
 
     const author = details.author?.name?.split(",")[0] || null;
     const title = details.name;
     const altTitles: string[] = Array.from(
       new Set(
-        (details.titles || [])
-          .map((t) => t.name)
-          .filter((t) => t !== title)
-      )
+        (details.titles || []).map((t) => t.name).filter((t) => t !== title),
+      ),
     );
     const team = details.team?.name || null;
     const panorama_url = details.panorama_url;
@@ -129,7 +128,7 @@ export class CuuTruyenParser {
     const chapters: UChapter[] = chaptersResponse.data.data
       .map((chapter: ChapterListResponse): UChapter => {
         // const source: UChapterSource = {
-        //   sourceName: this.config.source, 
+        //   sourceName: this.config.source,
         //   sourceId: chapter.id.toString(),
         //   sourceUrl: `/api/v2/chapters/${chapter.id}`,
         //   title: chapter.name || null,
@@ -151,7 +150,9 @@ export class CuuTruyenParser {
           sourceName: this.config.source,
           // sources: [source],
           scanlator: team,
-          createdAt: chapter.created_at ? formatUploadDate(chapter.created_at) : undefined,
+          createdAt: chapter.created_at
+            ? formatUploadDate(chapter.created_at)
+            : undefined,
           updatedAt: undefined,
           extraData: {},
         };
@@ -173,7 +174,7 @@ export class CuuTruyenParser {
       // bannerUrl?:  null;
       // largeCoverUrl?: string | null;
       // sources: UMangaSource[]; // Danh sách các nguồn (CuuTruyen, TruyenQQ, MangaDex, ...)
-      // chapters?: UChapter[]; // Danh sách chapter 
+      // chapters?: UChapter[]; // Danh sách chapter
       sources: [
         {
           sourceName: this.config.source,
@@ -187,7 +188,7 @@ export class CuuTruyenParser {
       extraData: {
         panoramaUrl: panorama_url || null,
         panoramaMobileUrl: panorama_mobile_url || null,
-      }
+      },
     };
   }
 
@@ -250,25 +251,24 @@ export class CuuTruyenParser {
     }
   }
 
-
-
-  async getPages(chapter: any): Promise<MangaPage[] | any> {
+  async getPages(chapter: any): Promise<UPage[]> {
     const res = await this.http.get<ApiResponse<ChapterDetailResponse>>(
       `https://${this.config.domain[0]}/api/v2/chapters/${chapter}`,
     );
-    console.log("Cuutruyen Paser getPages res", res.data);
+
     return res.data.data.pages.map(
       (page: { id: number; image_url: string; drm_data?: string }) => {
         return {
           id: this.generateUid(page.id),
           chapterSourceId: chapter,
           pageNumber: page.id, // Assuming page.id is the page number
-          url: page.image_url.toString(),
+          imageUrl: page.image_url.toString(),
           drmData: page.drm_data || null,
           width: null, // Width not provided in the response
           height: null, // Height not provided in the response
           fileSize: null, // File size not provided in the response
           createdAt: new Date(), // Assuming current date as createdAt
+          extraData: {},
         };
       },
     );

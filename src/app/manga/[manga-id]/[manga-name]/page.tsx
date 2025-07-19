@@ -2,16 +2,57 @@ import BaseLayout from "@/app/baseLayout";
 import { Manga } from "@/components/manga/manga";
 import { getMediaDetails } from "@/provider/Anilist";
 import { MediaType } from "@/types/anilist";
+import type { Metadata } from "next";
 
 // export async function getServerSideProps() {
+interface MangaPageProps {
+  params: Promise<{
+    "manga-id": string
+    "manga-name": string
+  }>
+}
 
 // }
+export async function generateMetadata({ params }: MangaPageProps): Promise<Metadata> {
+  try {
+    const { "manga-id": mangaIdParam, "manga-name": mangaName } = await params
+    const mangaId = Number(mangaIdParam)
+
+    const anilistData = await getMediaDetails({
+      id: mangaId,
+      type: MediaType.Manga,
+    })
+
+    const title = anilistData?.title?.english || anilistData?.title?.romaji || mangaName
+    const description = anilistData?.description?.replace(/<[^>]*>/g, "").slice(0, 160) || `Read ${title} manga online`
+
+    return {
+      title: `${title} - Read Manga Online`,
+      description,
+      openGraph: {
+        title,
+        description,
+        images: anilistData?.coverImage?.large ? [anilistData.coverImage.large] : [],
+        type: "article",
+      },
+      twitter: {
+        card: "summary_large_image",
+        title,
+        description,
+        images: anilistData?.coverImage?.large ? [anilistData.coverImage.large] : [],
+      },
+    }
+  } catch (_error) {
+    return {
+      title: "Manga Not Found",
+      description: "The requested manga could not be found.",
+    }
+  }
+}
 
 export default async function MangaPage({
   params,
-}: {
-  params: Promise<{ "manga-id": string; "manga-name": string }>;
-}) {
+}: MangaPageProps) {
   const { "manga-id": mangaIdParam, "manga-name": mangaName } = await params;
 
   const mangaId = Number(mangaIdParam);

@@ -1,5 +1,5 @@
 import { MERGE_STRATEGY, SOURCE_CONFIGS } from "@/constants/sources";
-import { SourceManager } from "@/provider/SourceManagerOld";
+import { SourceManager } from "@/provider/SourceManager";
 import { type NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
@@ -17,12 +17,12 @@ export async function GET(request: NextRequest) {
     }
 
     const sourceManager = new SourceManager(SOURCE_CONFIGS, MERGE_STRATEGY);
-    const results = await sourceManager.searchManga(query);
+    const results = await sourceManager.searchMangaID(query);
 
     return NextResponse.json({
       success: true,
       data: results,
-      total: results.length,
+      total: results,
       page,
       query,
     });
