@@ -20,13 +20,11 @@ export const Chapter = memo(function Manga(props: ChapterProps) {
   if (source === "source1") {
     const { data: cuuTruyenChapters } = useCuuTruyenChapter(mangaId.toString());
     chapters = cuuTruyenChapters;
-
   } else if (source === "source2") {
     const { data: truyenQQChapters } = useTruyenQQChapter(mangaId);
     chapters = truyenQQChapters;
     console.log("TruyenQQ Chapters:", truyenQQChapters);
   }
-
   return (
     <div className="container flex flex-col items-center justify-center p-4">
       <h1>Chapter</h1>
@@ -34,7 +32,9 @@ export const Chapter = memo(function Manga(props: ChapterProps) {
       <p>Source: {source}</p>
       <p>Next Chapter: {props.nextChapter}</p>
       {chapters && chapters.length > 0 ? (
-        <ul className={source === "source1" ? "flex w-full flex-wrap gap-4" : ""}>
+        <ul
+          className={source === "source1" ? "flex w-full flex-wrap gap-4" : ""}
+        >
           {chapters.map((chapter: any) => (
             <li key={chapter.id}>
               {source === "source1" ? (
@@ -47,12 +47,11 @@ export const Chapter = memo(function Manga(props: ChapterProps) {
                 />
               ) : (
                 <Image
-                  src={`/api/proxy?url=${chapter.url}$referer=`}
+                  src={`/api/proxy?url=${chapter.url}&referer=https://truyenqqgo.com`}
                   alt={chapter.title || "Chapter Image"}
                   width={1024}
                   height={1469}
                 />
-
               )}
             </li>
           ))}

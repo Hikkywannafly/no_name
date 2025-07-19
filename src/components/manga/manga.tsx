@@ -230,14 +230,11 @@ export const Manga = memo(function Manga(props: MangaProps) {
                       title={"Quốc Gia"}
                       value={manga.countryOfOrigin}
                     />
-
                     <InfoItem
                       title={"Tình Trạng"}
                       value={manga.status || "Unknown"}
                     />
-
                     <InfoItem title={"Chaptter"} value={manga.chapters} />
-
                     <InfoItem
                       title={"Thể Loại"}
                       value={manga.isAdult ? "18+" : ""}

@@ -1,5 +1,5 @@
 import { MERGE_STRATEGY, SOURCE_CONFIGS } from "@/constants/sources";
-import { SourceManager } from "@/provider/SourceManager";
+import { SourceManager } from "@/provider/SourceManagerOld";
 import { type NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {

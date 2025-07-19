@@ -64,47 +64,45 @@
 // }
 
 // // Page entity
-// export interface Page {
-//   id: string;
-//   chapterSourceId: string; // Reference to ChapterSource
-//   pageNumber?: number;
-//   imageUrl?: string;
-//   drmData: string | null;
-//   width?: number | null;
-//   height?: number | null;
-//   fileSize?: number | null;
-//   createdAt?: Date;
-// }
+export interface Page {
+  id: string;
+  chapterSourceId: string; // Reference to ChapterSource
+  pageNumber?: number;
+  imageUrl?: string;
+  drmData: string | null;
+  width?: number | null;
+  height?: number | null;
+  fileSize?: number | null;
+  createdAt?: Date;
+}
 
-// // Source configuration
-// export interface SourceConfig {
-//   name: string;
-//   displayName: string;
-//   baseUrl: string;
-//   isActive: boolean;
-//   priority: number; // Độ ưu tiên khi merge data
-//   supportedLanguages: string[];
-//   features: {
-//     hasBanner: boolean;
-//     hasLargeCover: boolean;
-//     hasRating: boolean;
-//     hasViewCount: boolean;
-//     hasLikeCount: boolean;
-//     supportsDRM: boolean;
-//   };
-// }
+// Source configuration
+export interface SourceConfig {
+  name: string;
+  displayName: string;
+  baseUrl: string;
+  isActive: boolean;
+  priority: number; // Độ ưu tiên khi merge data
+  supportedLanguages: string[];
+  features: {
+    hasBanner: boolean;
+    hasLargeCover: boolean;
+    hasRating: boolean;
+    hasViewCount: boolean;
+    hasLikeCount: boolean;
+    supportsDRM: boolean;
+  };
+}
 
-// // Manga merge strategy
-// export interface MangaMergeStrategy {
-//   title: "PRIORITY_SOURCE" | "MOST_COMPLETE" | "MANUAL";
-//   description: "PRIORITY_SOURCE" | "MOST_COMPLETE" | "MANUAL";
-//   cover: "PRIORITY_SOURCE" | "HIGHEST_QUALITY" | "MOST_RECENT";
-//   banner: "PRIORITY_SOURCE" | "HIGHEST_QUALITY" | "MOST_RECENT";
-//   rating: "AVERAGE" | "HIGHEST" | "MOST_VOTES";
-//   tags: "UNION" | "INTERSECTION" | "PRIORITY_SOURCE";
-// }
-
-
+// Manga merge strategy
+export interface MangaMergeStrategy {
+  title: "PRIORITY_SOURCE" | "MOST_COMPLETE" | "MANUAL";
+  description: "PRIORITY_SOURCE" | "MOST_COMPLETE" | "MANUAL";
+  cover: "PRIORITY_SOURCE" | "HIGHEST_QUALITY" | "MOST_RECENT";
+  banner: "PRIORITY_SOURCE" | "HIGHEST_QUALITY" | "MOST_RECENT";
+  rating: "AVERAGE" | "HIGHEST" | "MOST_VOTES";
+  tags: "UNION" | "INTERSECTION" | "PRIORITY_SOURCE";
+}
 
 export interface UManga {
   id: string; // id của unified manga (ưu tiên Anilist)
@@ -121,14 +119,14 @@ export interface UManga {
   bannerUrl?: string | null;
   largeCoverUrl?: string | null;
   sources: UMangaSource[]; // Danh sách các nguồn (CuuTruyen, TruyenQQ, MangaDex, ...)
-  chapters?: UChapter[]; // Danh sách chapter 
+  chapters?: UChapter[]; // Danh sách chapter
   extraData?: Record<string, any>; // Dữ liệu đặc thù từng nguồn
 }
 
 export interface UMangaSource {
   sourceName: string; // 'anilist', 'cuutruyen', 'truyenqq', 'mangadex', ...
-  sourceId: string;   // id của manga ở source đó
-  sourceUrl: string;  // url gốc
+  sourceId: string; // id của manga ở source đó
+  sourceUrl: string; // url gốc
   title?: string;
   description?: string;
   coverUrl?: string | null;
@@ -175,7 +173,6 @@ export interface UChapterSource {
   createdAt?: Date;
   extraData?: Record<string, any>;
 }
-
 
 export enum ContentRating {
   SAFE = "SAFE",
