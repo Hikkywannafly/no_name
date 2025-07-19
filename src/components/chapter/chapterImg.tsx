@@ -10,6 +10,7 @@ interface ChapterImageProps {
   title?: string;
   width?: number;
   height?: number;
+  onLoad?: () => void;
 }
 
 export default function ChapterImage({
@@ -18,22 +19,27 @@ export default function ChapterImage({
   title,
   width = 200,
   height = 300,
+  onLoad,
 }: ChapterImageProps) {
   const [src, setSrc] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     let objectUrl: string | undefined;
     setSrc(null);
     setError(null);
+    setIsLoading(true);
 
     unscrambleImageUrl(imageUrl, drmData)
       .then((url) => {
         setSrc(url);
         objectUrl = url;
+        setIsLoading(false);
       })
       .catch((err) => {
         setError("Image decode failed");
+        setIsLoading(false);
         console.error("Image decode failed:", err);
       });
 
@@ -42,16 +48,34 @@ export default function ChapterImage({
     };
   }, [imageUrl, drmData]);
 
-  if (error) return <div className="text-red-500">{error}</div>;
-  if (!src) return <Skeleton className="h-[300px] w-[200px] rounded" />;
+  const handleImageLoad = () => {
+    onLoad?.();
+  };
+
+  if (error) {
+    return (
+      <div className="flex h-[300px] w-[200px] items-center justify-center rounded bg-gray-800 text-red-400">
+        <div className="text-center">
+          <div className="mb-2 text-2xl">⚠️</div>
+          <div className="text-sm">{error}</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (isLoading || !src) {
+    return <Skeleton className="h-[300px] w-[200px] rounded bg-gray-800" />;
+  }
 
   return (
     <Image
-      src={src}
+      src={src || "/placeholder.svg"}
       alt={title || "Chapter Image"}
       width={width}
       height={height}
       style={{ objectFit: "contain" }}
+      onLoad={handleImageLoad}
+      className="h-auto max-w-full"
     />
   );
 }

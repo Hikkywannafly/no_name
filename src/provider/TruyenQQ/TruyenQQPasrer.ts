@@ -4,13 +4,12 @@ import {
   type MangaListFilter,
   type MangaListFilterCapabilities,
   type MangaListFilterOptions,
-  type MangaPage,
   MangaState,
   type MangaTag,
   type ParserConfig,
   SortOrder,
 } from "@/provider/CuuTruyen/type";
-import type { UChapter, UManga } from "@/types/manga";
+import type { UChapter, UManga, UPage } from "@/types/manga";
 import axios, { type AxiosInstance } from "axios";
 import { wrapper } from "axios-cookiejar-support";
 import * as cheerio from "cheerio";
@@ -242,19 +241,25 @@ export class TruyenQQParser {
     };
   }
 
-  async getPages(chapterUrl: string): Promise<MangaPage[]> {
+  async getPages(chapterUrl: string): Promise<UPage[]> {
     const url = `https://${this.config.domain[0]}/truyen-tranh/${chapterUrl}.html`;
     const res = await this.http.get(url);
     const $ = cheerio.load(res.data);
-    const pages: MangaPage[] = [];
+    const pages: UPage[] = [];
     $(".chapter_content .page-chapter img").each((_, img) => {
       const src = $(img).attr("src") || "";
       if (src) {
         pages.push({
           id: this.generateUid(src),
-          url: src,
-          preview: null,
-          source: this.config.source,
+          imageUrl: src,
+          chapterSourceId: chapterUrl,
+          pageNumber: undefined,
+          drmData: null,
+          width: null,
+          height: null,
+          fileSize: null,
+          createdAt: new Date(),
+          extraData: {},
         });
       }
     });

@@ -1,4 +1,4 @@
-import type { Page } from "@/types/manga";
+// import type { UPage } from "@/types/manga";
 import useSWR from "swr";
 export default function useTruyenQQChapter(name: string | null) {
   const fetcher = (url: string) => fetch(url).then((res) => res.json());
@@ -9,7 +9,7 @@ export default function useTruyenQQChapter(name: string | null) {
   );
 
   return {
-    data: (data?.data || []) as Page[],
+    data: data?.data || [],
     isLoading,
     error,
   };
