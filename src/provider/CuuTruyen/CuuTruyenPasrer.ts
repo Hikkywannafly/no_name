@@ -1,11 +1,9 @@
-// import {SOURCE_CONFIGS} from "@/config/sources";
 import {
   type ApiResponse,
   type ChapterDetailResponse,
   type ChapterListResponse,
   ContentRating,
   type Manga,
-  // type MangaChapter,
   type MangaDetailResponse,
   type MangaListFilter,
   type MangaListFilterCapabilities,
@@ -17,6 +15,7 @@ import {
   type ParserConfig,
   SortOrder,
 } from "@/provider/CuuTruyen/type";
+import type { UChapter, UManga } from "@/types/manga";
 import { formatUploadDate } from "@/utils";
 import axios, { type AxiosInstance } from "axios";
 
@@ -32,6 +31,7 @@ export class CuuTruyenParser {
     this.http = axios.create({
       headers: {
         "User-Agent": config.userAgent,
+        "referer": `https://${config.domain[0]}/`,
       },
     });
   }
@@ -68,31 +68,127 @@ export class CuuTruyenParser {
     };
   }
 
-  async searchMangaID(name: string): Promise<any> {
+  // searchMangaID(name ) => Umanga
+
+  async searchMangaID(name: string): Promise<UManga | null> {
     const url = `https://${this.config.domain[0]}/api/v2/mangas/quick_search?q=${this.urlEncode(name)}`;
-    // const url = `https://${this.config.domain[0]}/api/v2/mangas/quick_search?q=2242}`;
     try {
-      const response =
-        await this.http.get<ApiResponse<MangaListResponse[]>>(url);
+      const response = await this.http.get<ApiResponse<MangaListResponse[]>>(url);
       const data = response.data.data[0];
-      const newData = {
-        id: this.generateUid(data.id),
-        url: `/api/v2/mangas/${data.id}`,
-        publicUrl: `https://${this.config.domain[0]}/manga/${data.id}`,
-        title: data.name,
-        coverUrl: data.cover_mobile_url,
-        largeCoverUrl: data.cover_url,
-        source: this.config.source,
-        rating: this.RATING_UNKNOWN,
-        sda: name,
-      };
-      return newData;
+      if (!data) return null;
+      const urlNew = `/api/v2/mangas/${data.id}`;
+
+      return this.getDetails(urlNew);
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 500) {
-        return [];
+        return null;
       }
       throw error;
     }
+  }
+
+
+  async getDetails(url: string): Promise<UManga> {
+    const [chaptersResponse, detailsResponse] = await Promise.all([
+      this.http.get<ApiResponse<ChapterListResponse[]>>(
+        `https://${this.config.domain[0]}${url}/chapters`,
+      ),
+      this.http.get<ApiResponse<MangaDetailResponse>>(
+        `https://${this.config.domain[0]}${url}`,
+      ),
+    ]);
+    const details = detailsResponse.data.data;
+    const tags = new Set<MangaTag>(
+      (details.tags || []).map((tag: { name: string; slug: string }) => ({
+        title: this.toTitleCase(tag.name),
+        key: tag.slug,
+        source: this.config.source,
+      })),
+    );
+
+    const state = tags.has({ key: "da-hoan-thanh", title: "", source: "" })
+      ? MangaState.FINISHED
+      : MangaState.ONGOING;
+
+    const newTags: string[] = Array.from(tags)
+      .filter(tag => tag.key !== "da-hoan-thanh" && tag.key !== "dang-tien-hanh")
+      .map(tag => tag.key);
+
+    const author = details.author?.name?.split(",")[0] || null;
+    const title = details.name;
+    const altTitles: string[] = Array.from(
+      new Set(
+        (details.titles || [])
+          .map((t) => t.name)
+          .filter((t) => t !== title)
+      )
+    );
+    const team = details.team?.name || null;
+    const panorama_url = details.panorama_url;
+    const panorama_mobile_url = details.panorama_mobile_url;
+    const chapters: UChapter[] = chaptersResponse.data.data
+      .map((chapter: ChapterListResponse): UChapter => {
+        // const source: UChapterSource = {
+        //   sourceName: this.config.source, 
+        //   sourceId: chapter.id.toString(),
+        //   sourceUrl: `/api/v2/chapters/${chapter.id}`,
+        //   title: chapter.name || null,
+        //   number: chapter.number || 0,
+        //   volume: 0,
+        //   scanlator: team,
+        //   uploadDate: chapter.created_at ? new Date(chapter.created_at) : null,
+        //   isActive: true,
+        //   createdAt: chapter.created_at ? new Date(chapter.created_at) : undefined,
+        //   extraData: {},
+        // };
+
+        return {
+          id: this.generateUid(chapter.id),
+          title: chapter.name || null,
+          number: chapter.number || 0,
+          volume: 0,
+          language: "vi",
+          sourceName: this.config.source,
+          // sources: [source],
+          scanlator: team,
+          createdAt: chapter.created_at ? formatUploadDate(chapter.created_at) : undefined,
+          updatedAt: undefined,
+          extraData: {},
+        };
+      })
+      .reverse();
+
+    return {
+      id: this.generateUid(details.id),
+      // anilistId: 0,
+      title: title,
+      altTitles: altTitles,
+      description: details.full_description || "",
+      authors: author ? new Set([author]) : new Set(),
+      artists: [],
+      tags: newTags,
+      status: state,
+      contentRating: details.is_nsfw ? "NSFW" : "SAFE",
+      coverUrl: null,
+      // bannerUrl?:  null;
+      // largeCoverUrl?: string | null;
+      // sources: UMangaSource[]; // Danh sách các nguồn (CuuTruyen, TruyenQQ, MangaDex, ...)
+      // chapters?: UChapter[]; // Danh sách chapter 
+      sources: [
+        {
+          sourceName: this.config.source,
+          sourceId: details.id.toString(),
+          sourceUrl: `https://${this.config.domain[0]}/manga/${details.id}`,
+          title: details.name,
+          extraData: {},
+        },
+      ],
+      chapters: chapters,
+      extraData: {
+        panoramaUrl: panorama_url || null,
+        panoramaMobileUrl: panorama_mobile_url || null,
+      }
+    };
   }
 
   async getChapterList(name: string): Promise<any[]> {
@@ -154,71 +250,7 @@ export class CuuTruyenParser {
     }
   }
 
-  async getDetails(manga: Manga): Promise<Manga> {
-    const [chaptersResponse, detailsResponse] = await Promise.all([
-      this.http.get<ApiResponse<ChapterListResponse[]>>(
-        `https://${this.config.domain[0]}${manga.url}/chapters`,
-      ),
-      this.http.get<ApiResponse<MangaDetailResponse>>(
-        `https://${this.config.domain[0]}${manga.url}`,
-      ),
-    ]);
 
-    const details = detailsResponse.data.data;
-    const tags = new Set<MangaTag>(
-      (details.tags || []).map((tag: { name: string; slug: string }) => ({
-        title: this.toTitleCase(tag.name),
-        key: tag.slug,
-        source: this.config.source,
-      })),
-    );
-
-    const state = tags.has({ key: "da-hoan-thanh", title: "", source: "" })
-      ? MangaState.FINISHED
-      : MangaState.ONGOING;
-
-    const newTags = new Set(
-      Array.from(tags).filter(
-        (tag) => tag.key !== "da-hoan-thanh" && tag.key !== "dang-tien-hanh",
-      ),
-    );
-
-    const author = details.author?.name?.split(",")[0] || null;
-    const title = details.name || manga.title;
-    const team = details.team?.name || null;
-    const panorama_url = details.panorama_url;
-    const panorama_mobile_url = details.panorama_mobile_url;
-    const chapters = chaptersResponse.data.data
-      .map((chapter: ChapterListResponse) => ({
-        id: this.generateUid(chapter.id),
-        title: chapter.name || null,
-        number: chapter.number || 0,
-        volume: 0,
-        url: `/api/v2/chapters/${chapter.id}`,
-        scanlator: team,
-        uploadDate: chapter.created_at ? formatUploadDate(chapter.created_at) : null,
-        branch: null,
-        source: this.config.source,
-      }))
-      .reverse();
-    return {
-      ...manga,
-      title,
-      altTitles: new Set(
-        (details.titles || [])
-          .map((t: { name: string }) => t.name)
-          .filter((t: string) => t !== title),
-      ),
-      contentRating: details.is_nsfw ? ContentRating.ADULT : ContentRating.SAFE,
-      authors: new Set(author ? [author] : []),
-      description: details.full_description || null,
-      tags: newTags,
-      largeCoverUrl: panorama_url || " ",
-      coverUrl: panorama_mobile_url || " ",
-      state,
-      chapters,
-    };
-  }
 
   async getPages(chapter: any): Promise<MangaPage[] | any> {
     const res = await this.http.get<ApiResponse<ChapterDetailResponse>>(
@@ -227,23 +259,6 @@ export class CuuTruyenParser {
     console.log("Cuutruyen Paser getPages res", res.data);
     return res.data.data.pages.map(
       (page: { id: number; image_url: string; drm_data?: string }) => {
-        // const imageUrl = new URL(page.image_url);
-        // if (page.drm_data) {
-        //   imageUrl.hash = this.DRM_DATA_KEY + page.drm_data;
-        // }
-
-        // export interface Page {
-        //   id: string;
-        //   chapterSourceId: string; // Reference to ChapterSource
-        //   pageNumber?: number;
-        //   imageUrl?: string;
-        //   drmData: string | null;
-        //   width?: number | null;
-        //   height?: number | null;
-        //   fileSize?: number | null;
-        //   createdAt?: Date;
-        // }
-
         return {
           id: this.generateUid(page.id),
           chapterSourceId: chapter,
@@ -258,7 +273,6 @@ export class CuuTruyenParser {
       },
     );
   }
-
   private buildListUrl(
     page: number,
     order: SortOrder,

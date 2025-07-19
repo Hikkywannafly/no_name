@@ -15,6 +15,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const url = searchParams.get('url');
+    const referer = searchParams.get('referer');
     if (!url) {
         return new NextResponse('Missing url', { status: 400 });
     }
@@ -31,7 +32,7 @@ export async function GET(req: NextRequest) {
         const response = await fetch(url, {
             headers: {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36',
-                'Referer': 'https://truyenqqgo.com',
+                'Referer': referer || '',
             },
         });
         if (!response.ok) {

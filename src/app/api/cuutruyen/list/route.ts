@@ -18,8 +18,7 @@ export async function GET(request: NextRequest) {
 
   try {
     const manga = await parser.searchMangaID(name);
-    const mangaWithChapters = await parser.getDetails(manga);
-    return NextResponse.json({ data: mangaWithChapters || [] });
+    return NextResponse.json({ data: manga || [] });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

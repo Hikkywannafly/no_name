@@ -47,7 +47,7 @@ export const Chapter = memo(function Manga(props: ChapterProps) {
                 />
               ) : (
                 <Image
-                  src={`/api/proxy?url=${chapter.url}`}
+                  src={`/api/proxy?url=${chapter.url}$referer=`}
                   alt={chapter.title || "Chapter Image"}
                   width={1024}
                   height={1469}

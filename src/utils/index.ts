@@ -1,28 +1,62 @@
 // import type { Chapter, ChapterRange } from "../types/chapter"
 import type { Manga, MangaChapter } from "@/provider/CuuTruyen/type";
 import type { Media } from "@/types/anilist";
-import type { ChapterSource } from "@/types/manga";
+import type { UChapter } from "@/types/manga";
 import type { ExtendChapter, ExtendManga } from "@/types/mangadex";
 import type { UnifiedChapter, UnifiedManga } from "@/types/unified";
 import { getCoverArt, getMangaTitle } from "@/utils/mangadex";
+// export function groupChaptersIntoRanges(
+//   chapters: any | MangaChapter[],
+//   rangeSize = 10,
+// ): any[] | MangaChapter[] {
+//   // Sort chapters by number
+//   const sortedChapters = [...chapters].sort((a, b) => {
+//     const numA = Number.parseFloat(a.number) || 0;
+//     const numB = Number.parseFloat(b.number) || 0;
+//     return numA - numB;
+//   });
+
+//   const ranges: any[] = [];
+
+//   for (let i = 0; i < sortedChapters.length; i += rangeSize) {
+//     const rangeChapters = sortedChapters.slice(i, i + rangeSize);
+//     const startNum = Number.parseFloat(rangeChapters[0].number) || 1;
+//     const endNum =
+//       Number.parseFloat(rangeChapters[rangeChapters.length - 1].number) || 1;
+
+//     ranges.push({
+//       label: startNum === endNum ? `${startNum}` : `${startNum} - ${endNum}`,
+//       startChapter: startNum,
+//       endChapter: endNum,
+//       chapters: rangeChapters,
+//     });
+//   }
+
+//   return ranges;
+// }
 export function groupChaptersIntoRanges(
-  chapters: any[] | MangaChapter[],
+  chapters: UChapter[],
   rangeSize = 10,
-): any[] | MangaChapter[] {
-  // Sort chapters by number
+): {
+  label: string;
+  startChapter: number;
+  endChapter: number;
+  chapters: UChapter[];
+}[] {
   const sortedChapters = [...chapters].sort((a, b) => {
-    const numA = Number.parseFloat(a.number) || 0;
-    const numB = Number.parseFloat(b.number) || 0;
+    const numA = Number.parseFloat(String(a.number)) || 0;
+    const numB = Number.parseFloat(String(b.number)) || 0;
     return numA - numB;
   });
 
-  const ranges: any[] = [];
+  const ranges = [];
 
   for (let i = 0; i < sortedChapters.length; i += rangeSize) {
     const rangeChapters = sortedChapters.slice(i, i + rangeSize);
-    const startNum = Number.parseFloat(rangeChapters[0].number) || 1;
-    const endNum =
-      Number.parseFloat(rangeChapters[rangeChapters.length - 1].number) || 1;
+    const startNum = Number.parseFloat(String(rangeChapters[0].number)) || 1;
+    const endNum = Number.parseFloat(
+      String(rangeChapters[rangeChapters.length - 1].number),
+    ) || 1;
 
     ranges.push({
       label: startNum === endNum ? `${startNum}` : `${startNum} - ${endNum}`,
@@ -55,33 +89,33 @@ export function convertMangaDexChapters(
   }));
 }
 
-export function convertCuuTruyen(
-  manga: Manga & { chapters: ChapterSource[] },
-): UnifiedManga {
-  return {
-    id: manga.id,
-    title: manga.title,
-    coverUrl: manga.coverUrl,
-    description: manga.description,
-    source: "cuutruyen",
-    chapters: (manga.chapters || []).map((chapterSource) => ({
-      id: chapterSource.id,
-      chapterId: chapterSource.id,
-      title: chapterSource.title || "",
-      number: chapterSource.number,
-      source: chapterSource.source,
-      extraData: {
-        sourceId: chapterSource.id,
-        sourceUrl: chapterSource.url,
-        scanlator: chapterSource.scanlator,
-        uploadDate: chapterSource.uploadDate,
-        pageCount: chapterSource.number,
-        isActive: true,
-        createdAt: chapterSource.uploadDate,
-      },
-    })),
-  };
-}
+// export function convertCuuTruyen(
+//   manga: Manga & { chapters: UChapterSource[] },
+// ): UnifiedManga {
+//   return {
+//     id: manga.id,
+//     title: manga.title,
+//     coverUrl: manga.coverUrl,
+//     description: manga.description,
+//     source: "cuutruyen",
+//     chapters: (manga.chapters || []).map((chapterSource) => ({
+//       id: chapterSource.id,
+//       chapterId: chapterSource.id,
+//       title: chapterSource.title || "",
+//       number: chapterSource.number,
+//       source: chapterSource.source,
+//       extraData: {
+//         sourceId: chapterSource.id,
+//         sourceUrl: chapterSource.url,
+//         scanlator: chapterSource.scanlator,
+//         uploadDate: chapterSource.uploadDate,
+//         pageCount: chapterSource.number,
+//         isActive: true,
+//         createdAt: chapterSource.uploadDate,
+//       },
+//     })),
+//   };
+// }
 
 export function convertCuuTruyen1(manga: Manga): UnifiedManga {
   return {

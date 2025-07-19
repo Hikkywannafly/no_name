@@ -45,20 +45,7 @@ export class TruyenQQParser {
 
         return await this.http.get(url);
     }
-
-    // async searchMangaID(
-    //     name: string,
-    // ): Promise<any> {
-
-    //     const url = `https://${this.config.domain[0]}/tim-kiem/trang-1.html?q=${encodeURIComponent(name)}`;
-    //     const res = await this.fetchWithSession(url);
-    //     const $ = cheerio.load(res.data);
-    //     const firstResult = $("#main_homepage li").first();
-    //     const firstBookA = firstResult.find("a").first();
-    //     const href = firstBookA.attr("href");
-    //     return await this.getDetails(href?.toString() || "");
-    // }
-
+    // searchMangaID  
     async searchMangaID(name: string): Promise<any> {
         const trySearch = async (keyword: string): Promise<string | null> => {
             const url = `https://${this.config.domain[0]}/tim-kiem/trang-1.html?q=${encodeURIComponent(keyword)}`;

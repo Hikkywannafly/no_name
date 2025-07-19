@@ -48,7 +48,6 @@ export const Manga = memo(function Manga(props: MangaProps) {
   //   translatedLanguage: ["vi"],
   // });
   const { data: cuuTruyenData, isLoading: cuuTruyenLoading } = useCuuTruyenData(
-    // `${manga?.title?.userPreferred}|${manga?.title?.english}` || "",
     `${manga?.title?.userPreferred}` || `${manga?.title?.english}` || "",
   );
   const { data: truyenQQData, isLoading: truyenQQLoading } = useTruyenQQData(

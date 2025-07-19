@@ -2,6 +2,10 @@ export enum MangaState {
   ONGOING = "ONGOING",
   FINISHED = "FINISHED",
   PAUSED = "PAUSED",
+  UNKNOWN = "UNKNOWN",
+  COMPLETED = "COMPLETED",
+  HIATUS = "HIATUS",
+  CANCELLED = "CANCELLED",
 }
 
 export enum ContentRating {

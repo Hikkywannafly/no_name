@@ -21,7 +21,6 @@ export class SourceManager {
   }
 
   private initializeParsers() {
-    // Khởi tạo các parser cho từng nguồn
     for (const config of this.sourceConfigs) {
       if (!config.isActive) continue;
 
@@ -120,10 +119,6 @@ export class SourceManager {
 
     return results;
   }
-
-  /**
-   * Merge và trả về thông tin manga tổng hợp
-   */
   async getMergedManga(sources: MangaSource[]) {
     const mergedManga = this.merger.mergeManga(sources);
 
@@ -140,10 +135,6 @@ export class SourceManager {
       })),
     };
   }
-
-  /**
-   * Lấy danh sách manga từ tất cả nguồn
-   */
   async getMangaList(page = 1, sortOrder = "UPDATED"): Promise<MangaSource[]> {
     const results: MangaSource[] = [];
 

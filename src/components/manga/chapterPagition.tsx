@@ -5,13 +5,13 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { } from "@/components/ui/select";
 import { Constants } from "@/constants";
 
+import type { UChapter } from "@/types/manga";
 import { groupChaptersIntoRanges } from "@/utils";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-
 interface HorizontalChapterPaginationProps {
-  chapters: any;
-  onChapterSelect?: (chapter: any) => void;
+  chapters: UChapter[];
+  onChapterSelect?: (chapter: UChapter) => void;
   rangeSize?: number;
 }
 
@@ -21,7 +21,14 @@ export default function HorizontalChapterPagination({
   rangeSize = 10,
 }: HorizontalChapterPaginationProps) {
   const [selectedRangeIndex, setSelectedRangeIndex] = useState(0);
-  const [chapterRanges, setChapterRanges] = useState<any[]>([]);
+  const [chapterRanges, setChapterRanges] = useState<
+    {
+      label: string;
+      startChapter: number;
+      endChapter: number;
+      chapters: UChapter[];
+    }[]
+  >([]);
 
   useEffect(() => {
     const ranges = groupChaptersIntoRanges(chapters, rangeSize);
@@ -40,6 +47,7 @@ export default function HorizontalChapterPagination({
     return <div className="text-white">Không có chương nào :( </div>;
   }
 
+  const currentRange = chapterRanges[selectedRangeIndex];
   return (
     <div className="w-full text-white">
       <div className="mb-6">
@@ -64,28 +72,28 @@ export default function HorizontalChapterPagination({
       </div>
       <div className="space-y-3">
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-          {chapterRanges[selectedRangeIndex]?.chapters.map((chapter: any) => (
+          {currentRange?.chapters.map((chapter) => (
             <Link
               key={chapter.id}
               className="no-underline"
-              href={Constants.router.chapter(chapter.id, chapter.source)}
+              href={Constants.router.chapter(chapter.id, chapter.sourceName || "undefined")}
             >
               <Card
                 key={chapter.id}
                 className="cursor-pointer bg-black/50 p-4 transition-colors hover:bg-gray-700"
                 onClick={() => handleChapterClick(chapter)}
               >
-                <div className="flex flex-col space-y-2">
+                <div className="group flex flex-col space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="font-semibold text-white">
                       Chương {chapter.number}
                     </span>
                     <span className="text-gray-400 text-xs">
-                      {chapter.uploadDate || "Unknown"}
+                      {chapter.createdAt || "Unknown"}
                     </span>
                   </div>
                   {chapter.title && (
-                    <div className="group relative overflow-hidden">
+                    <div className=" relative overflow-hidden">
                       <div className="group-hover:-translate-x-full transform whitespace-nowrap text-gray-300 text-sm transition-transform duration-[4000ms] ease-linear ">
                         {chapter.title}
                       </div>
@@ -93,7 +101,7 @@ export default function HorizontalChapterPagination({
                   )}
                   <div className="flex items-center justify-between text-gray-500 text-xs">
                     <span>{chapter.scanlator}</span>
-                    <span className="capitalize">{chapter.source}</span>
+                    {/* <span className="capitalize">{chapter.sourceName}</span> */}
                   </div>
                 </div>
               </Card>

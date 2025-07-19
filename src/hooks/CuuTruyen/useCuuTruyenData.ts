@@ -1,4 +1,4 @@
-import type { Manga } from "@/provider/CuuTruyen/type";
+
 import useSWR from "swr";
 export default function useCuuTruyenData(name: string | null) {
   const fetcher = (url: string) => fetch(url).then((res) => res.json());
@@ -9,7 +9,7 @@ export default function useCuuTruyenData(name: string | null) {
   );
 
   return {
-    data: (data?.data || []) as Manga,
+    data: (data?.data || []),
     isLoading,
     error,
   };
