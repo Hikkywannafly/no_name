@@ -22,37 +22,83 @@ import { useAnilist } from "@/context/useAnilist";
 import useCuuTruyenData from "@/hooks/CuuTruyen/useCuuTruyenData";
 import useTruyenQQData from "@/hooks/TruyenQQ/useTruyenQQData";
 import type { Media } from "@/types/anilist";
+// import type { UPage } from "@/types/manga";
 import { numberWithCommas } from "@/utils";
 import { AspectRatio } from "@radix-ui/react-aspect-ratio";
 import { memo, useCallback, useMemo, useState } from "react";
+
+// Source configuration for prefetching
+// const SOURCE_CONFIG = {
+//   cuutruyen: {
+//     apiEndpoint: '/api/cuutruyen/chapter',
+//     sourceKey: 'source1'
+//   },
+//   truyenqq: {
+//     apiEndpoint: '/api/truyenqq/chapter',
+//     sourceKey: 'source2'
+//   }
+// } as const;
+
 interface MangaProps {
   mangaId: number;
   name?: string;
   prefetchManga?: Media;
 }
+
 export const Manga = memo(function Manga(props: MangaProps) {
   const { mangaId, prefetchManga } = props;
   const { mediaCache } = useAnilist();
 
   const manga = mediaCache[mangaId] || prefetchManga;
-  // const { data: manga } = useMediaDetails({
-  //   id: mangaId,
-  //   type: MediaType.Manga,
-  // },
-  //   {
-  //     fallbackData: prefetchManga,
-  //     revalidateOnFocus: false,
-  //   }
-  // );
-  // const { chapters: mangaDexData } = useChapterList(mangaId, {
-  //   translatedLanguage: ["vi"],
-  // });
+
   const { data: cuuTruyenData, isLoading: cuuTruyenLoading } = useCuuTruyenData(
     `${manga?.title?.userPreferred}` || `${manga?.title?.english}` || "",
   );
   const { data: truyenQQData, isLoading: truyenQQLoading } = useTruyenQQData(
     manga?.title?.userPreferred || "",
   );
+
+  // const [prefetchedChapters, setPrefetchedChapters] = useState<Record<string, UPage[]>>({});
+
+  // const prefetchChapters = useCallback(async () => {
+  //   try {
+  //     const promises = Object.entries(SOURCE_CONFIG).map(([key, config]) => {
+  //       const chapters = key === 'cuutruyen' ? cuuTruyenData?.chapters : truyenQQData?.chapters;
+  //       const firstChapter = chapters?.[0];
+
+  //       if (!firstChapter?.id) return null;
+
+  //       return fetch(`${config.apiEndpoint}?name=${firstChapter.id}`)
+  //         .then(res => res.json())
+  //         .then(data => ({ sourceKey: config.sourceKey, data: data.data || [] }))
+  //         .catch(() => ({ sourceKey: config.sourceKey, data: [] }));
+  //     }).filter(Boolean);
+
+  //     const results = await Promise.allSettled(promises);
+  //     const prefetched: Record<string, UPage[]> = {};
+
+  //     for (const result of results) {
+  //       if (result.status === 'fulfilled' && result.value) {
+  //         prefetched[result.value.sourceKey] = result.value.data;
+  //       }
+  //     }
+
+  //     setPrefetchedChapters(prefetched);
+  //   } catch (error) {
+  //     console.error('Error prefetching chapters:', error);
+  //   }
+  // }, [cuuTruyenData?.chapters, truyenQQData?.chapters]);
+
+  // // Auto prefetch when data is available
+  // useMemo(() => {
+  //   const hasChapters = cuuTruyenData?.chapters?.length > 0 || (truyenQQData?.chapters && truyenQQData.chapters.length > 0);
+  //   const notPrefetched = Object.keys(prefetchedChapters).length === 0;
+
+  //   if (hasChapters && notPrefetched) {
+  //     prefetchChapters();
+  //   }
+  // }, [cuuTruyenData?.chapters, truyenQQData?.chapters, prefetchedChapters, prefetchChapters]);
+
   const descriptionSources = useMemo(
     () =>
       [
@@ -85,7 +131,7 @@ export const Manga = memo(function Manga(props: MangaProps) {
       truyenQQLoading,
     ],
   );
-  // console.log("truyen test", truyenQQData.chapters, cuuTruyenData.chapters);
+  console.log("truyen test", truyenQQData.chapters, cuuTruyenData.chapters);
   const defaultDescriptionSource = useMemo(
     () => (descriptionSources.length > 0 ? descriptionSources[0].value : ""),
     [descriptionSources],
@@ -112,14 +158,14 @@ export const Manga = memo(function Manga(props: MangaProps) {
       {
         label: "TruyenQQ",
         value: "truyenqq",
-        chapters: truyenQQData?.chapters || [],
+        chapters: truyenQQData.chapters || [],
         loading: truyenQQLoading,
       },
     ],
     [
       cuuTruyenData.chapters,
       cuuTruyenLoading,
-      truyenQQData?.chapters,
+      truyenQQData.chapters,
       truyenQQLoading,
     ],
   );
@@ -150,6 +196,18 @@ export const Manga = memo(function Manga(props: MangaProps) {
     () => chapterSources.find((src) => src.value === selectedChapterSource),
     [chapterSources, selectedChapterSource],
   );
+
+  // const handleReadNow = useCallback(() => {
+  //   // Navigate to first chapter with prefetched data
+  //   const firstChapter = selectedSource?.chapters?.[0];
+  //   if (firstChapter) {
+  //     const sourceKey = selectedChapterSource === 'cuutruyen' ? 'source1' : 'source2';
+  //     const prefetchedData = prefetchedChapters[sourceKey];
+
+  //     // Navigate to chapter page with prefetched data
+  //     window.location.href = `/chapter/${firstChapter.id}/${sourceKey}?prefetched=${encodeURIComponent(JSON.stringify(prefetchedData))}`;
+  //   }
+  // }, [selectedSource?.chapters, selectedChapterSource, prefetchedChapters]);
 
   return (
     <div className="w-full">
@@ -183,7 +241,11 @@ export const Manga = memo(function Manga(props: MangaProps) {
               </div>
               <div className="flex-1 space-y-4 text-center md:text-left">
                 <div className="flex flex-col gap-3 sm:flex-row">
-                  <Button className="bg-red-600 px-8 font-semibold text-white hover:bg-red-700">
+                  <Button
+                    className="bg-red-600 px-8 font-semibold text-white hover:bg-red-700"
+                    // onClick={handleReadNow}
+                    disabled={!selectedSource?.chapters?.length}
+                  >
                     Đọc ngay
                   </Button>
                   <div className="">

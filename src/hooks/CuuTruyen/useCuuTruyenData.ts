@@ -5,6 +5,7 @@ export default function useCuuTruyenData(name: string | null) {
   const { data, isLoading, error } = useSWR(
     name ? `/api/cuutruyen/list?name=${encodeURIComponent(name)}` : null,
     fetcher,
+    { revalidateOnFocus: false }
   );
 
   return {

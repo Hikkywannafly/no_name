@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import {} from "@/components/ui/select";
+import { } from "@/components/ui/select";
 import { Constants } from "@/constants";
 
 import type { UChapter } from "@/types/manga";
@@ -24,8 +24,8 @@ export default function HorizontalChapterPagination({
   const [chapterRanges, setChapterRanges] = useState<
     {
       label: string;
-      startChapter: number;
-      endChapter: number;
+      startChapter: string;
+      endChapter: string;
       chapters: UChapter[];
     }[]
   >([]);
@@ -46,7 +46,7 @@ export default function HorizontalChapterPagination({
   if (chapterRanges.length === 0) {
     return <div className="text-white">Không có chương nào :( </div>;
   }
-
+  console.log("chapterRanges", chapters);
   const currentRange = chapterRanges[selectedRangeIndex];
   return (
     <div className="w-full text-white">
@@ -57,11 +57,10 @@ export default function HorizontalChapterPagination({
               <Button
                 key={`${range.startChapter}-${range.endChapter}-${index}`}
                 variant={selectedRangeIndex === index ? "default" : "secondary"}
-                className={`flex-shrink-0 rounded px-4 py-2 font-medium text-sm transition-colors ${
-                  selectedRangeIndex === index
-                    ? "bg-red-600 text-white "
-                    : "bg-black/50 text-white "
-                }`}
+                className={`flex-shrink-0 rounded px-4 py-2 font-medium text-sm transition-colors ${selectedRangeIndex === index
+                  ? "bg-red-600 text-white "
+                  : "bg-black/50 text-white "
+                  }`}
                 onClick={() => handleRangeSelect(index)}
               >
                 {range.label}
@@ -73,9 +72,9 @@ export default function HorizontalChapterPagination({
       </div>
       <div className="space-y-3">
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-          {currentRange?.chapters.map((chapter) => (
+          {currentRange?.chapters.map((chapter, _idx) => (
             <Link
-              key={chapter.id}
+              key={chapter.id + _idx}
               className="no-underline"
               href={Constants.router.chapter(
                 chapter.id,

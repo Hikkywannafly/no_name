@@ -6,6 +6,7 @@ export default function useCuuTruyenChapter(name: string | null) {
   const { data, isLoading, error } = useSWR(
     name ? `/api/cuutruyen/chapter?name=${encodeURIComponent(name)}` : null,
     fetcher,
+    { revalidateOnFocus: false }
   );
 
   return {

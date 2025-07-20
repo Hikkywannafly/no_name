@@ -6,6 +6,7 @@ export default function useTruyenQQChapter(name: string | null) {
   const { data, isLoading, error } = useSWR(
     name ? `/api/truyenqq/chapter?name=${encodeURIComponent(name)}` : null,
     fetcher,
+    { revalidateOnFocus: false }
   );
 
   return {

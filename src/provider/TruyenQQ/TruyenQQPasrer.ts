@@ -188,7 +188,6 @@ export class TruyenQQParser {
     const title = $("h1.title").text().trim();
     const coverUrl = $(".story-info-left img").attr("src") || null;
 
-    // Chapters to UChapter[]
     const chapters: UChapter[] = $("div.list_chapter div.works-chapter-item")
       .get()
       .reverse()
@@ -198,7 +197,7 @@ export class TruyenQQParser {
         const href = a.attr("href") || "";
         const name = a.text().trim();
         const dateText = $div.find(".time-chap").text().trim();
-        const match = name.match(/(Chương|Chapter)\s*(\d+(?:\.\d+)?)/i);
+        const match = name.match(/(Chương|Chapter|Chuong)\s*(\d+(?:\.\d+)?)/i);
         return {
           id: href.split("/").pop()?.replace(".html", "") || "",
           title: name,

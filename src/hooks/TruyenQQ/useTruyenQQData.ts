@@ -6,6 +6,7 @@ export default function useTruyenQQData(name: string | null) {
   const { data, isLoading, error } = useSWR(
     name ? `/api/truyenqq/list?name=${encodeURIComponent(name)}` : null,
     fetcher,
+    { revalidateOnFocus: false }
   );
   return {
     data: (data?.data || []) as Manga,

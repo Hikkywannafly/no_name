@@ -29,10 +29,10 @@ export async function generateMetadata({
       anilistData?.title?.english || anilistData?.title?.romaji || mangaName;
     const description =
       anilistData?.description?.replace(/<[^>]*>/g, "").slice(0, 160) ||
-      `Read ${title} manga online`;
+      `Đọc ${title} online`;
 
     return {
-      title: `${title} - Read Manga Online`,
+      title: `${title} - Đọc truyện tranh online`,
       description,
       openGraph: {
         title,
@@ -53,8 +53,8 @@ export async function generateMetadata({
     };
   } catch (_error) {
     return {
-      title: "Manga Not Found",
-      description: "The requested manga could not be found.",
+      title: "Không tìm thấy truyện này :((",
+      description: "Không tìm thấy thông tin truyện.",
     };
   }
 }
@@ -68,6 +68,7 @@ export default async function MangaPage({ params }: MangaPageProps) {
     id: mangaId,
     type: MediaType.Manga,
   });
+  
 
   return (
     <BaseLayout showHeader={true} showFooter={true}>

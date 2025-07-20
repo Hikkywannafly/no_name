@@ -167,7 +167,7 @@ export const Chapter = memo(function Chapter(props: ChapterProps) {
     }
   }, [settings.readingMode, currentPage, chapters.length]);
 
-  // Image loading handler
+
   const handleImageLoad = useCallback((index: number) => {
     setLoadedImages((prev: Set<number>) => new Set([...prev, index]));
   }, []);
