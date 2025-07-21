@@ -2,17 +2,18 @@ import { Chapter } from "@/components/chapter/chapter"
 import { ChapterProvider } from "@/context/useChapter"
 
 interface ChapterPageProps {
-  params: {
+  params: Promise<{
     "anilist-id": string
     "chapter-id": string
     "source-id": string
-  }
+  }>
 }
 
-export default function ChapterPage({ params }: ChapterPageProps) {
-  const mangaId = params["chapter-id"]
-  const source = params["source-id"]
-  const anilistId = params["anilist-id"]
+export default async function ChapterPage({ params }: ChapterPageProps) {
+  const resolvedParams = await params
+  const mangaId = resolvedParams["chapter-id"]
+  const source = resolvedParams["source-id"]
+  const anilistId = resolvedParams["anilist-id"]
 
   return (
     <ChapterProvider mangaId={mangaId} source={source} nextChapter={undefined} prevChapter={undefined}>
