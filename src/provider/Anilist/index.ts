@@ -72,22 +72,18 @@ export const getMediaDetails = async (
   );
   const media = response?.Media;
 
-  if (media?.title?.userPreferred) {
-    const { data: { data: mangaList }, } = await MangadexApi.Manga.getSearchManga({
-      title: media.title.userPreferred || "",
-      authors: (media?.staff?.nodes ?? [])
-        .map((author) => author?.name?.full)
-        .filter((name): name is string => !!name),
-      year: media?.startDate?.year || undefined,
 
-      includes: [],
-      limit: 1,
-    })
-    // const { data: { data: mangaList }, } = await MangadexApi.Manga.getSearchMangaTitle(media.title.userPreferred)
-    console.log("Anilist Manga", media.title.userPreferred, mangaList);
+  const { data: { data: mangaList }, } = await MangadexApi.Manga.getSearchManga({
+    title: media?.title?.userPreferred || "",
+    authors: (media?.staff?.nodes ?? [])
+      .map((author) => author?.name?.full)
+      .filter((name): name is string => !!name),
+    year: media?.startDate?.year || undefined,
 
-    media.translations = mangaList[0].attributes.altTitles
-  }
+    includes: [],
+    limit: 1,
+  })
+  media.translations = mangaList[0].attributes.altTitles
 
   return media;
 };

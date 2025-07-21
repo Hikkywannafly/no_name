@@ -148,6 +148,12 @@ export const createHttpsRequestPromise = async <T>(
   }
 
   if (CORS_V2) {
+    const headers = new Headers();
+    headers.set("referer", "https://truyendex.com/");
+    headers.set("origin", "https://truyendex.com/");
+    headers.set("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36");
+    headers.set("accept", "application/json, text/plain, */*");
+    // headers.set("x-requested-with", " ");
     const data = await customFetch(`${CORS_V2}/mangadex${path}`);
 
     return { data };
