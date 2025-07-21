@@ -1,5 +1,5 @@
+import { MangadexApi } from "@/provider";
 import type { MediaArgs, PageArgs } from "@/types/anilist";
-
 import axios from "axios";
 import {
   type MediaDetailsQueryResponse,
@@ -41,6 +41,27 @@ export const getMedia = async (args: MediaArgs & PageArgs, fields?: string) => {
   return response.Page.media || [];
 };
 
+// export const getMediaDetails = async (
+//   args: MediaArgs & PageArgs,
+//   fields?: string,
+// ) => {
+//   const response = await anilistFetcher<MediaDetailsQueryResponse>(
+//     mediaDetailsQuery(fields),
+//     args,
+//   );
+//   const media = response?.Media;
+
+//   if (media?.title?.userPreferred) {
+//     const mangadex = await MangadexApi.Manga.getSearchManga({
+//       title: media.title.userPreferred,
+//       limit: 1,
+//       includes: [],
+//     });
+//     console.log("Anilist Manga", media?.title?.userPreferred, mangadex);
+//   }
+
+//   return media;
+// };
 export const getMediaDetails = async (
   args: MediaArgs & PageArgs,
   fields?: string,
@@ -50,22 +71,23 @@ export const getMediaDetails = async (
     args,
   );
   const media = response?.Media;
-  // let translations: Translation[] = [];
-  // const media = response?.Media;
 
-  // const { data } = await supabaseClient
-  //   .from<Translation>("kaguya_translations")
-  //   .select("*")
-  //   .eq("mediaId", media.id)
-  //   .eq("mediaType", args?.type || MediaType.Anime);
+  if (media?.title?.userPreferred) {
+    const { data: { data: mangaList }, } = await MangadexApi.Manga.getSearchManga({
+      title: media.title.userPreferred || "",
+      authors: (media?.staff?.nodes ?? [])
+        .map((author) => author?.name?.full)
+        .filter((name): name is string => !!name),
+      year: media?.startDate?.year || undefined,
 
-  // if (data?.length) {
-  //   translations = data;
-  // } else if (args?.type === MediaType.Manga) {
-  //   translations = null;
-  // } else {
-  //   translations = await getTranslations(media);
-  // }
+      includes: [],
+      limit: 1,
+    })
+    // const { data: { data: mangaList }, } = await MangadexApi.Manga.getSearchMangaTitle(media.title.userPreferred)
+    console.log("Anilist Manga", media.title.userPreferred, mangaList);
+
+    media.translations = mangaList[0].attributes.altTitles
+  }
 
   return media;
 };

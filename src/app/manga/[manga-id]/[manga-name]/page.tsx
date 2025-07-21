@@ -70,6 +70,7 @@ export default async function MangaPage({ params }: MangaPageProps) {
   });
 
 
+
   return (
     <BaseLayout showHeader={true} showFooter={true}>
       <Manga mangaId={mangaId} name={mangaName} prefetchManga={mangaData} />

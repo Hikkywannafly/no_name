@@ -41,6 +41,7 @@ export const Chapter = memo(function Chapter(props: ChapterProps) {
   // Chapter data
   const { data: cuuTruyenChapters } = useCuuTruyenChapter(mangaId.toString());
   const { data: truyenQQChapters } = useTruyenQQChapter(mangaId);
+
   const chapters: UPage[] =
     source === "source1" ? cuuTruyenChapters || [] : truyenQQChapters || [];
   console.log("Chapters:", chapters);
@@ -50,7 +51,7 @@ export const Chapter = memo(function Chapter(props: ChapterProps) {
     zoomLevel: 100,
     autoFullscreen: false,
     showProgress: true,
-    preloadPages: 3,
+    preloadPages: 10,
   });
 
   const [currentPage, setCurrentPage] = useState(0);
@@ -352,11 +353,10 @@ export const Chapter = memo(function Chapter(props: ChapterProps) {
   return (
     <div
       ref={readerRef}
-      className={`relative min-h-screen bg-black text-white ${
-        settings.readingMode === "vertical"
-          ? "overflow-y-auto"
-          : "overflow-hidden"
-      }`}
+      className={`relative min-h-screen bg-black text-white ${settings.readingMode === "vertical"
+        ? "overflow-y-auto"
+        : "overflow-hidden"
+        }`}
     >
       {/* Progress bar */}
       {settings.showProgress && (

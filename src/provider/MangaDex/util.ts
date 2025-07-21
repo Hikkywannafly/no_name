@@ -175,7 +175,7 @@ export const createHttpsRequestPromise = async <T>(
     `${CORS}/v1/cors/${encodedUrl}`,
     httpsRequestOptions,
   );
-
+  console.info("Response from API Mangadex: ", `${CORS}/v1/cors/${encodedUrl}`,);
   return { data };
 };
 

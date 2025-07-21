@@ -95,7 +95,7 @@ export function getHighestPrioritySource(): SourceConfig | undefined {
 export const sourceInfo = {
   cuutruyen: {
     name: "source1",
-    baseUrl: "https://cuutruyen.net",
+    baseUrl: "cuutruyen.net",
     logo: "/logos/cuutruyen.png",
     description: "Nơi lưu trữ và đọc truyện tranh miễn phí.",
   },

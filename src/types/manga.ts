@@ -163,7 +163,6 @@ export interface UChapter {
   volume: number | null;
   language: string;
   sourceName?: string;
-  sources?: UChapterSource[]; // Danh sách các nguồn cho chapter này
   scanlator?: string | null;
   uploadDate?: Date | null;
   pageCount?: number;
@@ -177,12 +176,12 @@ export interface UChapterSource {
   sourceName: string;
   sourceId: string;
   sourceUrl: string;
+  anilist ?:string;
   title: string | null;
   number: number;
-  volume: number | null;
-  scanlator?: string | null;
+  volume?: number | null;
+  chapter?: UChapter[];
   uploadDate?: Date | null;
-  pageCount?: number;
   isActive?: boolean;
   createdAt?: Date;
   extraData?: Record<string, any>;

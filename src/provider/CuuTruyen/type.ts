@@ -118,11 +118,16 @@ export interface MangaDetailResponse {
 export interface ChapterListResponse {
   id: number;
   name?: string;
+  order?: number;
   number: number;
+  status?: string;
   created_at: string;
+  updated_at?: string;
 }
 
 export interface ChapterDetailResponse {
+  manga?: any;
+  team?: any;
   pages: {
     id: number;
     image_url: string;

@@ -48,7 +48,6 @@ export default function HorizontalChapterPagination({
   if (chapterRanges.length === 0) {
     return <div className="text-white">Không có chương nào :( </div>;
   }
-  console.log("chapterRanges", chapters);
   const currentRange = chapterRanges[selectedRangeIndex];
   return (
     <div className="w-full text-white">

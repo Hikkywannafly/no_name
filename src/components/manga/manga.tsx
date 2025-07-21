@@ -25,7 +25,7 @@ import type { Media } from "@/types/anilist";
 // import type { UPage } from "@/types/manga";
 import { numberWithCommas } from "@/utils";
 import { AspectRatio } from "@radix-ui/react-aspect-ratio";
-import { memo, useCallback, useMemo, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 
 // Source configuration for prefetching
 // const SOURCE_CONFIG = {
@@ -47,7 +47,7 @@ interface MangaProps {
 
 export const Manga = memo(function Manga(props: MangaProps) {
   const { mangaId, prefetchManga } = props;
-  const { mediaCache } = useAnilist();
+  const { mediaCache, setMedia } = useAnilist();
 
   const manga = mediaCache[mangaId] || prefetchManga;
 
@@ -57,7 +57,7 @@ export const Manga = memo(function Manga(props: MangaProps) {
   const { data: truyenQQData, isLoading: truyenQQLoading } = useTruyenQQData(
     manga?.title?.userPreferred || "",
   );
-
+  const viTitles = manga.translations?.filter((t: any) => t.vi).map((t: any) => t.vi) ?? [];
   // const [prefetchedChapters, setPrefetchedChapters] = useState<Record<string, UPage[]>>({});
 
   // const prefetchChapters = useCallback(async () => {
@@ -99,6 +99,12 @@ export const Manga = memo(function Manga(props: MangaProps) {
   //   }
   // }, [cuuTruyenData?.chapters, truyenQQData?.chapters, prefetchedChapters, prefetchChapters]);
 
+  useEffect(() => {
+    if (prefetchManga && !mediaCache[mangaId]) {
+      setMedia(mangaId, prefetchManga);
+    }
+  }, [mangaId, prefetchManga, mediaCache, setMedia]);
+
   const descriptionSources = useMemo(
     () =>
       [
@@ -131,7 +137,7 @@ export const Manga = memo(function Manga(props: MangaProps) {
       truyenQQLoading,
     ],
   );
-  console.log("truyen test", truyenQQData.chapters, cuuTruyenData.chapters);
+  // console.log("truyen test", truyenQQData.chapters, cuuTruyenData.chapters);
   const defaultDescriptionSource = useMemo(
     () => (descriptionSources.length > 0 ? descriptionSources[0].value : ""),
     [descriptionSources],
@@ -241,13 +247,14 @@ export const Manga = memo(function Manga(props: MangaProps) {
               </div>
               <div className="flex-1 space-y-4 text-center md:text-left">
                 <div className="flex flex-col gap-3 sm:flex-row">
-                  <Button
-                    className="bg-red-600 px-8 font-semibold text-white hover:bg-red-700"
-                    // onClick={handleReadNow}
-                    disabled={!selectedSource?.chapters?.length}
-                  >
-                    Đọc ngay
-                  </Button>
+                  {!isChapterSourcesLoading && (
+                    <Button
+                      className="bg-red-600 px-8 font-semibold text-white hover:bg-red-700"
+                      disabled={!selectedSource?.chapters?.length}
+                    >
+                      Đọc ngay
+                    </Button>
+                  )}
                   <div className="">
                     <Select
                       value={selectedDescriptionSource}
@@ -278,15 +285,13 @@ export const Manga = memo(function Manga(props: MangaProps) {
                 </div>
                 <div className="space-y-3">
                   <h1 className="font-bold text-2xl text-white leading-tight md:text-3xl lg:text-4xl">
-                    {/* {getMangaTitle(manga)} */}
-                    {manga?.title?.userPreferred}
+                    {viTitles[0] || manga?.title?.userPreferred}
                   </h1>
                   <p className="text-gray-300 text-sm leading-relaxed md:text-base">
-                    {manga?.title?.english ||
-                      manga?.title?.native ||
-                      "No title available."}
+                    {
+                      viTitles[0] ? manga?.title?.userPreferred : manga?.title?.english
+                    }
                   </p>
-
                   <div className="hidden gap-x-8 overflow-x-auto md:flex md:gap-x-16 [&>*]:shrink-0">
                     <InfoItem
                       title={"Quốc Gia"}
@@ -429,6 +434,7 @@ export const Manga = memo(function Manga(props: MangaProps) {
               <div className="space-y-4 rounded-lg bg-black/50 p-6">
                 <h3 className="font-semibold text-lg">Thông tin thêm</h3>
                 <div className="md:no-scrollbar flex flex-row gap-4 overflow-x-auto rounded-md bg-background-900 p-4 md:flex-col [&>*]:shrink-0">
+                  <InfoItem title="Viet Nam" value={viTitles.join("; ")} />
                   <InfoItem title="English" value={manga.title?.english} />
                   <InfoItem title="Native" value={manga.title?.native} />
                   <InfoItem title="Romanji" value={manga.title?.romaji} />

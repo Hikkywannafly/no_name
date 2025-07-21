@@ -270,7 +270,10 @@ export const getSearchManga = (
 
   return util.createHttpsRequestPromise<GetSearchMangaResponse>("GET", path);
 };
-
+export const getSearchMangaTitle = (title: string) => {
+  const path = `/manga?title=${encodeURIComponent(title)}`;
+  return util.createHttpsRequestPromise<GetSearchMangaResponse>("GET", path);
+};
 /**
  * Get reading status of ALL manga for logged User. If `status` is given,
  * returns a filtered list with only that specific reading status.

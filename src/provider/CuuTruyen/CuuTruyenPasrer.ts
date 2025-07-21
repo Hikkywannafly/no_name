@@ -273,6 +273,39 @@ export class CuuTruyenParser {
       },
     );
   }
+  
+  async getChapterListByMangaId(mangaId: string): Promise<UChapter[]> {
+    const res = await this.http.get<ApiResponse<ChapterListResponse[]>>(
+      `https://${this.config.domain[0]}/api/v2/mangas/${mangaId}/chapters`,
+    );
+
+    const chapters: UChapter[] = res.data.data
+      .map((chapter: ChapterListResponse): UChapter => {
+        return {
+          id: this.generateUid(chapter.id),
+          title: chapter.name || null,
+          number: chapter.number || 0,
+          volume: 0,
+          language: "vi",
+          sourceName: this.config.source,
+          // sources: [source],
+          createdAt: chapter.created_at
+            ? formatUploadDate(chapter.created_at)
+            : undefined,
+          updatedAt: chapter.updated_at
+            ? formatUploadDate(chapter.updated_at)
+            : undefined,
+          extraData: {},
+        };
+      })
+      .reverse();
+
+    return chapters;
+  }
+
+
+
+
   private buildListUrl(
     page: number,
     order: SortOrder,
@@ -289,9 +322,8 @@ export class CuuTruyenParser {
         url = `${baseUrl}/api/v2/tags/${tag.key}`;
       } else if (filter.states?.size === 1) {
         const state = Array.from(filter.states)[0];
-        url = `${baseUrl}/api/v2/tags/${
-          state === MangaState.ONGOING ? "dang-tien-hanh" : "da-hoan-thanh"
-        }`;
+        url = `${baseUrl}/api/v2/tags/${state === MangaState.ONGOING ? "dang-tien-hanh" : "da-hoan-thanh"
+          }`;
       } else {
         url = `${baseUrl}/api/v2/mangas`;
         switch (order) {

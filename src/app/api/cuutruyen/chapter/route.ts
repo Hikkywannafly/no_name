@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
   }
 
   const parser = new CuuTruyenParser({
-    domain: ["cuutruyen.net"],
+    domain: [sourceInfo.cuutruyen.baseUrl],
     userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
     pageSize: 20,
     source: sourceInfo.cuutruyen.name,
@@ -18,8 +18,8 @@ export async function GET(request: NextRequest) {
   });
 
   try {
-    const chapters = await parser.getPages(mangaId);
-    return NextResponse.json({ data: chapters || [] });
+    const chapter = await parser.getPages(mangaId);
+    return NextResponse.json({ data: chapter || [] });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
