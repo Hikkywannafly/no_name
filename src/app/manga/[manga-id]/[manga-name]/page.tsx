@@ -68,7 +68,7 @@ export default async function MangaPage({ params }: MangaPageProps) {
     id: mangaId,
     type: MediaType.Manga,
   });
-  
+
 
   return (
     <BaseLayout showHeader={true} showFooter={true}>

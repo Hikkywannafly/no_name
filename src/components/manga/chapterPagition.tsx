@@ -13,11 +13,13 @@ interface HorizontalChapterPaginationProps {
   chapters: UChapter[];
   onChapterSelect?: (chapter: UChapter) => void;
   rangeSize?: number;
+  anilist: any;
 }
 
 export default function HorizontalChapterPagination({
   chapters,
   onChapterSelect,
+  anilist,
   rangeSize = 10,
 }: HorizontalChapterPaginationProps) {
   const [selectedRangeIndex, setSelectedRangeIndex] = useState(0);
@@ -73,10 +75,12 @@ export default function HorizontalChapterPagination({
       <div className="space-y-3">
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
           {currentRange?.chapters.map((chapter, _idx) => (
+
             <Link
               key={chapter.id + _idx}
               className="no-underline"
               href={Constants.router.chapter(
+                anilist,
                 chapter.id,
                 chapter.sourceName || "undefined",
               )}
@@ -86,7 +90,7 @@ export default function HorizontalChapterPagination({
                 className="cursor-pointer bg-black/50 p-4 transition-colors hover:bg-gray-700"
                 onClick={() => handleChapterClick(chapter)}
               >
-                <div className="group flex flex-col space-y-2">
+                <div className=" flex flex-col space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="font-semibold text-white">
                       Chương {chapter.number}
@@ -95,12 +99,14 @@ export default function HorizontalChapterPagination({
                       {chapter.createdAt || "Unknown"}
                     </span>
                   </div>
-                  {chapter.title && (
-                    <div className=" relative overflow-hidden">
-                      <div className="group-hover:-translate-x-full transform whitespace-nowrap text-gray-300 text-sm transition-transform duration-[4000ms] ease-linear ">
+                  {chapter.title ? (
+                    <div className="relative w-full overflow-hidden">
+                      <div className="group-hover:-translate-x-full transform whitespace-nowrap text-gray-300 text-sm transition-transform duration-[4000ms] ease-linear">
                         {chapter.title}
                       </div>
                     </div>
+                  ) : (
+                    <div className="text-gray-500 text-sm italic">Không có tiêu đề</div>
                   )}
                   <div className="flex items-center justify-between text-gray-500 text-xs">
                     <span>{chapter.scanlator}</span>

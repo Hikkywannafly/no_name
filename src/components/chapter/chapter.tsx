@@ -19,6 +19,7 @@ import { memo, useCallback, useEffect, useRef, useState } from "react";
 interface ChapterProps {
   mangaId: string;
   source?: string;
+  anilistId?: string;
   prefetchManga?: any;
   nextChapter?: string;
   prevChapter?: string;

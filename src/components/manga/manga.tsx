@@ -419,6 +419,7 @@ export const Manga = memo(function Manga(props: MangaProps) {
                 <ChapterSkeleton />
               ) : (
                 <HorizontalChapterPagination
+                  anilist={manga.id}
                   chapters={selectedSource?.chapters || []}
                   rangeSize={10}
                 />
