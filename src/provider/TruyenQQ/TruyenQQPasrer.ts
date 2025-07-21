@@ -46,7 +46,8 @@ export class TruyenQQParser {
     return await this.http.get(url);
   }
   // searchMangaID
-  async searchMangaID(name: string): Promise<any> {
+  async searchMangaID(name: string, viName?: string): Promise<any> {
+
     const trySearch = async (keyword: string): Promise<string | null> => {
       const url = `https://${this.config.domain[0]}/tim-kiem/trang-1.html?q=${encodeURIComponent(keyword)}`;
       const res = await this.fetchWithSession(url);
@@ -57,20 +58,18 @@ export class TruyenQQParser {
       return href ? href.toString() : null;
     };
 
+    if (viName) {
+      const href = await trySearch(viName);
+      if (href) {
+        return await this.getDetails(href);
+      }
+    }
+
     let href = await trySearch(name);
     if (href) {
       return await this.getDetails(href);
     }
     const nameParts = name.split(" ");
-
-    // if (nameParts.length > 4) {
-    //     const shortenedOnce = nameParts.slice(0, nameParts.length - 4).join(" ");
-    //     console.log("Trying shortened once (-4 words):", shortenedOnce);
-    //     href = await trySearch(shortenedOnce);
-    //     if (href) {
-    //         return await this.getDetails(href);
-    //     }
-    // }
     if (nameParts.length > 1) {
       const halfLength = Math.floor(nameParts.length / 2);
       const halfName = nameParts.slice(0, halfLength).join(" ");
@@ -79,7 +78,6 @@ export class TruyenQQParser {
         return await this.getDetails(href);
       }
     }
-
     return null;
   }
 

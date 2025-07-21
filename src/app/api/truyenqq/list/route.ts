@@ -4,6 +4,7 @@ import { type NextRequest, NextResponse } from "next/server";
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const name = searchParams.get("name");
+  const viName = searchParams.get("viName");
   if (!name) {
     return NextResponse.json({ error: "Missing name" }, { status: 400 });
   }
@@ -16,7 +17,7 @@ export async function GET(request: NextRequest) {
     locale: "vi",
   });
   try {
-    const manga = await parser.searchMangaID(name);
+    const manga = await parser.searchMangaID(name, viName ?? undefined);
     return NextResponse.json({ data: manga || [] });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });

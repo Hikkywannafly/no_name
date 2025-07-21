@@ -41,27 +41,6 @@ export const getMedia = async (args: MediaArgs & PageArgs, fields?: string) => {
   return response.Page.media || [];
 };
 
-// export const getMediaDetails = async (
-//   args: MediaArgs & PageArgs,
-//   fields?: string,
-// ) => {
-//   const response = await anilistFetcher<MediaDetailsQueryResponse>(
-//     mediaDetailsQuery(fields),
-//     args,
-//   );
-//   const media = response?.Media;
-
-//   if (media?.title?.userPreferred) {
-//     const mangadex = await MangadexApi.Manga.getSearchManga({
-//       title: media.title.userPreferred,
-//       limit: 1,
-//       includes: [],
-//     });
-//     console.log("Anilist Manga", media?.title?.userPreferred, mangadex);
-//   }
-
-//   return media;
-// };
 export const getMediaDetails = async (
   args: MediaArgs & PageArgs,
   fields?: string,
@@ -73,17 +52,28 @@ export const getMediaDetails = async (
   const media = response?.Media;
 
 
-  const { data: { data: mangaList }, } = await MangadexApi.Manga.getSearchManga({
-    title: media?.title?.userPreferred || "",
-    authors: (media?.staff?.nodes ?? [])
-      .map((author) => author?.name?.full)
-      .filter((name): name is string => !!name),
-    year: media?.startDate?.year || undefined,
+  const title = media?.title?.userPreferred || "";
+  const authors = (media?.staff?.nodes ?? [])
+    .map((author) => author?.name?.full)
+    .filter((name): name is string => !!name);
+  const year = media?.startDate?.year || undefined;
 
-    includes: [],
-    limit: 1,
-  })
-  media.translations = mangaList[0].attributes.altTitles
+
+  let mangaList: any[] = [];
+  try {
+    const { data } = await MangadexApi.Manga.getSearchManga({
+      title,
+      authors,
+      year,
+      includes: [],
+      limit: 1,
+    });
+    mangaList = data?.data ?? [];
+  } catch (error) {
+    console.error("Lỗi khi fetch MangaDex:", error);
+  }
+  const firstManga = mangaList?.[0];
+  media.translations = firstManga?.attributes?.altTitles ?? [];
 
   return media;
 };

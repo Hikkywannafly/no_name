@@ -51,13 +51,15 @@ export const Manga = memo(function Manga(props: MangaProps) {
 
   const manga = mediaCache[mangaId] || prefetchManga;
 
+  const viTitles = manga.translations?.filter((t: any) => t.vi).map((t: any) => t.vi) ?? [];
+
   const { data: cuuTruyenData, isLoading: cuuTruyenLoading } = useCuuTruyenData(
     `${manga?.title?.userPreferred}` || `${manga?.title?.english}` || "",
   );
   const { data: truyenQQData, isLoading: truyenQQLoading } = useTruyenQQData(
-    manga?.title?.userPreferred || "",
+    manga?.title?.userPreferred || "", viTitles[1] ? viTitles[1] : viTitles[0]
   );
-  const viTitles = manga.translations?.filter((t: any) => t.vi).map((t: any) => t.vi) ?? [];
+
   // const [prefetchedChapters, setPrefetchedChapters] = useState<Record<string, UPage[]>>({});
 
   // const prefetchChapters = useCallback(async () => {
@@ -434,7 +436,7 @@ export const Manga = memo(function Manga(props: MangaProps) {
               <div className="space-y-4 rounded-lg bg-black/50 p-6">
                 <h3 className="font-semibold text-lg">Thông tin thêm</h3>
                 <div className="md:no-scrollbar flex flex-row gap-4 overflow-x-auto rounded-md bg-background-900 p-4 md:flex-col [&>*]:shrink-0">
-                  <InfoItem title="Viet Nam" value={viTitles.join("; ")} />
+                  <InfoItem title="Việt Nam" value={viTitles.join("; ")} />
                   <InfoItem title="English" value={manga.title?.english} />
                   <InfoItem title="Native" value={manga.title?.native} />
                   <InfoItem title="Romanji" value={manga.title?.romaji} />

@@ -1,305 +1,167 @@
-"use client";
-import ChapterImage from "@/components/chapter/chapterImg";
-import ReaderControls from "@/components/chapter/readerControl";
-import ReaderSettingsComponent from "@/components/chapter/readerSeting";
-import Image from "@/components/shared/image";
-import { Button } from "@/components/ui/button";
-import useCuuTruyenChapter from "@/hooks/CuuTruyen/useCuuTruyenChapter";
-import useTruyenQQChapter from "@/hooks/TruyenQQ/useTruyenQQChapter";
-import type { UPage } from "@/types/manga";
-import {
-  AlertTriangle,
-  ChevronLeft,
-  ChevronRight,
-  Maximize,
-  Settings,
-} from "lucide-react";
-import { memo, useCallback, useEffect, useRef, useState } from "react";
+"use client"
+import ChapterNavigation from "@/components/chapter/chapterNavigation"
+import ImagePreloader from "@/components/chapter/imagePreloader"
+import { OptimizedImage } from "@/components/chapter/optimizedImage"
+import ReaderSettingsComponent from "@/components/chapter/readerSeting"
+import { Button } from "@/components/ui/button"
+import { useChapter } from "@/context/useChapter"
+import { ChevronLeft, ChevronRight, Maximize, Settings } from "lucide-react"
+import { memo, useCallback, useEffect, useRef } from "react"
 
 interface ChapterProps {
-  mangaId: string;
-  source?: string;
-  anilistId?: string;
-  prefetchManga?: any;
-  nextChapter?: string;
-  prevChapter?: string;
-}
-
-type ReadingMode = "vertical" | "horizontal" | "single-page" | "page-flip";
-
-interface ReaderSettings {
-  readingMode: ReadingMode;
-  zoomLevel: number;
-  autoFullscreen: boolean;
-  showProgress: boolean;
-  preloadPages: number;
+  mangaId: string
+  source?: string
+  anilistId?: string
+  prefetchManga?: any
+  nextChapter?: string
+  prevChapter?: string
 }
 
 export const Chapter = memo(function Chapter(props: ChapterProps) {
-  const { mangaId, source } = props;
+  const { source = "source1" } = props
 
-  // Chapter data
-  const { data: cuuTruyenChapters } = useCuuTruyenChapter(mangaId.toString());
-  const { data: truyenQQChapters } = useTruyenQQChapter(mangaId);
+  const {
+    chapters,
+    isLoading,
+    error,
+    settings,
+    currentPage,
+    // setCurrentPage,
+    isFullscreen,
+    showControls,
+    setShowControls,
+    showSettings,
+    setShowSettings,
+    readingProgress,
+    setReadingProgress,
+    goToNextPage,
+    goToPrevPage,
+    toggleFullscreen,
+  } = useChapter()
 
-  const chapters: UPage[] =
-    source === "source1" ? cuuTruyenChapters || [] : truyenQQChapters || [];
-  console.log("Chapters:", chapters);
-  // Reader state
-  const [settings, setSettings] = useState<ReaderSettings>({
-    readingMode: "vertical",
-    zoomLevel: 100,
-    autoFullscreen: false,
-    showProgress: true,
-    preloadPages: 10,
-  });
-
-  const [currentPage, setCurrentPage] = useState(0);
-  const [isFullscreen, setIsFullscreen] = useState(false);
-  const [showControls, setShowControls] = useState(true);
-  const [showSettings, setShowSettings] = useState(false);
-  const [readingProgress, setReadingProgress] = useState(0);
-  const [, setLoadedImages] = useState<Set<number>>(new Set());
-
-  const readerRef = useRef<HTMLDivElement>(null);
-  const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  // Load user preferences
-  useEffect(() => {
-    const savedSettings = localStorage.getItem("manga-reader-settings");
-    if (savedSettings) {
-      setSettings(JSON.parse(savedSettings));
-    }
-  }, []);
-
-  // Save user preferences
-  useEffect(() => {
-    localStorage.setItem("manga-reader-settings", JSON.stringify(settings));
-  }, [settings]);
-
-  // Handle fullscreen
-  const toggleFullscreen = useCallback(() => {
-    if (!document.fullscreenElement) {
-      readerRef.current?.requestFullscreen();
-      setIsFullscreen(true);
-    } else {
-      document.exitFullscreen();
-      setIsFullscreen(false);
-    }
-  }, []);
+  const readerRef = useRef<HTMLDivElement>(null)
+  const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   // Auto-hide controls
   const resetControlsTimeout = useCallback(() => {
     if (controlsTimeoutRef.current) {
-      clearTimeout(controlsTimeoutRef.current);
+      clearTimeout(controlsTimeoutRef.current)
     }
-    setShowControls(true);
+    setShowControls(true)
     controlsTimeoutRef.current = setTimeout(() => {
-      if (isFullscreen) setShowControls(false);
-    }, 3000);
-  }, [isFullscreen]);
+      if (isFullscreen) setShowControls(false)
+    }, 3000)
+  }, [isFullscreen, setShowControls])
 
-  // Mouse movement handler
+  // Mouse movement and keyboard handlers
   useEffect(() => {
-    const handleMouseMove = () => resetControlsTimeout();
+    const handleMouseMove = () => resetControlsTimeout()
     const handleKeyPress = (e: KeyboardEvent) => {
       switch (e.key) {
         case "ArrowLeft":
         case "a":
-          if (settings.readingMode === "single-page" && currentPage > 0) {
-            setCurrentPage((prev) => prev - 1);
+          if (settings.readingMode === "single-page") {
+            goToPrevPage()
           }
-          break;
+          break
         case "ArrowRight":
         case "d":
-          if (
-            settings.readingMode === "single-page" &&
-            currentPage < chapters.length - 1
-          ) {
-            setCurrentPage((prev) => prev + 1);
+          if (settings.readingMode === "single-page") {
+            goToNextPage()
           }
-          break;
+          break
         case "f":
-          toggleFullscreen();
-          break;
+          toggleFullscreen()
+          break
         case "Escape":
-          setShowSettings(false);
-          break;
+          setShowSettings(false)
+          break
       }
-    };
+    }
 
-    document.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("keydown", handleKeyPress);
+    document.addEventListener("mousemove", handleMouseMove)
+    document.addEventListener("keydown", handleKeyPress)
 
     return () => {
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("keydown", handleKeyPress);
+      document.removeEventListener("mousemove", handleMouseMove)
+      document.removeEventListener("keydown", handleKeyPress)
       if (controlsTimeoutRef.current) {
-        clearTimeout(controlsTimeoutRef.current);
+        clearTimeout(controlsTimeoutRef.current)
       }
-    };
-  }, [
-    currentPage,
-    chapters.length,
-    settings.readingMode,
-    toggleFullscreen,
-    resetControlsTimeout,
-  ]);
+    }
+  }, [settings.readingMode, goToNextPage, goToPrevPage, toggleFullscreen, resetControlsTimeout, setShowSettings])
 
   // Calculate reading progress
   useEffect(() => {
     if (settings.readingMode === "single-page") {
-      setReadingProgress(((currentPage + 1) / chapters.length) * 100);
+      setReadingProgress(((currentPage + 1) / chapters.length) * 100)
     } else {
       // For scroll modes, calculate based on scroll position
       const handleScroll = () => {
-        const element = readerRef.current;
+        const element = readerRef.current
         if (element) {
-          const scrollTop = element.scrollTop;
-          const scrollHeight = element.scrollHeight - element.clientHeight;
-          const progress =
-            scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
-          setReadingProgress(progress);
+          const scrollTop = element.scrollTop
+          const scrollHeight = element.scrollHeight - element.clientHeight
+          const progress = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0
+          setReadingProgress(progress)
         }
-      };
+      }
 
-      const element = readerRef.current;
-      element?.addEventListener("scroll", handleScroll);
-      return () => element?.removeEventListener("scroll", handleScroll);
+      const element = readerRef.current
+      element?.addEventListener("scroll", handleScroll)
+      return () => element?.removeEventListener("scroll", handleScroll)
     }
-  }, [settings.readingMode, currentPage, chapters.length]);
+  }, [settings.readingMode, currentPage, chapters.length, setReadingProgress])
 
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-black text-white">
+        <div className="text-center">
+          <div className="mb-4 text-6xl">⏳</div>
+          <h2 className="mb-2 font-semibold text-xl">Loading chapter...</h2>
+          <p className="text-gray-400">Please wait while we load the images.</p>
+        </div>
+      </div>
+    )
+  }
 
-  const handleImageLoad = useCallback((index: number) => {
-    setLoadedImages((prev: Set<number>) => new Set([...prev, index]));
-  }, []);
-
-  // Navigation functions
-  const goToNextPage = useCallback(() => {
-    if (currentPage < chapters.length - 1) {
-      setCurrentPage((prev) => prev + 1);
-    }
-  }, [currentPage, chapters.length]);
-
-  const goToPrevPage = useCallback(() => {
-    if (currentPage > 0) {
-      setCurrentPage((prev) => prev - 1);
-    }
-  }, [currentPage]);
-
-  const reportError = useCallback((pageIndex: number) => {
-    // Implement error reporting logic
-    console.log(`Error reported for page ${pageIndex + 1}`);
-    alert(
-      `Error reported for page ${pageIndex + 1}. Thank you for your feedback!`,
-    );
-  }, []);
-
-  if (!chapters || chapters.length === 0) {
+  if (error || !chapters || chapters.length === 0) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-black text-white">
         <div className="text-center">
           <div className="mb-4 text-6xl">📖</div>
-          <h2 className="mb-2 font-semibold text-xl">No chapters available</h2>
+          <h2 className="mb-2 font-semibold text-xl">{error ? "Error loading chapter" : "No chapters available"}</h2>
           <p className="text-gray-400">
-            This chapter might not be available yet.
+            {error ? "Please try again later." : "This chapter might not be available yet."}
           </p>
         </div>
       </div>
-    );
+    )
   }
-
-  const renderImage = (chapter: UPage, index: number) => {
-    const shouldLoad =
-      index <= currentPage + settings.preloadPages && index >= currentPage - 1;
-
-    if (!shouldLoad && settings.readingMode !== "vertical") {
-      return (
-        <div
-          key={chapter.id || index}
-          className="flex h-screen w-full items-center justify-center bg-gray-900"
-        >
-          <div className="text-gray-500">Loading...</div>
-        </div>
-      );
-    }
-
-    return (
-      <div
-        key={chapter.id || index}
-        className={`relative ${settings.readingMode === "single-page" ? "h-screen w-full" : "mb-2"}`}
-        style={{
-          transform: `scale(${settings.zoomLevel / 100})`,
-          transformOrigin: "center top",
-        }}
-      >
-        {source === "source1" ? (
-          <ChapterImage
-            imageUrl={chapter.imageUrl || ""}
-            drmData={chapter.drmData || ""}
-            title={`Page ${index + 1}`}
-            width={settings.readingMode === "horizontal" ? 800 : 1024}
-            height={settings.readingMode === "horizontal" ? 600 : 1469}
-            onLoad={() => handleImageLoad(index)}
-          />
-        ) : (
-          <Image
-            src={`/api/proxy?url=${chapter.imageUrl}&referer=https://truyenqqgo.com`}
-            alt={`Page ${index + 1}`}
-            width={settings.readingMode === "horizontal" ? 800 : 1024}
-            height={settings.readingMode === "horizontal" ? 600 : 1469}
-            onLoad={() => handleImageLoad(index)}
-            style={{ objectFit: "contain" }}
-          />
-        )}
-
-        {/* Error report button */}
-        <Button
-          variant="ghost"
-          size="sm"
-          className="absolute top-2 right-2 bg-black/50 text-white opacity-0 transition-opacity hover:opacity-100"
-          onClick={() => reportError(index)}
-        >
-          <AlertTriangle className="h-4 w-4" />
-        </Button>
-
-        {/* Page number */}
-        <div className="absolute right-2 bottom-2 rounded bg-black/70 px-2 py-1 text-sm text-white">
-          {index + 1} / {chapters.length}
-        </div>
-      </div>
-    );
-  };
 
   const renderContent = () => {
     switch (settings.readingMode) {
       case "single-page":
         return (
           <div className="relative h-screen w-full overflow-hidden">
-            {renderImage(chapters[currentPage], currentPage)}
+            <OptimizedImage chapter={chapters[currentPage]} index={currentPage} source={source} />
 
             {/* Navigation areas */}
-            <div
-              className="absolute top-0 left-0 h-full w-1/3 cursor-pointer"
-              onClick={goToPrevPage}
-            />
-            <div
-              className="absolute top-0 right-0 h-full w-1/3 cursor-pointer"
-              onClick={goToNextPage}
-            />
+            <div className="absolute top-0 left-0 h-full w-1/3 cursor-pointer" onClick={goToPrevPage} />
+            <div className="absolute top-0 right-0 h-full w-1/3 cursor-pointer" onClick={goToNextPage} />
           </div>
-        );
+        )
 
       case "horizontal":
         return (
           <div className="flex h-screen overflow-x-auto overflow-y-hidden">
             {chapters.map((chapter, index) => (
               <div key={chapter.id || index} className="flex-shrink-0">
-                {renderImage(chapter, index)}
+                <OptimizedImage chapter={chapter} index={index} source={source} />
               </div>
             ))}
           </div>
-        );
+        )
 
       case "page-flip":
         return (
@@ -314,7 +176,7 @@ export const Chapter = memo(function Chapter(props: ChapterProps) {
             >
               {chapters.map((chapter, index) => (
                 <div key={chapter.id || index} className="w-full flex-shrink-0">
-                  {renderImage(chapter, index)}
+                  <OptimizedImage chapter={chapter} index={index} source={source} />
                 </div>
               ))}
             </div>
@@ -339,32 +201,32 @@ export const Chapter = memo(function Chapter(props: ChapterProps) {
               <ChevronRight className="h-6 w-6" />
             </Button>
           </div>
-        );
+        )
 
       default: // vertical
         return (
           <div className="flex flex-col items-center">
-            {chapters.map((chapter, index) => renderImage(chapter, index))}
+            {chapters.map((chapter, index) => (
+              <OptimizedImage key={chapter.id || index} chapter={chapter} index={index} source={source} />
+            ))}
           </div>
-        );
+        )
     }
-  };
+  }
 
   return (
     <div
       ref={readerRef}
-      className={`relative min-h-screen bg-black text-white ${settings.readingMode === "vertical"
-        ? "overflow-y-auto"
-        : "overflow-hidden"
+      className={`relative min-h-screen bg-black text-white ${settings.readingMode === "vertical" ? "overflow-y-auto" : "overflow-hidden"
         }`}
     >
+      {/* Image Preloader */}
+      <ImagePreloader source={source} />
+
       {/* Progress bar */}
       {settings.showProgress && (
         <div className="fixed top-0 left-0 z-50 h-1 w-full bg-gray-800">
-          <div
-            className="h-full bg-red-600 transition-all duration-300"
-            style={{ width: `${readingProgress}%` }}
-          />
+          <div className="h-full bg-red-600 transition-all duration-300" style={{ width: `${readingProgress}%` }} />
         </div>
       )}
 
@@ -383,37 +245,25 @@ export const Chapter = memo(function Chapter(props: ChapterProps) {
                   Back
                 </Button>
                 <span className="text-gray-300 text-sm">
-                  Chapter {mangaId} • {source}
+                  Chapter {props.mangaId} • {source}
                 </span>
               </div>
 
               <div className="flex items-center gap-2">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-white"
-                  onClick={() => setShowSettings(!showSettings)}
-                >
+                <Button variant="ghost" size="sm" className="text-white" onClick={() => setShowSettings(!showSettings)}>
                   <Settings className="h-4 w-4" />
                 </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-white"
-                  onClick={toggleFullscreen}
-                >
+                <Button variant="ghost" size="sm" className="text-white" onClick={toggleFullscreen}>
                   <Maximize className="h-4 w-4" />
                 </Button>
               </div>
             </div>
           </div>
 
-          {/* Bottom controls */}
-          <ReaderControls
-            currentPage={currentPage}
-            totalPages={chapters.length}
-            onPageChange={setCurrentPage}
-            readingMode={settings.readingMode}
+          {/* Chapter Navigation */}
+          <ChapterNavigation
+            anilistId={props.anilistId}
+            currentChapterId={props.mangaId}
             nextChapter={props.nextChapter}
             prevChapter={props.prevChapter}
           />
@@ -424,10 +274,10 @@ export const Chapter = memo(function Chapter(props: ChapterProps) {
       {showSettings && (
         <ReaderSettingsComponent
           settings={settings}
-          onSettingsChange={setSettings}
+          onSettingsChange={() => { }}
           onClose={() => setShowSettings(false)}
         />
       )}
     </div>
-  );
-});
+  )
+})

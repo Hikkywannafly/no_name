@@ -111,7 +111,8 @@ export default function MangaCarousel() {
   } = useMedia({
     type: MediaType.Manga,
     sort: [MediaSort.Trending_desc, MediaSort.Popularity_desc],
-    perPage: 10,
+    countryOfOrigin: "JP",
+    perPage: 20,
   });
 
   // Autoplay plugin configuration

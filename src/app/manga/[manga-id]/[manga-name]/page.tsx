@@ -1,9 +1,9 @@
 import BaseLayout from "@/app/baseLayout";
 import { Manga } from "@/components/manga/manga";
+import { AnilistContextProvider } from "@/context/useAnilist";
 import { getMediaDetails } from "@/provider/Anilist";
 import { MediaType } from "@/types/anilist";
 import type { Metadata } from "next";
-
 // export async function getServerSideProps() {
 interface MangaPageProps {
   params: Promise<{
@@ -72,8 +72,11 @@ export default async function MangaPage({ params }: MangaPageProps) {
 
 
   return (
-    <BaseLayout showHeader={true} showFooter={true}>
-      <Manga mangaId={mangaId} name={mangaName} prefetchManga={mangaData} />
-    </BaseLayout>
+    <AnilistContextProvider>
+      <BaseLayout showHeader={true} showFooter={true}>
+        <Manga mangaId={mangaId} name={mangaName} prefetchManga={mangaData} />
+      </BaseLayout>
+    </AnilistContextProvider>
+
   );
 }
