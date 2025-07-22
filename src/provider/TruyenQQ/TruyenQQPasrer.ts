@@ -47,7 +47,6 @@ export class TruyenQQParser {
   }
   // searchMangaID
   async searchMangaID(name: string, viName?: string): Promise<any> {
-
     const trySearch = async (keyword: string): Promise<string | null> => {
       const url = `https://${this.config.domain[0]}/tim-kiem/trang-1.html?q=${encodeURIComponent(keyword)}`;
       const res = await this.fetchWithSession(url);
@@ -250,6 +249,7 @@ export class TruyenQQParser {
         pages.push({
           id: this.generateUid(src),
           imageUrl: src,
+          reference: `https://${this.config.domain[0]}`,
           chapterSourceId: chapterUrl,
           pageNumber: undefined,
           drmData: null,
@@ -264,7 +264,9 @@ export class TruyenQQParser {
     return pages;
   }
   async getChapterListByMangaId(mangaId: string): Promise<UChapter[]> {
-    const res = await this.http.get(`https://${this.config.domain[0]}/truyen-tranh/truyen-${mangaId}`)
+    const res = await this.http.get(
+      `https://${this.config.domain[0]}/truyen-tranh/truyen-${mangaId}`,
+    );
     const $ = cheerio.load(res.data);
     const chapters: UChapter[] = $("div.list_chapter div.works-chapter-item")
       .get()

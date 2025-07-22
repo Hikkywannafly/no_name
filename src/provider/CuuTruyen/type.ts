@@ -128,6 +128,7 @@ export interface ChapterListResponse {
 export interface ChapterDetailResponse {
   manga?: any;
   team?: any;
+  data?: any;
   pages: {
     id: number;
     image_url: string;

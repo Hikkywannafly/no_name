@@ -242,6 +242,8 @@ export class CuuTruyenParser {
       (page: { id: number; image_url: string; drm_data?: string }) => {
         return {
           id: this.generateUid(page.id),
+          name: res.data.data?.manga?.name,
+          title: res.data.data?.data?.name,
           chapterSourceId: chapter,
           pageNumber: page.id, // Assuming page.id is the page number
           imageUrl: page.image_url.toString(),
@@ -270,7 +272,7 @@ export class CuuTruyenParser {
           volume: 0,
           language: "vi",
           sourceName: this.config.source,
-        
+
           // sources: [source],
           createdAt: chapter.created_at
             ? formatUploadDate(chapter.created_at)
@@ -302,8 +304,9 @@ export class CuuTruyenParser {
         url = `${baseUrl}/api/v2/tags/${tag.key}`;
       } else if (filter.states?.size === 1) {
         const state = Array.from(filter.states)[0];
-        url = `${baseUrl}/api/v2/tags/${state === MangaState.ONGOING ? "dang-tien-hanh" : "da-hoan-thanh"
-          }`;
+        url = `${baseUrl}/api/v2/tags/${
+          state === MangaState.ONGOING ? "dang-tien-hanh" : "da-hoan-thanh"
+        }`;
       } else {
         url = `${baseUrl}/api/v2/mangas`;
         switch (order) {

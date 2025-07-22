@@ -1,6 +1,8 @@
 import { MangadexApi } from "@/provider";
 import type { MediaArgs, PageArgs } from "@/types/anilist";
+
 import axios from "axios";
+import { Order } from "../MangaDex/static";
 import {
   type MediaDetailsQueryResponse,
   type PageQueryResponse,
@@ -51,24 +53,21 @@ export const getMediaDetails = async (
   );
   const media = response?.Media;
 
-
   const title = media?.title?.userPreferred || "";
-  const authors = (media?.staff?.nodes ?? [])
-    .map((author) => author?.name?.full)
-    .filter((name): name is string => !!name);
-  const year = media?.startDate?.year || undefined;
-
 
   let mangaList: any[] = [];
   try {
     const { data } = await MangadexApi.Manga.getSearchManga({
       title,
-      authors,
-      year,
       includes: [],
+      order: {
+        followedCount: Order.DESC,
+        relevance: Order.DESC,
+      },
       limit: 1,
     });
     mangaList = data?.data ?? [];
+    console.log("MangaDex Manga List:", data);
   } catch (error) {
     console.error("Lỗi khi fetch MangaDex:", error);
   }

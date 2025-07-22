@@ -78,6 +78,9 @@ export interface Page {
 
 export interface UPage {
   id: string;
+  name?: string;
+  title?: string;
+  reference?: string;
   chapterSourceId?: string; // Reference to ChapterSource
   pageNumber?: number;
   imageUrl?: string;
