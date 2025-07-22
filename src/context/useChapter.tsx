@@ -65,6 +65,7 @@ interface ChapterProviderProps {
   prevChapter?: string;
 }
 
+
 export function ChapterProvider({
   children,
   mangaId,

@@ -1,6 +1,5 @@
 "use client";
 import Image from "@/components/shared/image";
-import { Skeleton } from "@/components/ui/skeleton";
 import { unscrambleImageUrl } from "@/provider/CuuTruyen/image";
 import { useEffect, useState } from "react";
 
@@ -23,23 +22,22 @@ export default function ChapterImage({
 }: ChapterImageProps) {
   const [src, setSrc] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  // const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     let objectUrl: string | undefined;
     setSrc(null);
     setError(null);
-    setIsLoading(true);
+
 
     unscrambleImageUrl(imageUrl, drmData)
       .then((url) => {
         setSrc(url);
         objectUrl = url;
-        setIsLoading(false);
+
       })
       .catch((err) => {
         setError("Image decode failed");
-        setIsLoading(false);
         console.error("Image decode failed:", err);
       });
 
@@ -63,10 +61,9 @@ export default function ChapterImage({
     );
   }
 
-  if (isLoading || !src) {
-    return <Skeleton className="h-[300px] w-[200px] rounded bg-gray-800" />;
-  }
-
+  // if (isLoading || !src) {
+  //   return <Skeleton className="h-[300px] w-[200px] rounded bg-gray-800" />;
+  // }
   return (
     <Image
       src={src || "/placeholder.svg"}

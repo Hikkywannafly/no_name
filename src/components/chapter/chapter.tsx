@@ -4,11 +4,11 @@ import ImagePreloader from "@/components/chapter/imagePreloader";
 import { OptimizedImage } from "@/components/chapter/optimizedImage";
 // import ReaderControls from "@/components/chapter/readerControl";
 import ReaderSettings from "@/components/chapter/readerSeting";
+import Loading from "@/components/shared/loading";
 import { Button } from "@/components/ui/button";
 import { useChapter } from "@/context/useChapter";
 import { ChevronLeft, ChevronRight, Maximize, Settings } from "lucide-react";
 import { memo, useCallback, useEffect, useRef } from "react";
-
 interface ChapterProps {
   mangaId: string;
   chapterId: string;
@@ -114,7 +114,6 @@ export const Chapter = memo(function Chapter(props: ChapterProps) {
     setShowSettings,
   ]);
 
-  // Calculate reading progress
   useEffect(() => {
     if (settings.readingMode === "single-page") {
       setReadingProgress(((currentPage + 1) / chapters.length) * 100);
@@ -149,28 +148,27 @@ export const Chapter = memo(function Chapter(props: ChapterProps) {
   //   }
   // };
 
-  if (isLoading) {
+  if (isLoading && source === "source2") {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-black text-white">
+      <div className="flex min-h-screen items-center justify-center bg-black ">
         <div className="text-center">
-          <p className="text-gray-400">Vui lòng đợi một tý ạ</p>
+          <Loading className="h-12 w-12" />
         </div>
       </div>
     );
   }
 
-  if (error || !chapters || chapters.length === 0) {
+  if (error) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-black text-white">
         <div className="text-center">
-          <div className="mb-4 text-6xl">📖</div>
           <h2 className="mb-2 font-semibold text-xl">
-            {error ? "Error loading chapter" : "No chapters available"}
+            {error ? "Không thể tải được chap" : "Chương này chưa có sẵn"}
           </h2>
           <p className="text-gray-400">
             {error
-              ? "Please try again later."
-              : "This chapter might not be available yet."}
+              ? "Vui lòng load lại trang :()."
+              : "Có thể chương này chưa sẵn sàng vui lòng đợi nhé"}
           </p>
         </div>
       </div>
@@ -316,7 +314,7 @@ export const Chapter = memo(function Chapter(props: ChapterProps) {
                   Quay về
                 </Button>
                 <span className="text-gray-300 text-sm">
-                  {chapters[0].name} • {currentChapterInfo?.title}
+                  {chapters[0]?.name} • {currentChapterInfo?.title}
                 </span>
               </div>
 

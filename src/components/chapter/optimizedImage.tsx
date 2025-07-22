@@ -30,8 +30,8 @@ export function OptimizedImage({
           : "mb-2 h-96 w-full"
           }`}
       >
-        <div className="text-center">
-          <Skeleton className="h-96 w-full rounded" />
+        <div className=" text-center">
+          <Skeleton className="h-96 w-[500px] rounded" />
           <div className="mt-2 font-semibold text-lg">
             Đang tải trang {index + 1}...
           </div>
@@ -65,26 +65,34 @@ export function OptimizedImage({
           onLoad={() => { }}
           style={{
             objectFit: "contain",
-            width: "100%", // hoặc width: 800/1024 nếu muốn cố định
-            height: "auto", // Đảm bảo tỷ lệ ảnh không bị méo
+            width: "100%",
+            height: "auto",
             maxHeight: settings.readingMode === "horizontal" ? 600 : 1469,
           }}
         />
       )}
+      {
+        isLoaded && (
+          <>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="absolute top-2 right-2 bg-black/50 text-white opacity-0 transition-opacity hover:opacity-100"
+              onClick={() => reportError(index)}
+            >
+              <AlertTriangle className="h-4 w-4" />
+            </Button>
 
-      <Button
-        variant="ghost"
-        size="sm"
-        className="absolute top-2 right-2 bg-black/50 text-white opacity-0 transition-opacity hover:opacity-100"
-        onClick={() => reportError(index)}
-      >
-        <AlertTriangle className="h-4 w-4" />
-      </Button>
+            <div className="absolute right-2 bottom-2 rounded bg-black/70 px-2 py-1 text-sm text-white">
+              {index + 1} / {chapters.length}
+            </div>
 
-      {/* Page number */}
-      <div className="absolute right-2 bottom-2 rounded bg-black/70 px-2 py-1 text-sm text-white">
-        {index + 1} / {chapters.length}
-      </div>
+          </>
+
+        )
+      }
+
+
     </div>
   );
 }

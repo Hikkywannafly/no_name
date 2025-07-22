@@ -40,8 +40,7 @@ export default function ChapterNavigation({
   const { chapterList, } = useChapter();
   const [isChapterListOpen, setIsChapterListOpen] = useState(false);
   const router = useRouter()
-  console.log(anilistId)
-  // Find current chapter info
+
   const currentChapterInfo = chapterList.find(
     (ch) => ch.id === currentChapterId,
   );
@@ -57,7 +56,6 @@ export default function ChapterNavigation({
     currentChapterIndex < chapterList.length - 1
       ? chapterList[currentChapterIndex + 1]
       : null;
-  console.log("ChapterNavigation", currentChapterIndex)
   // const handlePageSelect = (pageNumber: string) => {
   //   const page = Number.parseInt(pageNumber) - 1;
   //   setCurrentPage(page);

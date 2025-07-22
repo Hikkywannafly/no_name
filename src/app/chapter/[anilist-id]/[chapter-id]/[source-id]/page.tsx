@@ -1,6 +1,6 @@
 import { Chapter } from "@/components/chapter/chapter";
 import { ChapterProvider } from "@/context/useChapter";
-
+import { SWRConfig } from "swr";
 interface ChapterPageProps {
   params: Promise<{
     "anilist-id": string;
@@ -15,17 +15,21 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
   const source = resolvedParams["source-id"];
   const anilistId = resolvedParams["anilist-id"];
   const mangaId = anilistId.split("-")[1];
-  console.log(
-    `ChapterPage: anilistId=${anilistId}, mangaId=${mangaId}, chapterId=${chapterId}, source=${source}`
-  );
   return (
-    <ChapterProvider mangaId={mangaId} source={source} chapterId={chapterId}>
-      <Chapter
-        chapterId={chapterId}
-        mangaId={mangaId}
-        source={source}
-        anilistId={mangaId[0]}
-      />
-    </ChapterProvider>
+    <SWRConfig value={{
+      dedupingInterval: 60000,
+      revalidateOnFocus: false,
+      keepPreviousData: true,
+
+    }}>
+      <ChapterProvider mangaId={mangaId} source={source} chapterId={chapterId}>
+        <Chapter
+          chapterId={chapterId}
+          mangaId={mangaId}
+          source={source}
+          anilistId={mangaId[0]}
+        />
+      </ChapterProvider>
+    </SWRConfig>
   );
 }
