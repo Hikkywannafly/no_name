@@ -15,3 +15,19 @@ export default function useTruyenQQChapter(name: string | null) {
     error,
   };
 }
+
+export function useTruyenQQChapters(name: string | null) {
+  const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
+  const { data, isLoading, error } = useSWR(
+    name ? `/api/truyenqq/chapters?name=${encodeURIComponent(name)}` : null,
+    fetcher,
+    { revalidateOnFocus: false }
+  );
+
+  return {
+    data: data?.data || [],
+    isLoading,
+    error,
+  };
+}

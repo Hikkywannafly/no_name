@@ -1,16 +1,16 @@
 import useSWR from "swr";
 export default function useCuuTruyenData(name: string | null) {
-  const fetcher = (url: string) => fetch(url).then((res) => res.json());
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-  const { data, isLoading, error } = useSWR(
-    name ? `/api/cuutruyen/list?name=${encodeURIComponent(name)}` : null,
-    fetcher,
-    { revalidateOnFocus: false }
-  );
+const { data, isLoading, error } = useSWR(
+  name ? `/api/cuutruyen/list?name=${encodeURIComponent(name)}` : null,
+  fetcher,
+  { revalidateOnFocus: false }
+);
 
-  return {
-    data: data?.data || [],
-    isLoading,
-    error,
-  };
+return {
+  data: data?.data || [],
+  isLoading,
+  error,
+};
 }

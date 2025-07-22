@@ -199,6 +199,7 @@ export class TruyenQQParser {
         return {
           id: href.split("/").pop()?.replace(".html", "") || "",
           title: name,
+          sourceId: mangaUrl.match(/-(\d+)$/)?.[1],
           number: match ? Number.parseFloat(match[2]) : 0,
           volume: 0,
           language: "vi",
@@ -261,5 +262,34 @@ export class TruyenQQParser {
       }
     });
     return pages;
+  }
+  async getChapterListByMangaId(mangaId: string): Promise<UChapter[]> {
+    const res = await this.http.get(`https://${this.config.domain[0]}/truyen-tranh/truyen-${mangaId}`)
+    const $ = cheerio.load(res.data);
+    const chapters: UChapter[] = $("div.list_chapter div.works-chapter-item")
+      .get()
+      .reverse()
+      .map((div) => {
+        const $div = $(div);
+        const a = $div.find("a").first();
+        const href = a.attr("href") || "";
+        const name = a.text().trim();
+        const dateText = $div.find(".time-chap").text().trim();
+        const match = name.match(/(Chương|Chapter|Chuong)\s*(\d+(?:\.\d+)?)/i);
+        return {
+          id: href.split("/").pop()?.replace(".html", "") || "",
+          title: name,
+          sourceId: mangaId,
+          number: match ? Number.parseFloat(match[2]) : 0,
+          volume: 0,
+          language: "vi",
+          sourceName: this.config.source,
+          scanlator: null,
+          createdAt: dateText || undefined,
+          updatedAt: undefined,
+          extraData: {},
+        };
+      });
+    return chapters;
   }
 }

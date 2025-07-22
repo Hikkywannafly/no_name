@@ -1,8 +1,7 @@
 "use client"
-import useCuuTruyenChapter, { useCuuTruyenChapters } from "@/hooks/CuuTruyen/useCuuTruyenChapter"
-import useTruyenQQChapter from "@/hooks/TruyenQQ/useTruyenQQChapter"
-import type { UChapter, UPage } from "@/types/manga"
-import { type ReactNode, createContext, useContext, useEffect, useState } from "react"
+import useChapterData from "@/hooks/useChapterData";
+import type { UChapter, UPage } from "@/types/manga";
+import { type ReactNode, createContext, useContext, useEffect, useState } from "react";
 
 type ReadingMode = "vertical" | "horizontal" | "single-page" | "page-flip"
 
@@ -55,36 +54,14 @@ const ChapterContext = createContext<ChapterContextType | undefined>(undefined)
 interface ChapterProviderProps {
     children: ReactNode
     mangaId: string
+    chapterId: string
     source?: string
     nextChapter?: string
     prevChapter?: string
 }
 
-export function ChapterProvider({
-    children,
-    mangaId,
-    source = "source1",
-    // nextChapter,
-    // prevChapter,
-}: ChapterProviderProps) {
-    // Fetch chapter data
-    const {
-        data: cuuTruyenChapters,
-        isLoading: cuuTruyenLoading,
-        error: cuuTruyenError,
-    } = useCuuTruyenChapter(source === "source1" ? mangaId : null)
-    const { data: cuuTruyenChapterList } = useCuuTruyenChapters(source === "source1" ? mangaId : null)
-    const {
-        data: truyenQQChapters,
-        isLoading: truyenQQLoading,
-        error: truyenQQError,
-    } = useTruyenQQChapter(source !== "source1" ? mangaId : null)
-
-    // Determine which data to use
-    const chapters: UPage[] = source === "source1" ? cuuTruyenChapters || [] : truyenQQChapters || []
-    const chapterList: UChapter[] = cuuTruyenChapterList || []
-    const isLoading = source === "source1" ? cuuTruyenLoading : truyenQQLoading
-    const error = source === "source1" ? cuuTruyenError : truyenQQError
+export function ChapterProvider({ children, mangaId, chapterId, source = "source1" }: ChapterProviderProps) {
+    const { chapters, chapterList, isLoading, error } = useChapterData(source, mangaId, chapterId);
 
     // Reader settings
     const [settings, setSettings] = useState<ReaderSettings>({
@@ -92,9 +69,9 @@ export function ChapterProvider({
         zoomLevel: 100,
         autoFullscreen: false,
         showProgress: true,
-        preloadPages: chapters.length, // Preload all pages
+        preloadPages: chapters.length,
     })
-
+    console.log("useChapter test", chapters, chapterList)
     // Reader state
     const [currentPage, setCurrentPage] = useState(0)
     const [isFullscreen, setIsFullscreen] = useState(false)

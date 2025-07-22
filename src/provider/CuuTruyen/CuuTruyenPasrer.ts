@@ -127,20 +127,6 @@ export class CuuTruyenParser {
     const panorama_mobile_url = details.panorama_mobile_url;
     const chapters: UChapter[] = chaptersResponse.data.data
       .map((chapter: ChapterListResponse): UChapter => {
-        // const source: UChapterSource = {
-        //   sourceName: this.config.source,
-        //   sourceId: chapter.id.toString(),
-        //   sourceUrl: `/api/v2/chapters/${chapter.id}`,
-        //   title: chapter.name || null,
-        //   number: chapter.number || 0,
-        //   volume: 0,
-        //   scanlator: team,
-        //   uploadDate: chapter.created_at ? new Date(chapter.created_at) : null,
-        //   isActive: true,
-        //   createdAt: chapter.created_at ? new Date(chapter.created_at) : undefined,
-        //   extraData: {},
-        // };
-
         return {
           id: this.generateUid(chapter.id),
           title: chapter.name || null,
@@ -148,7 +134,7 @@ export class CuuTruyenParser {
           volume: 0,
           language: "vi",
           sourceName: this.config.source,
-          // sources: [source],
+          sourceId: url.match(/\d+$/)?.[0],
           scanlator: team,
           createdAt: chapter.created_at
             ? formatUploadDate(chapter.created_at)
@@ -171,10 +157,6 @@ export class CuuTruyenParser {
       status: state,
       contentRating: details.is_nsfw ? "NSFW" : "SAFE",
       coverUrl: null,
-      // bannerUrl?:  null;
-      // largeCoverUrl?: string | null;
-      // sources: UMangaSource[]; // Danh sách các nguồn (CuuTruyen, TruyenQQ, MangaDex, ...)
-      // chapters?: UChapter[]; // Danh sách chapter
       sources: [
         {
           sourceName: this.config.source,
@@ -273,21 +255,22 @@ export class CuuTruyenParser {
       },
     );
   }
-  
-  async getChapterListByMangaId(mangaId: string): Promise<UChapter[]> {
-    const res = await this.http.get<ApiResponse<ChapterListResponse[]>>(
-      `https://${this.config.domain[0]}/api/v2/mangas/${mangaId}/chapters`,
-    );
 
+  async getChapterListByMangaId(mangaUrl: string): Promise<UChapter[]> {
+    const res = await this.http.get<ApiResponse<ChapterListResponse[]>>(
+      `https://${this.config.domain[0]}/api/v2/mangas/${mangaUrl}/chapters`,
+    );
     const chapters: UChapter[] = res.data.data
       .map((chapter: ChapterListResponse): UChapter => {
         return {
           id: this.generateUid(chapter.id),
           title: chapter.name || null,
           number: chapter.number || 0,
+          sourceId: mangaUrl.match(/\d+$/)?.[0],
           volume: 0,
           language: "vi",
           sourceName: this.config.source,
+        
           // sources: [source],
           createdAt: chapter.created_at
             ? formatUploadDate(chapter.created_at)
@@ -302,9 +285,6 @@ export class CuuTruyenParser {
 
     return chapters;
   }
-
-
-
 
   private buildListUrl(
     page: number,

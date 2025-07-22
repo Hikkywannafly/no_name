@@ -158,6 +158,7 @@ export interface UMangaSource {
 // Each Chapter
 export interface UChapter {
   id: string;
+  sourceId: any;
   title: string | null;
   number: number;
   volume: number | null;
@@ -176,7 +177,7 @@ export interface UChapterSource {
   sourceName: string;
   sourceId: string;
   sourceUrl: string;
-  anilist ?:string;
+  anilist?: string;
   title: string | null;
   number: number;
   volume?: number | null;

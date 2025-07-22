@@ -11,13 +11,14 @@ interface ChapterPageProps {
 
 export default async function ChapterPage({ params }: ChapterPageProps) {
   const resolvedParams = await params
-  const mangaId = resolvedParams["chapter-id"]
+  const chapterId = resolvedParams["chapter-id"]
   const source = resolvedParams["source-id"]
   const anilistId = resolvedParams["anilist-id"]
+  const mangaId = anilistId.split("-")[1]
 
   return (
-    <ChapterProvider mangaId={mangaId} source={source} nextChapter={undefined} prevChapter={undefined}>
-      <Chapter mangaId={mangaId} source={source} anilistId={anilistId} />
+    <ChapterProvider mangaId={mangaId} source={source} chapterId={chapterId} >
+      <Chapter mangaId={chapterId} source={source} anilistId={anilistId} />
     </ChapterProvider>
   )
 }

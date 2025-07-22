@@ -80,6 +80,7 @@ export default function HorizontalChapterPagination({
               className="no-underline"
               href={Constants.router.chapter(
                 anilist,
+                chapter.sourceId,
                 chapter.id,
                 chapter.sourceName || "undefined",
               )}

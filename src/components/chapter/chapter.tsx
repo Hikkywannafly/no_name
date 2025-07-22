@@ -42,7 +42,7 @@ export const Chapter = memo(function Chapter(props: ChapterProps) {
   const readerRef = useRef<HTMLDivElement>(null)
   const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
-  // Auto-hide controls
+
   const resetControlsTimeout = useCallback(() => {
     if (controlsTimeoutRef.current) {
       clearTimeout(controlsTimeoutRef.current)
@@ -53,7 +53,6 @@ export const Chapter = memo(function Chapter(props: ChapterProps) {
     }, 3000)
   }, [isFullscreen, setShowControls])
 
-  // Mouse movement and keyboard handlers
   useEffect(() => {
     const handleMouseMove = () => resetControlsTimeout()
     const handleKeyPress = (e: KeyboardEvent) => {
@@ -119,7 +118,7 @@ export const Chapter = memo(function Chapter(props: ChapterProps) {
         <div className="text-center">
           <div className="mb-4 text-6xl">⏳</div>
           <h2 className="mb-2 font-semibold text-xl">Loading chapter...</h2>
-          <p className="text-gray-400">Please wait while we load the images.</p>
+          <p className="text-gray-400">Vui lòng đợi một tý ạ</p>
         </div>
       </div>
     )
@@ -245,7 +244,7 @@ export const Chapter = memo(function Chapter(props: ChapterProps) {
                   Back
                 </Button>
                 <span className="text-gray-300 text-sm">
-                  Chapter {props.mangaId} • {source}
+                  Chapter {props.source} • {source}
                 </span>
               </div>
 
@@ -259,8 +258,6 @@ export const Chapter = memo(function Chapter(props: ChapterProps) {
               </div>
             </div>
           </div>
-
-          {/* Chapter Navigation */}
           <ChapterNavigation
             anilistId={props.anilistId}
             currentChapterId={props.mangaId}
@@ -270,7 +267,6 @@ export const Chapter = memo(function Chapter(props: ChapterProps) {
         </div>
       )}
 
-      {/* Settings panel */}
       {showSettings && (
         <ReaderSettingsComponent
           settings={settings}

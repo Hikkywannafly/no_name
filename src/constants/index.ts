@@ -82,8 +82,8 @@ export class Constants {
   static readonly router = {
     manga: (id: number, name: string) =>
       `/manga/${id}/${slugify(name, { lower: true, strict: true })}`,
-    chapter: (anilist: string, chapter: string, source: string) =>
-      `/chapter/${anilist}/${chapter}/${source}`,
+    chapter: (anilist: string, mangaId: string, chapter: string, source: string) =>
+      `/chapter/${anilist}-${mangaId}/${chapter}/${source}`,
   };
   api = {};
 }

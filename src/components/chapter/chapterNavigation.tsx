@@ -5,7 +5,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Constants } from "@/constants"
 import { useChapter } from "@/context/useChapter"
-import { ChevronLeft, ChevronRight, List, X } from "lucide-react"
+import { ChevronLeft, ChevronRight, List, } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
 
@@ -137,14 +137,14 @@ export default function ChapterNavigation({
                     <Card className="max-h-[80vh] w-full max-w-2xl border-gray-700 bg-gray-900 text-white">
                         <div className="flex items-center justify-between border-gray-700 border-b p-4">
                             <h3 className="font-semibold text-lg">Select Chapter</h3>
-                            <Button
+                            {/* <Button
                                 variant="ghost"
                                 size="sm"
                                 onClick={() => setShowChapterList(false)}
                                 className="text-white hover:bg-gray-800"
                             >
                                 <X className="h-4 w-4" />
-                            </Button>
+                            </Button> */}
                         </div>
 
                         <ScrollArea className="max-h-96 p-4">
