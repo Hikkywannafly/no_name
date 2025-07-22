@@ -15,14 +15,16 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
   const source = resolvedParams["source-id"];
   const anilistId = resolvedParams["anilist-id"];
   const mangaId = anilistId.split("-")[1];
-
+  console.log(
+    `ChapterPage: anilistId=${anilistId}, mangaId=${mangaId}, chapterId=${chapterId}, source=${source}`
+  );
   return (
     <ChapterProvider mangaId={mangaId} source={source} chapterId={chapterId}>
       <Chapter
         chapterId={chapterId}
         mangaId={mangaId}
         source={source}
-        anilistId={anilistId}
+        anilistId={mangaId[0]}
       />
     </ChapterProvider>
   );

@@ -69,14 +69,11 @@ export default async function MangaPage({ params }: MangaPageProps) {
     type: MediaType.Manga,
   });
 
-
-
   return (
     <AnilistContextProvider>
       <BaseLayout showHeader={true} showFooter={true}>
         <Manga mangaId={mangaId} name={mangaName} prefetchManga={mangaData} />
       </BaseLayout>
     </AnilistContextProvider>
-
   );
 }

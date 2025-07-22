@@ -2,7 +2,7 @@
 import ChapterNavigation from "@/components/chapter/chapterNavigation";
 import ImagePreloader from "@/components/chapter/imagePreloader";
 import { OptimizedImage } from "@/components/chapter/optimizedImage";
-import ReaderControls from "@/components/chapter/readerControl";
+// import ReaderControls from "@/components/chapter/readerControl";
 import ReaderSettings from "@/components/chapter/readerSeting";
 import { Button } from "@/components/ui/button";
 import { useChapter } from "@/context/useChapter";
@@ -12,15 +12,15 @@ import { memo, useCallback, useEffect, useRef } from "react";
 interface ChapterProps {
   mangaId: string;
   chapterId: string;
-  source?: string;
-  anilistId?: string;
+  source: string;
+  anilistId: string;
   prefetchManga?: any;
   nextChapter?: string;
   prevChapter?: string;
 }
 
 export const Chapter = memo(function Chapter(props: ChapterProps) {
-  const { source = "source1" } = props;
+  const { source, chapterId, anilistId, mangaId } = props;
 
   const {
     chapters,
@@ -29,7 +29,6 @@ export const Chapter = memo(function Chapter(props: ChapterProps) {
     error,
     settings,
     currentPage,
-    setCurrentPage,
     isFullscreen,
     showControls,
     setShowControls,
@@ -49,19 +48,18 @@ export const Chapter = memo(function Chapter(props: ChapterProps) {
   const currentChapterIndex = chapterList.findIndex(
     (ch) => ch.id === props.chapterId,
   );
-  const nextChapterFromList =
-    currentChapterIndex > 0 ? chapterList[currentChapterIndex - 1] : null;
-  const prevChapterFromList =
-    currentChapterIndex < chapterList.length - 1
-      ? chapterList[currentChapterIndex + 1]
-      : null;
-  console.log(
-    "chapter info",
-    chapterList,
-    currentChapterIndex,
-    nextChapterFromList,
-    prevChapterFromList,
-  );
+  const currentChapterInfo = chapterList[currentChapterIndex] || null;
+
+  // const nextChapterFromList =
+  //   currentChapterIndex > 0 ? chapterList[currentChapterIndex - 1] : null;
+  // const prevChapterFromList =
+  //   currentChapterIndex < chapterList.length - 1
+  //     ? chapterList[currentChapterIndex + 1]
+  //     : null;
+  // console.log(
+  //   "chapter info",
+  //   chapters
+  // );
   const resetControlsTimeout = useCallback(() => {
     if (controlsTimeoutRef.current) {
       clearTimeout(controlsTimeoutRef.current);
@@ -139,24 +137,22 @@ export const Chapter = memo(function Chapter(props: ChapterProps) {
     }
   }, [settings.readingMode, currentPage, chapters.length, setReadingProgress]);
 
-  const handleNextChapter = () => {
-    if (nextChapterFromList && props.anilistId) {
-      window.location.href = `/manga/${props.anilistId}-${props.mangaId}/chapter/${nextChapterFromList.id}?source=${source}`;
-    }
-  };
+  // const handleNextChapter = () => {
+  //   if (nextChapterFromList && props.anilistId) {
+  //     window.location.href = `/manga/${props.anilistId}-${props.mangaId}/chapter/${nextChapterFromList.id}?source=${source}`;
+  //   }
+  // };
 
-  const handlePrevChapter = () => {
-    if (prevChapterFromList && props.anilistId) {
-      window.location.href = `/manga/${props.anilistId}-${props.mangaId}/chapter/${prevChapterFromList.id}?source=${source}`;
-    }
-  };
+  // const handlePrevChapter = () => {
+  //   if (prevChapterFromList && props.anilistId) {
+  //     window.location.href = `/manga/${props.anilistId}-${props.mangaId}/chapter/${prevChapterFromList.id}?source=${source}`;
+  //   }
+  // };
 
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-black text-white">
         <div className="text-center">
-          <div className="mb-4 text-6xl">⏳</div>
-          <h2 className="mb-2 font-semibold text-xl">Loading chapter...</h2>
           <p className="text-gray-400">Vui lòng đợi một tý ạ</p>
         </div>
       </div>
@@ -263,6 +259,7 @@ export const Chapter = memo(function Chapter(props: ChapterProps) {
           </div>
         );
 
+
       default: // vertical
         return (
           <div className="flex flex-col items-center">
@@ -282,11 +279,10 @@ export const Chapter = memo(function Chapter(props: ChapterProps) {
   return (
     <div
       ref={readerRef}
-      className={`relative min-h-screen bg-black text-white ${
-        settings.readingMode === "vertical"
-          ? "overflow-y-auto"
-          : "overflow-hidden"
-      }`}
+      className={`relative min-h-screen bg-black text-white ${settings.readingMode === "vertical"
+        ? "overflow-y-auto"
+        : "overflow-hidden"
+        }`}
     >
       {/* Image Preloader */}
       <ImagePreloader source={source} />
@@ -317,10 +313,10 @@ export const Chapter = memo(function Chapter(props: ChapterProps) {
                   className="text-white hover:bg-white/20"
                 >
                   <ChevronLeft className="mr-1 h-4 w-4" />
-                  Back
+                  Quay về
                 </Button>
                 <span className="text-gray-300 text-sm">
-                  Chapter {props.chapterId} • Page {currentPage + 1}
+                  {chapters[0].name} • {currentChapterInfo?.title}
                 </span>
               </div>
 
@@ -347,14 +343,16 @@ export const Chapter = memo(function Chapter(props: ChapterProps) {
 
           {/* Chapter Navigation */}
           <ChapterNavigation
-            anilistId={props.anilistId}
-            currentChapterId={props.chapterId}
-            nextChapter={props.nextChapter}
-            prevChapter={props.prevChapter}
+            anilistId={anilistId}
+            mangaId={mangaId}
+            sourceId={source}
+            currentChapterId={chapterId}
+          // nextChapter={props.nextChapter}
+          // prevChapter={props.prevChapter}
           />
 
           {/* Reader Controls for non-vertical modes */}
-          {settings.readingMode !== "vertical" && (
+          {/* {settings.readingMode !== "vertical" && (
             <ReaderControls
               currentPage={currentPage}
               totalPages={chapters.length}
@@ -367,14 +365,14 @@ export const Chapter = memo(function Chapter(props: ChapterProps) {
                 prevChapterFromList ? handlePrevChapter : undefined
               }
             />
-          )}
+          )} */}
         </div>
       )}
 
       {/* Settings Dialog */}
       <ReaderSettings
         settings={settings}
-        onSettingsChange={() => {}}
+        onSettingsChange={() => { }}
         onClose={() => setShowSettings(false)}
         isOpen={showSettings}
       />

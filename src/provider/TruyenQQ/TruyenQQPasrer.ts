@@ -242,6 +242,7 @@ export class TruyenQQParser {
     const url = `https://${this.config.domain[0]}/truyen-tranh/${chapterUrl}.html`;
     const res = await this.http.get(url);
     const $ = cheerio.load(res.data);
+    const name = $('h1.detail-title.txt-primary a').text().trim();
     const pages: UPage[] = [];
     $(".chapter_content .page-chapter img").each((_, img) => {
       const src = $(img).attr("src") || "";
@@ -249,6 +250,7 @@ export class TruyenQQParser {
         pages.push({
           id: this.generateUid(src),
           imageUrl: src,
+          name: name,
           reference: `https://${this.config.domain[0]}`,
           chapterSourceId: chapterUrl,
           pageNumber: undefined,
@@ -268,6 +270,7 @@ export class TruyenQQParser {
       `https://${this.config.domain[0]}/truyen-tranh/truyen-${mangaId}`,
     );
     const $ = cheerio.load(res.data);
+    const title = $("h1[itemprop='name']").text().trim();
     const chapters: UChapter[] = $("div.list_chapter div.works-chapter-item")
       .get()
       .reverse()
@@ -281,6 +284,7 @@ export class TruyenQQParser {
         return {
           id: href.split("/").pop()?.replace(".html", "") || "",
           title: name,
+          name: title,
           sourceId: mangaId,
           number: match ? Number.parseFloat(match[2]) : 0,
           volume: 0,

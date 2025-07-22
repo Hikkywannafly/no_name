@@ -1,6 +1,7 @@
 "use client";
 import Image from "@/components/shared/image";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useChapter } from "@/context/useChapter";
 import type { UPage } from "@/types/manga";
 import { AlertTriangle } from "lucide-react";
@@ -24,16 +25,15 @@ export function OptimizedImage({
   if (!isLoaded) {
     return (
       <div
-        className={`relative flex items-center justify-center bg-gray-900 ${
-          settings.readingMode === "single-page"
-            ? "h-screen w-full"
-            : "mb-2 h-96 w-full"
-        }`}
+        className={`relative flex items-center justify-center bg-black ${settings.readingMode === "single-page"
+          ? "h-screen w-full"
+          : "mb-2 h-96 w-full"
+          }`}
       >
         <div className="text-center">
-          <div className="mb-2 h-8 w-8 animate-spin rounded-full border-2 border-red-600 border-t-transparent" />
-          <div className="text-gray-500 text-sm">
-            Loading page {index + 1}...
+          <Skeleton className="h-96 w-full rounded" />
+          <div className="mt-2 font-semibold text-lg">
+            Đang tải trang {index + 1}...
           </div>
         </div>
       </div>
@@ -54,7 +54,7 @@ export function OptimizedImage({
           title={`Page ${index + 1}`}
           width={settings.readingMode === "horizontal" ? 800 : 1024}
           height={settings.readingMode === "horizontal" ? 600 : 1469}
-          onLoad={() => {}}
+          onLoad={() => { }}
         />
       ) : (
         <Image
@@ -62,7 +62,7 @@ export function OptimizedImage({
           alt={`Page ${index + 1}`}
           width={settings.readingMode === "horizontal" ? 800 : 1024}
           height={settings.readingMode === "horizontal" ? 600 : 1469}
-          onLoad={() => {}}
+          onLoad={() => { }}
           style={{
             objectFit: "contain",
             width: "100%", // hoặc width: 800/1024 nếu muốn cố định
@@ -72,7 +72,6 @@ export function OptimizedImage({
         />
       )}
 
-      {/* Error report button */}
       <Button
         variant="ghost"
         size="sm"

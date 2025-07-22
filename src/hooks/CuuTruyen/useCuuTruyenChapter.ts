@@ -1,4 +1,4 @@
-import type { UPage , UChapter } from "@/types/manga";
+import type { UPage, UChapter } from "@/types/manga";
 import useSWR from "swr";
 export default function useCuuTruyenChapter(name: string | null) {
   const fetcher = (url: string) => fetch(url).then((res) => res.json());
@@ -6,7 +6,7 @@ export default function useCuuTruyenChapter(name: string | null) {
   const { data, isLoading, error } = useSWR(
     name ? `/api/cuutruyen/chapter?name=${encodeURIComponent(name)}` : null,
     fetcher,
-    { revalidateOnFocus: false }
+    { revalidateOnFocus: false },
   );
 
   return {
@@ -21,7 +21,7 @@ export function useCuuTruyenChapters(name: string | null) {
   const { data, isLoading, error } = useSWR(
     name ? `/api/cuutruyen/chapters?name=${encodeURIComponent(name)}` : null,
     fetcher,
-    { revalidateOnFocus: false }
+    { revalidateOnFocus: false },
   );
 
   return {

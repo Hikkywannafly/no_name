@@ -51,13 +51,15 @@ export const Manga = memo(function Manga(props: MangaProps) {
 
   const manga = mediaCache[mangaId] || prefetchManga;
 
-  const viTitles = manga.translations?.filter((t: any) => t.vi).map((t: any) => t.vi) ?? [];
+  const viTitles =
+    manga.translations?.filter((t: any) => t.vi).map((t: any) => t.vi) ?? [];
 
   const { data: cuuTruyenData, isLoading: cuuTruyenLoading } = useCuuTruyenData(
     `${manga?.title?.userPreferred}` || `${manga?.title?.english}` || "",
   );
   const { data: truyenQQData, isLoading: truyenQQLoading } = useTruyenQQData(
-    manga?.title?.userPreferred || "", viTitles[1] ? viTitles[1] : viTitles[0]
+    manga?.title?.userPreferred || "",
+    viTitles[1] ? viTitles[1] : viTitles[0],
   );
 
   // const [prefetchedChapters, setPrefetchedChapters] = useState<Record<string, UPage[]>>({});
@@ -290,9 +292,9 @@ export const Manga = memo(function Manga(props: MangaProps) {
                     {viTitles[0] || manga?.title?.userPreferred}
                   </h1>
                   <p className="text-gray-300 text-sm leading-relaxed md:text-base">
-                    {
-                      viTitles[0] ? manga?.title?.userPreferred : manga?.title?.english
-                    }
+                    {viTitles[0]
+                      ? manga?.title?.userPreferred
+                      : manga?.title?.english}
                   </p>
                   <div className="hidden gap-x-8 overflow-x-auto md:flex md:gap-x-16 [&>*]:shrink-0">
                     <InfoItem

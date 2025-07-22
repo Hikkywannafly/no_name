@@ -54,7 +54,9 @@ export function groupChaptersIntoRanges(
   for (let i = 0; i < sortedChapters.length; i += rangeSize) {
     const rangeChapters = sortedChapters.slice(i, i + rangeSize);
     const startNum = String(rangeChapters[0].number ?? "1");
-    const endNum = String(rangeChapters[rangeChapters.length - 1].number ?? "1");
+    const endNum = String(
+      rangeChapters[rangeChapters.length - 1].number ?? "1",
+    );
 
     ranges.push({
       label: startNum === endNum ? `${startNum}` : `${startNum} - ${endNum}`,

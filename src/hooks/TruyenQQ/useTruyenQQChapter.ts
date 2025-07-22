@@ -6,7 +6,7 @@ export default function useTruyenQQChapter(name: string | null) {
   const { data, isLoading, error } = useSWR(
     name ? `/api/truyenqq/chapter?name=${encodeURIComponent(name)}` : null,
     fetcher,
-    { revalidateOnFocus: false }
+    { revalidateOnFocus: false },
   );
 
   return {
@@ -22,7 +22,7 @@ export function useTruyenQQChapters(name: string | null) {
   const { data, isLoading, error } = useSWR(
     name ? `/api/truyenqq/chapters?name=${encodeURIComponent(name)}` : null,
     fetcher,
-    { revalidateOnFocus: false }
+    { revalidateOnFocus: false },
   );
 
   return {

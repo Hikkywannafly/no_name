@@ -162,6 +162,7 @@ export interface UMangaSource {
 export interface UChapter {
   id: string;
   sourceId: any;
+  name?: string;
   title: string | null;
   number: number;
   volume: number | null;

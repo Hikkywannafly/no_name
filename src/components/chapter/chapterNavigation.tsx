@@ -14,21 +14,18 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { } from "@/components/ui/select";
 import { Constants } from "@/constants";
 import { useChapter } from "@/context/useChapter";
 import { ChevronDown, ChevronLeft, ChevronRight, List } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from 'next/navigation';
 import { useState } from "react";
 
 interface ChapterNavigationProps {
-  anilistId?: string;
+  anilistId: string;
+  mangaId: string; // Optional mangaId for navigation
+  sourceId: string; // Optional sourceId for navigation
   currentChapterId: string;
   nextChapter?: string;
   prevChapter?: string;
@@ -37,10 +34,13 @@ interface ChapterNavigationProps {
 export default function ChapterNavigation({
   anilistId,
   currentChapterId,
+  mangaId,
+  sourceId,
 }: ChapterNavigationProps) {
-  const { chapterList, currentPage, setCurrentPage, chapters } = useChapter();
+  const { chapterList, } = useChapter();
   const [isChapterListOpen, setIsChapterListOpen] = useState(false);
-
+  const router = useRouter()
+  console.log(anilistId)
   // Find current chapter info
   const currentChapterInfo = chapterList.find(
     (ch) => ch.id === currentChapterId,
@@ -50,45 +50,28 @@ export default function ChapterNavigation({
   );
 
   // Get next and previous chapters from the list
-  const nextChapterFromList =
-    currentChapterIndex > 0 ? chapterList[currentChapterIndex - 1] : null;
   const prevChapterFromList =
+    currentChapterIndex > 0 ? chapterList[currentChapterIndex - 1] : null;
+
+  const nextChapterFromList =
     currentChapterIndex < chapterList.length - 1
       ? chapterList[currentChapterIndex + 1]
       : null;
-
-  const handlePageSelect = (pageNumber: string) => {
-    const page = Number.parseInt(pageNumber) - 1;
-    setCurrentPage(page);
-  };
+  console.log("ChapterNavigation", currentChapterIndex)
+  // const handlePageSelect = (pageNumber: string) => {
+  //   const page = Number.parseInt(pageNumber) - 1;
+  //   setCurrentPage(page);
+  // };
 
   const handleChapterSelect = (chapterId: string) => {
-    if (anilistId) {
-      // Navigate to selected chapter
-      window.location.href = Constants.router.chapter(
-        anilistId,
-        "",
-        chapterId,
-        "source1",
-      );
-    }
+
+    router.push(Constants.router.chapter(anilistId, mangaId, chapterId, sourceId))
     setIsChapterListOpen(false);
   };
 
   return (
     <div className="pointer-events-auto absolute right-0 bottom-0 left-0 bg-gradient-to-t from-black/90 to-transparent p-4">
       <div className="mx-auto max-w-4xl">
-        {/* Chapter Info */}
-        <div className="mb-4 text-center">
-          <h2 className="font-semibold text-lg text-white">
-            {currentChapterInfo?.title ||
-              `Chapter ${currentChapterInfo?.number || currentChapterId}`}
-          </h2>
-          <p className="text-gray-400 text-sm">
-            Page {currentPage + 1} of {chapters.length}
-          </p>
-        </div>
-
         {/* Navigation Controls */}
         <div className="flex items-center justify-between gap-4">
           {/* Previous Chapter */}
@@ -102,14 +85,14 @@ export default function ChapterNavigation({
               >
                 <Link
                   href={Constants.router.chapter(
-                    anilistId || "",
-                    "",
+                    anilistId,
+                    mangaId,
                     prevChapterFromList.id,
-                    "source1",
+                    sourceId,
                   )}
                 >
                   <ChevronLeft className="mr-1 h-4 w-4" />
-                  Prev
+                  Trước
                 </Link>
               </Button>
             ) : (
@@ -120,29 +103,14 @@ export default function ChapterNavigation({
                 className="bg-gray-800 text-gray-500"
               >
                 <ChevronLeft className="mr-1 h-4 w-4" />
-                Prev
+                Trước
               </Button>
             )}
           </div>
 
           {/* Center Controls */}
           <div className="flex items-center gap-2">
-            {/* Page Selector */}
-            <Select
-              value={(currentPage + 1).toString()}
-              onValueChange={handlePageSelect}
-            >
-              <SelectTrigger className="w-20 border-gray-600 bg-gray-800 text-white">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent className="border-gray-600 bg-gray-800 text-white">
-                {chapters.map((_, index) => (
-                  <SelectItem key={index} value={(index + 1).toString()}>
-                    {index + 1}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+
 
             {/* Chapter Selector */}
             <DropdownMenu>
@@ -161,16 +129,15 @@ export default function ChapterNavigation({
                   {chapterList.map((chapter, index) => (
                     <DropdownMenuItem
                       key={chapter.id + index}
-                      className={`cursor-pointer ${
-                        chapter.id === currentChapterId
-                          ? "bg-red-600 text-white"
-                          : "text-white hover:bg-gray-700"
-                      }`}
+                      className={`cursor-pointer ${chapter.id === currentChapterId
+                        ? "bg-red-600 text-white"
+                        : "text-white hover:bg-gray-700"
+                        }`}
                       onClick={() => handleChapterSelect(chapter.id)}
                     >
                       <div className="flex w-full flex-col items-start">
                         <span className="font-medium">
-                          Chapter {chapter.number}
+                          Chương {chapter.number}
                         </span>
                         {chapter.title && (
                           <span className="w-full truncate text-gray-400 text-sm">
@@ -213,11 +180,10 @@ export default function ChapterNavigation({
                         variant={
                           chapter.id === currentChapterId ? "default" : "ghost"
                         }
-                        className={`w-full justify-start text-left ${
-                          chapter.id === currentChapterId
-                            ? "bg-red-600 text-white hover:bg-red-700"
-                            : "text-white hover:bg-gray-800"
-                        }`}
+                        className={`w-full justify-start text-left ${chapter.id === currentChapterId
+                          ? "bg-red-600 text-white hover:bg-red-700"
+                          : "text-white hover:bg-gray-800"
+                          }`}
                         onClick={() => handleChapterSelect(chapter.id)}
                       >
                         <div className="flex flex-col items-start">
@@ -252,13 +218,13 @@ export default function ChapterNavigation({
               >
                 <Link
                   href={Constants.router.chapter(
-                    anilistId || "",
-                    "",
+                    anilistId,
+                    mangaId,
                     nextChapterFromList.id,
-                    "source1",
+                    sourceId,
                   )}
                 >
-                  Next
+                  Tiếp
                   <ChevronRight className="ml-1 h-4 w-4" />
                 </Link>
               </Button>
