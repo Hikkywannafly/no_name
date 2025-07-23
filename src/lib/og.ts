@@ -17,13 +17,13 @@ export const OpenGraph: Metadata = {
     icon: [
       {
         media: "(prefers-color-scheme: light)",
-        url: "/icons/favicon-light.ico",
-        href: "/icons/favicon-light.ico",
+        url: "/icons/logo_nazuna.svg",
+        href: "/icons/logo_nazuna.svg",
       },
       {
         media: "(prefers-color-scheme: dark)",
-        url: "/icons/favicon.ico",
-        href: "/icons/favicon.ico",
+        url: "/icons/logo_nazuna.svg",
+        href: "/icons/logo_nazuna.svg",
       },
     ],
   },

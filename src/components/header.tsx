@@ -49,8 +49,9 @@ const Header = () => {
             </button>
             <Link
               href="/"
-              className="cursor-pointer whitespace-nowrap font-semibold text-xl opacity-80"
+              className="flex cursor-pointer flex-row items-center justify-center gap-2 whitespace-nowrap font-semibold text-xl opacity-80"
             >
+              <img className="w-8" src="/icons/logo_nazuna.svg" alt="nazuna1" />
               nazuna
             </Link>
           </div>
@@ -134,7 +135,7 @@ const Header = () => {
                 options={GENRES_COMICS}
                 show={true}
                 isMore={false}
-                onClose={() => {}}
+                onClose={() => { }}
               />
             </div>
             <div className="py-2">
@@ -145,7 +146,7 @@ const Header = () => {
                 options={RANKING_COMICS}
                 show={true}
                 isMore={false}
-                onClose={() => {}}
+                onClose={() => { }}
               />
             </div>
             <button
