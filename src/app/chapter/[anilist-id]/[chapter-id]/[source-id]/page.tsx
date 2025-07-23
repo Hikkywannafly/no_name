@@ -55,8 +55,8 @@ export async function generateMetadata({
     };
   } catch (_error) {
     return {
-      title: "Không tìm thấy truyện này :((",
-      description: "Không tìm thấy thông tin truyện.",
+      title: "Chúc bạn đọc vui vẻ :>",
+      description: "Chúc bạn đọc vui vẻ :>",
     };
   }
 }

@@ -26,7 +26,6 @@ export default function ChapterImage({
       .then((url) => {
         setSrc(url);
         objectUrl = url;
-
       })
       .catch((err) => {
         console.error("Image decode failed:", err);

@@ -33,7 +33,7 @@ export function OptimizedImage({
           title={`Đọc truyện tại nazuna ${index + 1}`}
           width={settings.readingMode === "horizontal" ? 800 : 1024}
           height={settings.readingMode === "horizontal" ? 600 : 1469}
-          onLoad={() => { }}
+          onLoad={() => {}}
         />
       ) : (
         <ReadImage
@@ -41,7 +41,7 @@ export function OptimizedImage({
           alt={`Đọc truyện tại nazuna ${index + 1}`}
           width={settings.readingMode === "horizontal" ? 800 : 1024}
           height={settings.readingMode === "horizontal" ? 600 : 1469}
-          onLoad={() => { }}
+          onLoad={() => {}}
           style={{
             objectFit: "contain",
             width: "100%",

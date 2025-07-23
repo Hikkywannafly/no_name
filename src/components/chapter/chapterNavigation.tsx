@@ -1,4 +1,5 @@
 "use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,8 +14,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import {} from "@/components/ui/select";
 import { Constants } from "@/constants";
 import { useChapter } from "@/context/useChapter";
 import { ChevronDown, ChevronLeft, ChevronRight, List } from "lucide-react";
@@ -24,12 +23,35 @@ import { useState } from "react";
 
 interface ChapterNavigationProps {
   anilistId: string;
-  mangaId: string; // Optional mangaId for navigation
-  sourceId: string; // Optional sourceId for navigation
+  mangaId: string;
+  sourceId: string;
   currentChapterId: string;
   nextChapter?: string;
   prevChapter?: string;
 }
+
+// Scrolling text component for long titles
+const ScrollingText = ({
+  text,
+  className,
+}: { text: string; className?: string }) => {
+  return (
+    <div className={`relative overflow-hidden ${className}`}>
+      <span className="block whitespace-nowrap transition-transform duration-1000 ease-linear hover:animate-scroll">
+        {text}
+      </span>
+      <style jsx>{`
+        @keyframes scroll {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(calc(-100% + 100px)); }
+        }
+        .hover\\:animate-scroll:hover {
+          animation: scroll 3s linear infinite;
+        }
+      `}</style>
+    </div>
+  );
+};
 
 export default function ChapterNavigation({
   anilistId,
@@ -48,18 +70,12 @@ export default function ChapterNavigation({
     (ch) => ch.id === currentChapterId,
   );
 
-  // Get next and previous chapters from the list
   const prevChapterFromList =
     currentChapterIndex > 0 ? chapterList[currentChapterIndex - 1] : null;
-
   const nextChapterFromList =
     currentChapterIndex < chapterList.length - 1
       ? chapterList[currentChapterIndex + 1]
       : null;
-  // const handlePageSelect = (pageNumber: string) => {
-  //   const page = Number.parseInt(pageNumber) - 1;
-  //   setCurrentPage(page);
-  // };
 
   const handleChapterSelect = (chapterId: string) => {
     router.push(
@@ -71,7 +87,6 @@ export default function ChapterNavigation({
   return (
     <div className="pointer-events-auto absolute right-0 bottom-0 left-0 bg-gradient-to-t from-black/90 to-transparent p-4">
       <div className="mx-auto max-w-4xl">
-        {/* Navigation Controls */}
         <div className="flex items-center justify-between gap-4">
           {/* Previous Chapter */}
           <div className="flex items-center gap-2">
@@ -80,7 +95,7 @@ export default function ChapterNavigation({
                 asChild
                 variant="secondary"
                 size="sm"
-                className="bg-gray-800 text-white hover:bg-gray-700"
+                className="bg-black text-white"
               >
                 <Link
                   href={Constants.router.chapter(
@@ -99,7 +114,7 @@ export default function ChapterNavigation({
                 variant="secondary"
                 size="sm"
                 disabled
-                className="bg-gray-800 text-gray-500"
+                className="bg-black text-gray-500"
               >
                 <ChevronLeft className="mr-1 h-4 w-4" />
                 Trước
@@ -115,40 +130,45 @@ export default function ChapterNavigation({
                 <Button
                   variant="secondary"
                   size="sm"
-                  className="bg-gray-800 text-white hover:bg-gray-700"
+                  className="bg-black text-white"
                 >
-                  Chapter {currentChapterInfo?.number || currentChapterId}
+                  Chương {currentChapterInfo?.number}
                   <ChevronDown className="ml-1 h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="max-h-96 w-80 border-gray-600 bg-gray-800 text-white">
-                <ScrollArea className="h-80">
-                  {chapterList.map((chapter, index) => (
-                    <DropdownMenuItem
-                      key={chapter.id + index}
-                      className={`cursor-pointer ${
-                        chapter.id === currentChapterId
-                          ? "bg-red-600 text-white"
-                          : "text-white hover:bg-gray-700"
-                      }`}
-                      onClick={() => handleChapterSelect(chapter.id)}
-                    >
-                      <div className="flex w-full flex-col items-start">
+              <DropdownMenuContent
+                className="w-80 border-gray-700 bg-black text-white"
+                style={{ maxHeight: "60vh", overflowY: "auto" }}
+              >
+                {chapterList.map((chapter, index) => (
+                  <DropdownMenuItem
+                    key={chapter.id + index}
+                    className={`cursor-pointer ${
+                      chapter.id === currentChapterId
+                        ? "bg-[#31042b] text-white hover:bg-[#693c63]"
+                        : "text-white hover:bg-gray-700"
+                    }`}
+                    onClick={() => handleChapterSelect(chapter.id)}
+                  >
+                    <div className="flex w-full flex-col items-start">
+                      <div className="flex w-full flex-row justify-between">
                         <span className="font-medium">
                           Chương {chapter.number}
                         </span>
-                        {chapter.title && (
-                          <span className="w-full truncate text-gray-400 text-sm">
-                            {chapter.title}
-                          </span>
-                        )}
                         <span className="text-gray-500 text-xs">
                           {chapter.createdAt}
                         </span>
                       </div>
-                    </DropdownMenuItem>
-                  ))}
-                </ScrollArea>
+
+                      {chapter.title && (
+                        <ScrollingText
+                          text={chapter.title}
+                          className="w-full text-gray-400 text-sm"
+                        />
+                      )}
+                    </div>
+                  </DropdownMenuItem>
+                ))}
               </DropdownMenuContent>
             </DropdownMenu>
 
@@ -161,47 +181,75 @@ export default function ChapterNavigation({
                 <Button
                   variant="secondary"
                   size="sm"
-                  className="bg-gray-800 text-white hover:bg-gray-700"
+                  className="bg-black text-white"
                 >
                   <List className="h-4 w-4" />
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-w-2xl border-gray-700 bg-gray-900 text-white">
-                <DialogHeader>
-                  <DialogTitle>Danh sách chương</DialogTitle>
+              <DialogContent className="max-w-2xl p-1 text-white">
+                <DialogHeader className="py-2">
+                  <DialogTitle className="text-center font-bold text-xl">
+                    Danh sách chương
+                  </DialogTitle>
                 </DialogHeader>
-                <ScrollArea className="max-h-96">
-                  <div className="space-y-2 p-4">
+                <div className="scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800 max-h-[70vh] overflow-y-auto">
+                  <div className="space-y-1 p-2">
                     {chapterList.map((chapter, index) => (
-                      <Button
+                      <div
                         key={chapter.id + index}
-                        variant={
-                          chapter.id === currentChapterId ? "default" : "ghost"
-                        }
-                        className={`w-full justify-start text-left ${
+                        className={`group relative rounded-sm transition-all duration-200 hover:shadow-lg ${
                           chapter.id === currentChapterId
-                            ? "bg-red-600 text-white hover:bg-red-700"
-                            : "text-white hover:bg-gray-800"
+                            ? " bg-[#31042b] shadow-purple-500/20"
+                            : " hover:bg-gray-700/50"
                         }`}
-                        onClick={() => handleChapterSelect(chapter.id)}
                       >
-                        <div className="flex flex-col items-start">
-                          <span className="font-medium">
-                            Chapter {chapter.number}
-                          </span>
-                          {chapter.title && (
-                            <span className="text-gray-400 text-sm">
-                              {chapter.title}
-                            </span>
-                          )}
-                          <span className="text-gray-500 text-xs">
-                            {chapter.createdAt}
-                          </span>
-                        </div>
-                      </Button>
+                        <Button
+                          variant="ghost"
+                          className="h-auto w-full justify-start p-4 text-left hover:bg-transparent"
+                          onClick={() => handleChapterSelect(chapter.id)}
+                        >
+                          <div className="flex w-full flex-col items-start space-y-1">
+                            <div className="flex w-full items-center justify-between">
+                              <span className="font-semibold text-white">
+                                Chương {chapter.number}
+                              </span>
+                              <span className="ml-2 text-gray-400 text-xs">
+                                {chapter.createdAt}
+                              </span>
+                            </div>
+                            {chapter.title && (
+                              <div className="w-full overflow-hidden">
+                                <div className="relative">
+                                  <span
+                                    className="block whitespace-nowrap text-gray-300 text-sm transition-transform duration-3000 ease-linear group-hover:animate-marquee"
+                                    style={{
+                                      animation: "none",
+                                    }}
+                                    onMouseEnter={(e) => {
+                                      const element = e.currentTarget;
+                                      const containerWidth =
+                                        element.parentElement?.offsetWidth || 0;
+                                      const textWidth = element.scrollWidth;
+                                      if (textWidth > containerWidth) {
+                                        element.style.animation =
+                                          "marquee 4s linear infinite";
+                                      }
+                                    }}
+                                    onMouseLeave={(e) => {
+                                      e.currentTarget.style.animation = "none";
+                                    }}
+                                  >
+                                    {chapter.title}
+                                  </span>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </Button>
+                      </div>
                     ))}
                   </div>
-                </ScrollArea>
+                </div>
               </DialogContent>
             </Dialog>
           </div>
@@ -213,7 +261,7 @@ export default function ChapterNavigation({
                 asChild
                 variant="secondary"
                 size="sm"
-                className="bg-gray-800 text-white hover:bg-gray-700"
+                className="bg-black text-white"
               >
                 <Link
                   href={Constants.router.chapter(
@@ -232,9 +280,9 @@ export default function ChapterNavigation({
                 variant="secondary"
                 size="sm"
                 disabled
-                className="bg-gray-800 text-gray-500"
+                className="bg-black text-gray-500"
               >
-                Next
+                Tiếp
                 <ChevronRight className="ml-1 h-4 w-4" />
               </Button>
             )}
