@@ -16,12 +16,13 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
   const anilistId = resolvedParams["anilist-id"];
   const mangaId = anilistId.split("-")[1];
   return (
-    <SWRConfig value={{
-      dedupingInterval: 60000,
-      revalidateOnFocus: false,
-      keepPreviousData: true,
-
-    }}>
+    <SWRConfig
+      value={{
+        dedupingInterval: 60000,
+        revalidateOnFocus: false,
+        keepPreviousData: true,
+      }}
+    >
       <ChapterProvider mangaId={mangaId} source={source} chapterId={chapterId}>
         <Chapter
           chapterId={chapterId}

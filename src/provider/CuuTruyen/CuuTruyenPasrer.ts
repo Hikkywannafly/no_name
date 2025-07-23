@@ -267,7 +267,7 @@ export class CuuTruyenParser {
         return {
           id: this.generateUid(chapter.id),
           title: chapter.name || null,
-          name: chapter.name ,
+          name: chapter.name,
           number: chapter.number || 0,
           sourceId: mangaUrl.match(/\d+$/)?.[0],
           volume: 0,

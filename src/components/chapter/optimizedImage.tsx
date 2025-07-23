@@ -19,24 +19,6 @@ export function OptimizedImage({
   const { settings, loadedImages, reportError, chapters } = useChapter();
 
   const isLoaded = loadedImages.has(index);
-
-  // if (!isLoaded) {
-  //   return (
-  //     <div
-  //       className={`relative flex items-center justify-center bg-black ${settings.readingMode === "single-page"
-  //         ? "h-screen w-full"
-  //         : "mb-2 h-96 w-full"
-  //         }`}
-  //     >
-  //       <div className=" text-center">
-  //         <Skeleton className="h-96 w-[500px] rounded" />
-  //         <div className="mt-2 font-semibold text-lg">
-  //           Đang tải trang {index + 1}...
-  //         </div>
-  //       </div>
-  //     </div>
-  //   );
-  // }
   return (
     <div
       className={`relative ${settings.readingMode === "single-page" ? "h-screen w-full" : "mb-2"}`}
@@ -69,24 +51,22 @@ export function OptimizedImage({
           }}
         />
       )}
-      {
-        isLoaded && (
-          <>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="absolute top-2 right-2 bg-black/50 text-white opacity-0 transition-opacity hover:opacity-100"
-              onClick={() => reportError(index)}
-            >
-              <AlertTriangle className="h-4 w-4" />
-            </Button>
+      {isLoaded && (
+        <>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="absolute top-2 right-2 bg-black/50 text-white opacity-0 transition-opacity hover:opacity-100"
+            onClick={() => reportError(index)}
+          >
+            <AlertTriangle className="h-4 w-4" />
+          </Button>
 
-            <div className="absolute right-2 bottom-2 rounded bg-black/70 px-2 py-1 text-sm text-white">
-              {index + 1} / {chapters.length}
-            </div>
-          </>
-        )
-      }
+          <div className="absolute right-2 bottom-2 rounded bg-black/70 px-2 py-1 text-sm text-white">
+            {index + 1} / {chapters.length}
+          </div>
+        </>
+      )}
     </div>
   );
 }

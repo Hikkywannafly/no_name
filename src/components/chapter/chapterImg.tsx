@@ -1,8 +1,8 @@
 "use client";
+import Image from "@/components/shared/image";
 import { unscrambleImageUrl } from "@/provider/CuuTruyen/image";
 import { useEffect, useState } from "react";
-import Loading from "../shared/loading";
-import ReadImage from "./readerImage";
+
 interface ChapterImageProps {
   imageUrl: string;
   drmData: string;
@@ -16,48 +16,63 @@ export default function ChapterImage({
   imageUrl,
   drmData,
   title,
-  width = 200,
-  height = 300,
-  onLoad,
+  width,
+  height,
+  // onLoad,
 }: ChapterImageProps) {
   const [src, setSrc] = useState<string | null>(null);
-  const [, setObjectUrl] = useState<string | undefined>(undefined);
+
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    let objectUrl: string | undefined;
     setSrc(null);
-    let localObjectUrl: string | undefined;
+
+    setIsLoading(true);
+
+
     unscrambleImageUrl(imageUrl, drmData)
       .then((url) => {
         setSrc(url);
-        setObjectUrl(url);
-        localObjectUrl = url;
+        objectUrl = url;
+        setIsLoading(false);
+
       })
       .catch((err) => {
+        setIsLoading(false);
         console.error("Image decode failed:", err);
       });
 
     return () => {
-      if (localObjectUrl) URL.revokeObjectURL(localObjectUrl);
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
     };
   }, [imageUrl, drmData]);
 
-  if (!src) {
-    return <div className="flex min-h-screen items-center justify-center bg-black ">
-      <div className="text-center">
-        <Loading className="h-12 w-12" />
+  if (isLoading || !src) {
+    return (
+      <div
+        className=
+        "flex h-60 w-full flex-col items-center justify-center gap-2 text-gray-500">
+        <img className="w-12 animate-pulse" src="/images/nazuna1.gif" alt="nazuna1" />
+        <p>Đợi chút nhé...</p>
       </div>
-    </div>
+    )
   }
-
   return (
-    <ReadImage
-      src={src}
+    <Image
+      src={src || "/placeholder.svg"}
       alt={title || "Chapter Image"}
       width={width}
       height={height}
-      style={{ objectFit: "contain" }}
+      style={{
+        objectFit: "contain",
+        width: "auto",
+        height: height,
+        maxWidth: "100%",
+        maxHeight: "100%",
+      }}
+      // onLoad={handleImageLoad}
       className="h-auto max-w-full"
-      onLoad={onLoad}
     />
   );
 }

@@ -14,12 +14,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { } from "@/components/ui/select";
+import {} from "@/components/ui/select";
 import { Constants } from "@/constants";
 import { useChapter } from "@/context/useChapter";
 import { ChevronDown, ChevronLeft, ChevronRight, List } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 interface ChapterNavigationProps {
@@ -37,9 +37,9 @@ export default function ChapterNavigation({
   mangaId,
   sourceId,
 }: ChapterNavigationProps) {
-  const { chapterList, } = useChapter();
+  const { chapterList } = useChapter();
   const [isChapterListOpen, setIsChapterListOpen] = useState(false);
-  const router = useRouter()
+  const router = useRouter();
 
   const currentChapterInfo = chapterList.find(
     (ch) => ch.id === currentChapterId,
@@ -62,8 +62,9 @@ export default function ChapterNavigation({
   // };
 
   const handleChapterSelect = (chapterId: string) => {
-
-    router.push(Constants.router.chapter(anilistId, mangaId, chapterId, sourceId))
+    router.push(
+      Constants.router.chapter(anilistId, mangaId, chapterId, sourceId),
+    );
     setIsChapterListOpen(false);
   };
 
@@ -108,8 +109,6 @@ export default function ChapterNavigation({
 
           {/* Center Controls */}
           <div className="flex items-center gap-2">
-
-
             {/* Chapter Selector */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -127,10 +126,11 @@ export default function ChapterNavigation({
                   {chapterList.map((chapter, index) => (
                     <DropdownMenuItem
                       key={chapter.id + index}
-                      className={`cursor-pointer ${chapter.id === currentChapterId
-                        ? "bg-red-600 text-white"
-                        : "text-white hover:bg-gray-700"
-                        }`}
+                      className={`cursor-pointer ${
+                        chapter.id === currentChapterId
+                          ? "bg-red-600 text-white"
+                          : "text-white hover:bg-gray-700"
+                      }`}
                       onClick={() => handleChapterSelect(chapter.id)}
                     >
                       <div className="flex w-full flex-col items-start">
@@ -178,10 +178,11 @@ export default function ChapterNavigation({
                         variant={
                           chapter.id === currentChapterId ? "default" : "ghost"
                         }
-                        className={`w-full justify-start text-left ${chapter.id === currentChapterId
-                          ? "bg-red-600 text-white hover:bg-red-700"
-                          : "text-white hover:bg-gray-800"
-                          }`}
+                        className={`w-full justify-start text-left ${
+                          chapter.id === currentChapterId
+                            ? "bg-red-600 text-white hover:bg-red-700"
+                            : "text-white hover:bg-gray-800"
+                        }`}
                         onClick={() => handleChapterSelect(chapter.id)}
                       >
                         <div className="flex flex-col items-start">

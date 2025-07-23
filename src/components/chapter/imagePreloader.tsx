@@ -22,7 +22,6 @@ export default function ImagePreloader({ source }: ImagePreloaderProps) {
           let imageUrl = chapter.imageUrl || "";
 
           if (source === "source1" && chapter.drmData) {
-            // For CuuTruyen, unscramble the image
             imageUrl = await unscrambleImageUrl(
               chapter.imageUrl || "",
               chapter.drmData || "",

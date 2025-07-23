@@ -242,7 +242,7 @@ export class TruyenQQParser {
     const url = `https://${this.config.domain[0]}/truyen-tranh/${chapterUrl}.html`;
     const res = await this.http.get(url);
     const $ = cheerio.load(res.data);
-    const name = $('h1.detail-title.txt-primary a').text().trim();
+    const name = $("h1.detail-title.txt-primary a").text().trim();
     const pages: UPage[] = [];
     $(".chapter_content .page-chapter img").each((_, img) => {
       const src = $(img).attr("src") || "";
