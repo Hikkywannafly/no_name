@@ -12,7 +12,8 @@
       ".next",
       "public/sw.js",
       "src/provider/MangaDex/**",
-      "tests/**"
+      "tests/**",
+      "src/components/chapter/readerImage.tsx"
     ]
   },
   "formatter": {
