@@ -34,7 +34,7 @@ export async function generateMetadata({
       `Đọc ${title} online`;
 
     return {
-      title: `${title} - Chúc bạn đọc vui vẻ :>`,
+      title: `${title} - Chúc bạn đọc vui vẻ`,
       description,
       openGraph: {
         title,
@@ -55,7 +55,7 @@ export async function generateMetadata({
     };
   } catch (_error) {
     return {
-      title: "Chúc bạn đọc vui vẻ :>",
+      title: "Chúc bạn đọc vui vẻ",
       description: "Chúc bạn đọc vui vẻ :>",
     };
   }
@@ -64,8 +64,9 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
   const resolvedParams = await params;
   const chapterId = resolvedParams["chapter-id"];
   const source = resolvedParams["source-id"];
-  const anilistId = resolvedParams["anilist-id"];
-  const mangaId = anilistId.split("-")[1];
+  const aniID = resolvedParams["anilist-id"];
+  const mangaId = aniID.split("-")[1];
+  const anilistId = aniID.split("-")[0];
   return (
     <SWRConfig
       value={{
@@ -79,7 +80,7 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
           chapterId={chapterId}
           mangaId={mangaId}
           source={source}
-          anilistId={mangaId[0]}
+          anilistId={anilistId}
         />
       </ChapterProvider>
     </SWRConfig>

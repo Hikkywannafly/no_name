@@ -40,15 +40,6 @@ const ScrollingText = ({
       <span className="block whitespace-nowrap transition-transform duration-1000 ease-linear hover:animate-scroll">
         {text}
       </span>
-      <style jsx>{`
-        @keyframes scroll {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(calc(-100% + 100px)); }
-        }
-        .hover\\:animate-scroll:hover {
-          animation: scroll 3s linear infinite;
-        }
-      `}</style>
     </div>
   );
 };
