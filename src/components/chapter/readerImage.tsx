@@ -72,7 +72,6 @@ const ReadImage: React.FC<ReadImageProps> = ({
                 }}
                 className={containerClassName}
             >
-                {/* biome-ignore a11y/useAltText: Image has appropriate alt text */}
                 <img
                     ref={ref}
                     src={src}
@@ -81,11 +80,13 @@ const ReadImage: React.FC<ReadImageProps> = ({
                         setLoaded(true);
                         onLoad?.(e);
                     }}
-                    onError={() => setLoaded(true)}
+                    onError={() => {
+                        setLoaded(false);
+                    }}
                     className={className}
                     {...props}
+                    style={{ display: loaded ? undefined : "none" }}
                 />
-
             </motion.div>
         </>
     );
