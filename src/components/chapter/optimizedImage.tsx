@@ -1,8 +1,6 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import { useChapter } from "@/context/useChapter";
 import type { UPage } from "@/types/manga";
-import { AlertTriangle } from "lucide-react";
 import ChapterImage from "./chapterImg";
 import ReadImage from "./readerImage";
 interface OptimizedImageProps {
@@ -16,9 +14,9 @@ export function OptimizedImage({
   index,
   source,
 }: OptimizedImageProps) {
-  const { settings, loadedImages, reportError, chapters } = useChapter();
+  const { settings, isLoading } = useChapter();
 
-  const isLoaded = loadedImages.has(index);
+  // const isLoaded = loadedImages.has(index);
   return (
     <div
       className={`relative ${settings.readingMode === "single-page" ? "h-screen w-full" : "mb-2"}`}
@@ -27,12 +25,12 @@ export function OptimizedImage({
         transformOrigin: "center top",
       }}
     >
-
       {source === "source1" ? (
         <ChapterImage
           imageUrl={chapter.imageUrl || ""}
           drmData={chapter.drmData || ""}
-          title={`Page ${index + 1}`}
+          isLoading={isLoading}
+          title={`Đọc truyện tại nazuna ${index + 1}`}
           width={settings.readingMode === "horizontal" ? 800 : 1024}
           height={settings.readingMode === "horizontal" ? 600 : 1469}
           onLoad={() => { }}
@@ -40,7 +38,7 @@ export function OptimizedImage({
       ) : (
         <ReadImage
           src={`/api/proxy?url=${chapter.imageUrl}&referer=${chapter.reference}`}
-          alt={`Page ${index + 1}`}
+          alt={`Đọc truyện tại nazuna ${index + 1}`}
           width={settings.readingMode === "horizontal" ? 800 : 1024}
           height={settings.readingMode === "horizontal" ? 600 : 1469}
           onLoad={() => { }}
@@ -52,7 +50,7 @@ export function OptimizedImage({
           }}
         />
       )}
-      {
+      {/* {
         isLoaded && (
           <>
             <Button
@@ -69,7 +67,7 @@ export function OptimizedImage({
             </div>
           </>
         )
-      }
+      } */}
     </div>
   );
 }

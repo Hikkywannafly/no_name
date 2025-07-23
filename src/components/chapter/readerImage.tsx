@@ -72,7 +72,6 @@ const ReadImage: React.FC<ReadImageProps> = ({
                 }}
                 className={containerClassName}
             >
-                {/* eslint-disable-next-line jsx-a11y/img-redundant-alt */}
                 {/* biome-ignore a11y/useAltText: Image has appropriate alt text */}
                 <img
                     ref={ref}
@@ -86,6 +85,7 @@ const ReadImage: React.FC<ReadImageProps> = ({
                     className={className}
                     {...props}
                 />
+
             </motion.div>
         </>
     );

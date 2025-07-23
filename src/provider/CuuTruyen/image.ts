@@ -54,7 +54,6 @@ export async function unscrambleImageUrl(
   const blob = await loadImageAsBlob(imageUrl);
   const image = await createImageBitmap(blob);
 
-  // Dùng canvas DOM để vẽ ảnh
   const canvas = document.createElement("canvas");
   canvas.width = image.width;
   canvas.height = image.height;

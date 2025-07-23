@@ -16,7 +16,6 @@ export default function ImagePreloader({ source }: ImagePreloaderProps) {
       const newPreloadedImages = new Map<number, string>();
       const newLoadedImages = new Set<number>();
 
-      // Preload all images
       const preloadPromises = chapters.map(async (chapter, index) => {
         try {
           let imageUrl = chapter.imageUrl || "";
