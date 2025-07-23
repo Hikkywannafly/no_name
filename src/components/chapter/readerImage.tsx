@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/useAltText */
-/* eslint-disable react-hooks/exhaustive-deps */
 {/* biome-ignore a11y/useAltText: Image has appropriate alt text */ }
 import useIntersectionObserver from "@/hooks/useIntersectionObserver";
 import classNames from "classnames";
@@ -32,9 +30,6 @@ const ReadImage: React.FC<ReadImageProps> = ({
     });
 
     // Reset loaded state when src changes
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    /* eslint-disable jsx-a11y/useAltText */
-    /* eslint-disable react-hooks/exhaustive-deps */
     {/* biome-ignore a11y/useAltText: Image has appropriate alt text */ }
     useEffect(() => {
         setLoaded(false);

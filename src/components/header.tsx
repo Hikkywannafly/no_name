@@ -51,7 +51,7 @@ const Header = () => {
               href="/"
               className="cursor-pointer whitespace-nowrap font-semibold text-xl opacity-80"
             >
-              NONAMEE
+              nazuna
             </Link>
           </div>
 

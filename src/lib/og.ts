@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 
-const APP_NAME = "No Name";
-const APP_DEFAULT_TITLE = "No Name";
-const APP_TITLE_TEMPLATE = "%s - No Name";
-const APP_DESCRIPTION = "An application dont have a name";
+const APP_NAME = "nazuna manga";
+const APP_DEFAULT_TITLE = "nazuna";
+const APP_TITLE_TEMPLATE = "%s - nazuna";
+const APP_DESCRIPTION =
+  "nazuna manga - Đọc truyện tranh free online, đọc manga, manhua, manhwa, truyện tranh tiếng việt, tiếng anh, tiếng nhật, tiếng trung, tiếng hàn hỗ trợ nhiều source";
 
 export const OpenGraph: Metadata = {
   applicationName: APP_NAME,
