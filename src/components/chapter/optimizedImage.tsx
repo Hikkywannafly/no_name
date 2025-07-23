@@ -1,12 +1,10 @@
 "use client";
-import Image from "@/components/shared/image";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import { useChapter } from "@/context/useChapter";
 import type { UPage } from "@/types/manga";
 import { AlertTriangle } from "lucide-react";
 import ChapterImage from "./chapterImg";
-
+import ReadImage from "./readerImage";
 interface OptimizedImageProps {
   chapter: UPage;
   index: number;
@@ -22,23 +20,23 @@ export function OptimizedImage({
 
   const isLoaded = loadedImages.has(index);
 
-  if (!isLoaded) {
-    return (
-      <div
-        className={`relative flex items-center justify-center bg-black ${settings.readingMode === "single-page"
-          ? "h-screen w-full"
-          : "mb-2 h-96 w-full"
-          }`}
-      >
-        <div className=" text-center">
-          <Skeleton className="h-96 w-[500px] rounded" />
-          <div className="mt-2 font-semibold text-lg">
-            Đang tải trang {index + 1}...
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // if (!isLoaded) {
+  //   return (
+  //     <div
+  //       className={`relative flex items-center justify-center bg-black ${settings.readingMode === "single-page"
+  //         ? "h-screen w-full"
+  //         : "mb-2 h-96 w-full"
+  //         }`}
+  //     >
+  //       <div className=" text-center">
+  //         <Skeleton className="h-96 w-[500px] rounded" />
+  //         <div className="mt-2 font-semibold text-lg">
+  //           Đang tải trang {index + 1}...
+  //         </div>
+  //       </div>
+  //     </div>
+  //   );
+  // }
   return (
     <div
       className={`relative ${settings.readingMode === "single-page" ? "h-screen w-full" : "mb-2"}`}
@@ -57,7 +55,7 @@ export function OptimizedImage({
           onLoad={() => { }}
         />
       ) : (
-        <Image
+        <ReadImage
           src={`/api/proxy?url=${chapter.imageUrl}&referer=${chapter.reference}`}
           alt={`Page ${index + 1}`}
           width={settings.readingMode === "horizontal" ? 800 : 1024}
@@ -86,13 +84,9 @@ export function OptimizedImage({
             <div className="absolute right-2 bottom-2 rounded bg-black/70 px-2 py-1 text-sm text-white">
               {index + 1} / {chapters.length}
             </div>
-
           </>
-
         )
       }
-
-
     </div>
   );
 }

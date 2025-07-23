@@ -50,16 +50,6 @@ export const Chapter = memo(function Chapter(props: ChapterProps) {
   );
   const currentChapterInfo = chapterList[currentChapterIndex] || null;
 
-  // const nextChapterFromList =
-  //   currentChapterIndex > 0 ? chapterList[currentChapterIndex - 1] : null;
-  // const prevChapterFromList =
-  //   currentChapterIndex < chapterList.length - 1
-  //     ? chapterList[currentChapterIndex + 1]
-  //     : null;
-  // console.log(
-  //   "chapter info",
-  //   chapters
-  // );
   const resetControlsTimeout = useCallback(() => {
     if (controlsTimeoutRef.current) {
       clearTimeout(controlsTimeoutRef.current);
@@ -135,19 +125,7 @@ export const Chapter = memo(function Chapter(props: ChapterProps) {
       return () => element?.removeEventListener("scroll", handleScroll);
     }
   }, [settings.readingMode, currentPage, chapters.length, setReadingProgress]);
-
-  // const handleNextChapter = () => {
-  //   if (nextChapterFromList && props.anilistId) {
-  //     window.location.href = `/manga/${props.anilistId}-${props.mangaId}/chapter/${nextChapterFromList.id}?source=${source}`;
-  //   }
-  // };
-
-  // const handlePrevChapter = () => {
-  //   if (prevChapterFromList && props.anilistId) {
-  //     window.location.href = `/manga/${props.anilistId}-${props.mangaId}/chapter/${prevChapterFromList.id}?source=${source}`;
-  //   }
-  // };
-
+  
   if (isLoading && source === "source2") {
     return (
       <div className="flex min-h-screen items-center justify-center bg-black ">

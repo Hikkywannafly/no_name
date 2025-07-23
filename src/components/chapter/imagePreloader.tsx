@@ -28,7 +28,7 @@ export default function ImagePreloader({ source }: ImagePreloaderProps) {
               chapter.drmData || "",
             );
           } else if (source !== "source1") {
-            // For TruyenQQ, use proxy
+            // For TruyenQQ and orther sources, use proxy
             imageUrl = `/api/proxy?url=${chapter.imageUrl}&referer=${chapter.reference}`;
           }
 

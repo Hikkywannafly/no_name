@@ -41,7 +41,7 @@ export default function ReaderSettings({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-md border-gray-700 bg-gray-900 text-white">
         <DialogHeader>
-          <DialogTitle>Reader Settings</DialogTitle>
+          <DialogTitle>Cài đặt chế độ đọc</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-6 p-4">
