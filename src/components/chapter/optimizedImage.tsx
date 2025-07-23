@@ -27,6 +27,7 @@ export function OptimizedImage({
         transformOrigin: "center top",
       }}
     >
+
       {source === "source1" ? (
         <ChapterImage
           imageUrl={chapter.imageUrl || ""}
@@ -51,22 +52,24 @@ export function OptimizedImage({
           }}
         />
       )}
-      {isLoaded && (
-        <>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="absolute top-2 right-2 bg-black/50 text-white opacity-0 transition-opacity hover:opacity-100"
-            onClick={() => reportError(index)}
-          >
-            <AlertTriangle className="h-4 w-4" />
-          </Button>
+      {
+        isLoaded && (
+          <>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="absolute top-2 right-2 bg-black/50 text-white opacity-0 transition-opacity hover:opacity-100"
+              onClick={() => reportError(index)}
+            >
+              <AlertTriangle className="h-4 w-4" />
+            </Button>
 
-          <div className="absolute right-2 bottom-2 rounded bg-black/70 px-2 py-1 text-sm text-white">
-            {index + 1} / {chapters.length}
-          </div>
-        </>
-      )}
+            <div className="absolute right-2 bottom-2 rounded bg-black/70 px-2 py-1 text-sm text-white">
+              {index + 1} / {chapters.length}
+            </div>
+          </>
+        )
+      }
     </div>
   );
 }
