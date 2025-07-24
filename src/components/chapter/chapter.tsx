@@ -139,7 +139,6 @@ export const Chapter = memo(function Chapter(props: ChapterProps) {
   if (error) {
     return (
       <div className="ga-4 flex min-h-screen flex-col items-center justify-center text-center text-white">
-
         <img src="/images/nazuna3.gif" className="mb-2 w-44 " alt="" />
         <h2 className="mb-2 font-semibold text-xl">
           {error ? "Không thể tải được chap" : "Chương này chưa có sẵn"}
@@ -261,10 +260,11 @@ export const Chapter = memo(function Chapter(props: ChapterProps) {
   return (
     <div
       ref={readerRef}
-      className={`relative min-h-screen text-white ${settings.readingMode === "vertical"
-        ? "overflow-y-auto"
-        : "overflow-hidden"
-        }`}
+      className={`relative min-h-screen text-white ${
+        settings.readingMode === "vertical"
+          ? "overflow-y-auto"
+          : "overflow-hidden"
+      }`}
     >
       {/* Image Preloader */}
       <ImagePreloader source={source} />
@@ -329,8 +329,8 @@ export const Chapter = memo(function Chapter(props: ChapterProps) {
             mangaId={mangaId}
             sourceId={source}
             currentChapterId={chapterId}
-          // nextChapter={props.nextChapter}
-          // prevChapter={props.prevChapter}
+            // nextChapter={props.nextChapter}
+            // prevChapter={props.prevChapter}
           />
 
           {/* Reader Controls for non-vertical modes */}
@@ -354,7 +354,7 @@ export const Chapter = memo(function Chapter(props: ChapterProps) {
       {/* Settings Dialog */}
       <ReaderSettings
         settings={settings}
-        onSettingsChange={() => { }}
+        onSettingsChange={() => {}}
         onClose={() => setShowSettings(false)}
         isOpen={showSettings}
       />

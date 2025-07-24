@@ -36,18 +36,20 @@ const Image: React.FC<ImageProps> = ({ onLoad, ...props }) => {
       animate={isLoaded ? "visible" : "hidden"}
       className={containerClassName}
     >
-      {
-        isLoaded && (
-          <div
-            className={
-              "flex h-60 w-full flex-col items-center justify-center gap-2 text-gray-500"
-            }
-          >
-            <img className="w-12 animate-pulse" src="/images/nazuna1.gif" alt="nazuna1" />
-            <p>Đợi chút nhé...</p>
-          </div>
-        )
-      }
+      {isLoaded && (
+        <div
+          className={
+            "flex h-60 w-full flex-col items-center justify-center gap-2 text-gray-500"
+          }
+        >
+          <img
+            className="w-12 animate-pulse"
+            src="/images/nazuna1.gif"
+            alt="nazuna1"
+          />
+          <p>Đợi chút nhé...</p>
+        </div>
+      )}
 
       <NextImage onLoad={handleLoad} unoptimized {...props} />
     </motion.div>

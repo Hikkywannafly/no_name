@@ -39,6 +39,36 @@ export const getMedia = async (args: MediaArgs & PageArgs, fields?: string) => {
     mediaQuery(fields),
     args,
   );
+  console.log("Anilist Media Response:", response);
+  // const mediaList = response.Page.media || [];
+
+  // const updatedMediaList = await Promise.all(
+  //   mediaList.map(async (media) => {
+  //     const title = media?.title?.userPreferred || "";
+  //     let mangaList: any[] = [];
+  //     try {
+  //       const { data } = await MangadexApi.Manga.getSearchManga({
+  //         title,
+  //         includes: [],
+  //         order: {
+  //           followedCount: Order.DESC,
+  //           relevance: Order.DESC,
+  //         },
+  //         limit: 1,
+  //       });
+  //       mangaList = data?.data ?? [];
+  //     } catch (error) {
+  //       console.error("Lỗi khi fetch MangaDex:", error);
+  //     }
+  //     const firstManga = mangaList?.[0];
+  //     return {
+  //       ...media,
+  //       translations: firstManga?.attributes?.altTitles ?? [],
+  //     };
+  //   })
+  // );
+
+  // return updatedMediaList;
 
   return response.Page.media || [];
 };

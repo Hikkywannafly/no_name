@@ -1,13 +1,8 @@
 "use client";
-
-import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { Card } from "@/components/ui/card";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CustomCarouselNext,
-  CustomCarouselPrevious,
 } from "@/components/ui/carousel";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Constants } from "@/constants";
@@ -21,10 +16,11 @@ import Autoplay from "embla-carousel-autoplay";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { AspectRatio } from "./ui";
 
 // Fallback images
 const FALLBACK_BANNER = "/placeholder.svg?height=280&width=1600";
-const FALLBACK_COVER = "/placeholder.svg?height=600&width=400";
+
 
 interface MangaSlideProps {
   manga: Media;
@@ -33,96 +29,89 @@ interface MangaSlideProps {
   isActive: boolean;
 }
 
-function MangaSlide({ manga, nextManga, isFirst, isActive }: MangaSlideProps) {
-  const currentColor = manga.coverImage?.color || "#1a1a1a";
-  const nextColor = nextManga?.coverImage?.color || "#1a1a1a";
-
-  console.log(`MangaSlide: ${getTitle(manga)}`, manga);
-
+function MangaSlide({ manga, isFirst, isActive }: MangaSlideProps) {
   return (
-    <div className="relative h-[400px] overflow-hidden transition-colors duration-700 ease-in-out">
-      <div
-        className="absolute inset-0 h-[300px] overflow-hidden transition-all duration-700 ease-in-out"
-        style={{
-          background: `linear-gradient(135deg, ${currentColor} 0%, ${nextColor} 100%)`,
-        }}
-      />
-
-      {/* Background Banner Image - Smaller and positioned lower */}
-      <div className="-translate-x-1/2 absolute top-16 left-1/2 h-[280px] w-[70%] overflow-hidden rounded-lg shadow-2xl">
+    <div className="relative w-full">
+      {/* Background Image Container */}
+      <div className="relative h-[300px] w-full overflow-hidden sm:h-[350px] md:h-[400px] lg:h-[450px]">
         <Image
           fill
           src={manga.bannerImage || FALLBACK_BANNER}
           alt={`${getTitle(manga)} banner`}
-          className="object-cover opacity-90"
+          className="object-cover object-center"
           priority={isFirst}
-          sizes="70vw"
+          sizes="100vw"
         />
-        {/* Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent" />
-        {/* Custom Navigation Buttons - Positioned inside the banner */}
-        <div className="-translate-y-1/2 absolute top-1/2 right-4 z-30 flex flex-col gap-2">
-          <CustomCarouselPrevious className="relative top-0 left-0 size-8 translate-y-0 border-white/30 bg-black/60 text-white backdrop-blur-sm transition-all duration-300 hover:bg-black/80 hover:text-white" />
-          <CustomCarouselNext className="relative top-0 right-0 size-8 translate-y-0 border-white/30 bg-black/60 text-white backdrop-blur-sm transition-all duration-300 hover:bg-black/80 hover:text-white" />
+
+        {/* Gradient Overlays */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/20" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-transparent to-black/70" />
+
+        {/* Content Container */}
+        <div className="absolute inset-0 flex items-center">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <Link
+              href={`${Constants.router.manga(manga.id, getTitle(manga, "vi"))}`}
+              className="mx-auto flex max-w-6xl flex-col items-center gap-4 sm:flex-row sm:items-end sm:gap-6 lg:gap-8"
+            >
+              {/* Manga Cover */}
+              <div
+                className={`w-32 shrink-0 transform transition-all duration-700 ease-out sm:w-40 md:w-48 lg:w-52 xl:w-56 ${isActive
+                  ? "translate-y-0 opacity-100 sm:translate-x-0"
+                  : "translate-y-4 opacity-0 sm:translate-x-[-20px]"
+                  }`}
+              >
+                <div className="relative overflow-hidden rounded-lg shadow-2xl">
+                  <AspectRatio ratio={2 / 3}>
+                    <Image
+                      src={manga?.coverImage?.large || "/placeholder.svg?height=300&width=200"}
+                      alt={`${getTitle(manga, "vi")} cover`}
+                      fill
+                      priority={isFirst}
+                      className="object-cover"
+                    />
+                  </AspectRatio>
+                </div>
+              </div>
+
+              {/* Text Content */}
+              <div
+                className={`flex-1 transform text-center transition-all delay-200 duration-700 ease-out sm:text-left ${isActive ? "translate-y-0 opacity-100 sm:translate-x-0" : "translate-y-4 opacity-0 sm:translate-x-4"
+                  }`}
+              >
+                <h2 className="mb-2 line-clamp-2 font-bold text-white text-xl leading-tight drop-shadow-lg sm:mb-4 lg:text-xl xl:text-2xl">
+                  {getTitle(manga, "vi")}
+                </h2>
+
+                {manga.description && (
+                  <p className="mb-3 line-clamp-2 max-w-2xl text-gray-100 text-sm drop-shadow-md sm:mb-4 sm:line-clamp-3 sm:text-base md:text-lg">
+                    {manga.description.replace(/<[^>]*>/g, "").substring(0, 200)}...
+                  </p>
+                )}
+
+                {/* Stats */}
+                <div className="flex flex-wrap items-center justify-center gap-2 text-gray-200 text-xs sm:justify-start sm:gap-3 sm:text-sm">
+                  {manga.averageScore && (
+                    <span className="flex items-center gap-1 rounded-full bg-white/20 px-2 py-1 backdrop-blur-sm sm:gap-2 sm:px-3">
+                      {manga.averageScore}%
+                    </span>
+                  )}
+                  {manga.status && (
+                    <span className="rounded-full bg-white/25 px-2 py-1 backdrop-blur-sm sm:px-3">{manga.status}</span>
+                  )}
+                  {manga.genres && manga.genres.length > 0 && (
+                    <span className="rounded-full bg-white/20 px-2 py-1 backdrop-blur-sm sm:px-3">
+                      {manga.genres[0]}
+                    </span>
+                  )}
+                </div>
+              </div>
+            </Link>
+          </div>
         </div>
       </div>
-      {/* Content */}
-      <Link
-        href={`${Constants.router.manga(manga.id, getTitle(manga))}`}
-        className="relative z-20 mx-auto flex h-full max-w-6xl items-center gap-8 p-8"
-      >
-        {/* Cover Image with slide-in animation */}
-        <Card
-          className={`h-72 w-48 shrink-0 transform overflow-hidden shadow-2xl transition-all duration-700 ease-out ${
-            isActive ? "translate-x-0 opacity-100" : "-translate-x-8 opacity-0"
-          }`}
-        >
-          <div className="relative h-full w-full">
-            <AspectRatio ratio={2 / 3} className="h-full w-full">
-              <Image
-                src={manga.coverImage?.large || FALLBACK_COVER}
-                alt={`${getTitle(manga)} cover`}
-                fill
-                className="object-cover transition-transform hover:scale-105"
-                sizes="192px"
-              />
-            </AspectRatio>
-          </div>
-        </Card>
-        {/* Text Content */}
-        <div
-          className={`flex transform flex-col justify-center space-y-4 text-white transition-all delay-200 duration-700 ease-out ${
-            isActive ? "translate-x-0 opacity-100" : "translate-x-4 opacity-0"
-          }`}
-        >
-          <h2 className="line-clamp-2 font-bold text-3xl leading-tight drop-shadow-lg md:text-4xl lg:text-5xl">
-            {getTitle(manga, "vi")}
-          </h2>
-          {manga.description && (
-            <p className="line-clamp-3 max-w-2xl text-base text-gray-100 drop-shadow-md md:text-lg">
-              {manga.description.replace(/<[^>]*>/g, "").substring(0, 250)}...
-            </p>
-          )}
-          <div className="flex items-center gap-6 text-gray-200 text-sm">
-            {manga.averageScore && (
-              <span className="flex items-center gap-2 rounded-full bg-white/20 px-3 py-1 backdrop-blur-sm">
-                ⭐ {manga.averageScore}%
-              </span>
-            )}
-            {manga.status && (
-              <span className="rounded-full bg-white/25 px-3 py-1 text-sm backdrop-blur-sm">
-                {manga.status}
-              </span>
-            )}
-            {manga.genres && manga.genres.length > 0 && (
-              <span className="rounded-full bg-white/20 px-3 py-1 text-sm backdrop-blur-sm">
-                {manga.genres[0]}
-              </span>
-            )}
-          </div>
-        </div>
-      </Link>
     </div>
+
   );
 }
 
@@ -144,8 +133,8 @@ export default function MangaCarousel() {
   } = useMedia({
     type: MediaType.Manga,
     sort: [MediaSort.Trending_desc, MediaSort.Popularity_desc],
-    countryOfOrigin: "JP",
-    perPage: 20,
+    // countryOfOrigin: "JP",
+    perPage: 10,
   });
 
   // Autoplay plugin configuration
@@ -214,29 +203,7 @@ export default function MangaCarousel() {
           })}
         </CarouselContent>
       </Carousel>
-      <style jsx global>{`
-        .embla__slide {
-          opacity: 0;
-          transition: opacity 0.8s ease-in-out;
-        }
-        
-        .embla__slide.is-selected {
-          opacity: 1;
-        }
-        
-        .embla__container {
-          transition: none !important;
-        }
-        /* Custom scrollbar for better UX */
-        .embla__viewport::-webkit-scrollbar {
-          display: none;
-        }
-        
-        .embla__viewport {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-      `}</style>
+
     </div>
   );
 }
