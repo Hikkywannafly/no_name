@@ -72,6 +72,7 @@
     "classnames": "^2.5.1",
     "clsx": "^2.1.1",
     "embla-carousel-autoplay": "^8.6.0",
+    "embla-carousel-fade": "^8.6.0",
     "embla-carousel-react": "^8.6.0",
     "framer-motion": "^12.6.2",
     "lodash": "^4.17.21",

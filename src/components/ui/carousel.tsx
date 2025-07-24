@@ -19,6 +19,7 @@ type CarouselProps = {
   plugins?: CarouselPlugin;
   orientation?: "horizontal" | "vertical";
   setApi?: (api: CarouselApi) => void;
+  onSelect?: (api: CarouselApi) => void;
 };
 
 type CarouselContextProps = {
@@ -49,6 +50,7 @@ function Carousel({
   plugins,
   className,
   children,
+  onSelect: onSelectProp,
   ...props
 }: React.ComponentProps<"div"> & CarouselProps) {
   const [carouselRef, api] = useEmblaCarousel(
@@ -61,12 +63,18 @@ function Carousel({
   const [canScrollPrev, setCanScrollPrev] = React.useState(false);
   const [canScrollNext, setCanScrollNext] = React.useState(false);
 
-  const onSelect = React.useCallback((api: CarouselApi) => {
-    if (!api) return;
+  const onSelect = React.useCallback(
+    (api: CarouselApi) => {
+      if (!api) return;
 
-    setCanScrollPrev(api.canScrollPrev());
-    setCanScrollNext(api.canScrollNext());
-  }, []);
+      setCanScrollPrev(api.canScrollPrev());
+      setCanScrollNext(api.canScrollNext());
+
+      // Call the external onSelect callback
+      onSelectProp?.(api);
+    },
+    [onSelectProp],
+  );
 
   const scrollPrev = React.useCallback(() => {
     api?.scrollPrev();
@@ -187,7 +195,7 @@ function CarouselPrevious({
       variant={variant}
       size={size}
       className={cn(
-        "absolute size-8 rounded-full",
+        "absolute size-8 rounded",
         orientation === "horizontal"
           ? "-left-12 -translate-y-1/2 top-1/2"
           : "-top-12 -translate-x-1/2 left-1/2 rotate-90",
@@ -217,12 +225,59 @@ function CarouselNext({
       variant={variant}
       size={size}
       className={cn(
-        "absolute size-8 rounded-full",
+        "absolute size-8",
         orientation === "horizontal"
           ? "-right-12 -translate-y-1/2 top-1/2"
           : "-bottom-12 -translate-x-1/2 left-1/2 rotate-90",
         className,
       )}
+      disabled={!canScrollNext}
+      onClick={scrollNext}
+      {...props}
+    >
+      <ArrowRight />
+      <span className="sr-only">Next slide</span>
+    </Button>
+  );
+}
+
+// Custom navigation buttons for internal use
+function CustomCarouselPrevious({
+  className,
+  variant = "outline",
+  size = "icon",
+  ...props
+}: React.ComponentProps<typeof Button>) {
+  const { scrollPrev, canScrollPrev } = useCarousel();
+
+  return (
+    <Button
+      variant={variant}
+      size={size}
+      className={className}
+      disabled={!canScrollPrev}
+      onClick={scrollPrev}
+      {...props}
+    >
+      <ArrowLeft />
+      <span className="sr-only">Previous slide</span>
+    </Button>
+  );
+}
+
+function CustomCarouselNext({
+  className,
+  variant = "outline",
+  size = "icon",
+  ...props
+}: React.ComponentProps<typeof Button>) {
+  const { scrollNext, canScrollNext } = useCarousel();
+
+  return (
+    <Button
+      variant={variant}
+      size={size}
+      className={className}
       disabled={!canScrollNext}
       onClick={scrollNext}
       {...props}
@@ -239,5 +294,7 @@ export {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
+  CustomCarouselNext,
+  CustomCarouselPrevious,
   type CarouselApi,
 };

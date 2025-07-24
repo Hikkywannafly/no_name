@@ -42,8 +42,10 @@ interface ChapterContextType {
   // Image loading
   loadedImages: Set<number>;
   setLoadedImages: (images: Set<number>) => void;
-  preloadedImages: Map<number, string>;
-  setPreloadedImages: (images: Map<number, string>) => void;
+  preloadedImages: Map<number, ImageData | HTMLImageElement>;
+  setPreloadedImages: (
+    images: Map<number, ImageData | HTMLImageElement>,
+  ) => void;
 
   // Navigation
   goToNextPage: () => void;
@@ -94,9 +96,9 @@ export function ChapterProvider({
 
   // Image loading state
   const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set());
-  const [preloadedImages, setPreloadedImages] = useState<Map<number, string>>(
-    new Map(),
-  );
+  const [preloadedImages, setPreloadedImages] = useState<
+    Map<number, ImageData | HTMLImageElement>
+  >(new Map());
 
   // Load user preferences
   useEffect(() => {

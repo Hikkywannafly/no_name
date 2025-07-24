@@ -1,6 +1,6 @@
 "use client";
 import { useChapter } from "@/context/useChapter";
-import { unscrambleImageUrl } from "@/provider/CuuTruyen/image";
+import { unscrambleImageData } from "@/provider/CuuTruyen/image";
 import { useEffect } from "react";
 
 interface ImagePreloaderProps {
@@ -13,38 +13,39 @@ export default function ImagePreloader({ source }: ImagePreloaderProps) {
     if (!chapters || chapters.length === 0) return;
 
     const preloadImages = async () => {
-      const newPreloadedImages = new Map<number, string>();
+      const newPreloadedImages = new Map<
+        number,
+        ImageData | HTMLImageElement
+      >();
       const newLoadedImages = new Set<number>();
 
       const preloadPromises = chapters.map(async (chapter, index) => {
         try {
-          let imageUrl = chapter.imageUrl || "";
-
           if (source === "source1" && chapter.drmData) {
-            imageUrl = await unscrambleImageUrl(
+            // Decode và preload ImageData
+            const imageData = await unscrambleImageData(
               chapter.imageUrl || "",
               chapter.drmData || "",
             );
+            newPreloadedImages.set(index, imageData);
+            newLoadedImages.add(index);
           } else if (source !== "source1") {
-            // For TruyenQQ and orther sources, use proxy
-            imageUrl = `/api/proxy?url=${chapter.imageUrl}&referer=${chapter.reference}`;
+            // For TruyenQQ and other sources, use proxy and preload as Image
+            return new Promise<void>((resolve, reject) => {
+              const img = new window.Image();
+              img.crossOrigin = "anonymous";
+              img.onload = () => {
+                newPreloadedImages.set(index, img);
+                newLoadedImages.add(index);
+                resolve();
+              };
+              img.onerror = () => {
+                console.error(`Failed to preload image ${index + 1}`);
+                reject();
+              };
+              img.src = `/api/proxy?url=${chapter.imageUrl}&referer=${chapter.reference}`;
+            });
           }
-
-          // Preload the image
-          return new Promise<void>((resolve, reject) => {
-            const img = new Image();
-            img.crossOrigin = "anonymous";
-            img.onload = () => {
-              newPreloadedImages.set(index, imageUrl);
-              newLoadedImages.add(index);
-              resolve();
-            };
-            img.onerror = () => {
-              console.error(`Failed to preload image ${index + 1}`);
-              reject();
-            };
-            img.src = imageUrl;
-          });
         } catch (error) {
           console.error(`Error preloading image ${index + 1}:`, error);
         }

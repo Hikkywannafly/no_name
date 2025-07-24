@@ -883,6 +883,7 @@ export interface MediaExternalLink {
   type: Maybe<ExternalLinkType>;
   /** Language the site content is in. See Staff language field for values.*/
   language: Maybe<string>;
+  /** The color of the site, usually a hex code*/
   color: Maybe<string>;
   /** The icon image url of the site. Not available for all links. Transparent PNG 64x64*/
   icon: Maybe<string>;

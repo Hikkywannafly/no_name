@@ -47,10 +47,10 @@ async function loadImageAsBlob(url: string): Promise<Blob> {
   return await res.blob();
 }
 
-export async function unscrambleImageUrl(
+export async function unscrambleImageData(
   imageUrl: string,
   drmData: string,
-): Promise<string> {
+): Promise<ImageData> {
   const blob = await loadImageAsBlob(imageUrl);
   const image = await createImageBitmap(blob);
 
@@ -65,12 +65,5 @@ export async function unscrambleImageUrl(
   const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
   const unscrambled = await unscrambleImage(imageData, drmData);
-  ctx.putImageData(unscrambled, 0, 0);
-
-  return new Promise<string>((resolve, reject) => {
-    canvas.toBlob((blob) => {
-      if (!blob) return reject(new Error("Failed to convert canvas to blob"));
-      resolve(URL.createObjectURL(blob));
-    }, "image/png");
-  });
+  return unscrambled;
 }
