@@ -6,6 +6,8 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@plugin "tailwindcss-animate";
+
 :root {
   --radius: 0.625rem;
 
@@ -161,4 +163,28 @@
 
 .hover\\:animate-scroll:hover {
   animation: scroll 3s linear infinite;
+}
+
+.bar {
+  background: #31042b !important;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #000000;
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000000;
+  border-radius: 8px;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #5a0035 #000000;
 }

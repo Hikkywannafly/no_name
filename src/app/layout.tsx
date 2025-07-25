@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Nunito } from "next/font/google";
 
 import { ThemeProvider } from "@/components/theme";
 import { AnilistContextProvider } from "@/context/useAnilist";
@@ -7,10 +7,9 @@ import { OpenGraph } from "@/lib/og";
 import { Analytics } from "@vercel/analytics/react";
 import NextTopLoader from "nextjs-toploader";
 import "./globals.css";
-
-const inter = Inter({
+const nunito = Nunito({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-nunito",
 });
 
 export const metadata: Metadata = {
@@ -29,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.variable} font-sans antialiased`}
+        className={`${nunito.variable} font-sans antialiased`}
         suppressHydrationWarning
       >
         <AnilistContextProvider>
@@ -41,8 +40,9 @@ export default function RootLayout({
               height={4}
               showSpinner={false}
               template={`
-        <div class="bar bg-web-title" role="bar"><div class="peg"></div></div> 
-  <div class="spinner text-web-title" role="spinner"><div class="spinner-icon"></div></div>`}
+    <div class="bar bg-[#31042b]" role="bar"><div class="peg"></div></div> 
+    <div class="spinner text-web-title" role="spinner"><div class="spinner-icon"></div></div>
+  `}
             />
             <main>{children}</main>
             <Analytics />

@@ -50,7 +50,7 @@ const Option: React.ComponentType<
     <div
       ref={innerRef}
       className={classNames(
-        "relative cursor-pointer px-3 py-2 transition duration-300",
+        "relative cursor-pointer px-3 py-2 text-lg transition duration-300",
         props.isFocused && "bg-white/20 text-primary-300",
         className,
       )}

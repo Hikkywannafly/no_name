@@ -38,7 +38,7 @@ const Header = () => {
   return (
     <React.Fragment>
       <header className="fixed top-0 left-0 z-[999] w-full bg-gradient-to-b from-black/60 via-black/40 to-transparent p-4 px-2 transition duration-500 ">
-        <WideContainer classNames="mx-auto flex h-full w-full items-center justify-between ">
+        <WideContainer classNames="mx-auto flex h-full items-center justify-between ">
           <div className="flex items-center ">
             <button
               className="mr-2 block md:hidden"
@@ -135,7 +135,7 @@ const Header = () => {
                 options={GENRES_COMICS}
                 show={true}
                 isMore={false}
-                onClose={() => { }}
+                onClose={() => {}}
               />
             </div>
             <div className="py-2">
@@ -146,7 +146,7 @@ const Header = () => {
                 options={RANKING_COMICS}
                 show={true}
                 isMore={false}
-                onClose={() => { }}
+                onClose={() => {}}
               />
             </div>
             <button
