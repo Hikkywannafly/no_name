@@ -12,8 +12,7 @@ import BaseLayout from "../baseLayout";
 //     voice_actors: VABrowseList,
 //     users: UserBrowseList,
 // };
-
-export const TYPES = [
+const TYPES = [
     {
         value: "manga",
         label: "Manga",
