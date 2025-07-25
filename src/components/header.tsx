@@ -1,5 +1,5 @@
 "use client";
-import { HeaderSearch, HeaderUser } from "@/components/icons";
+import { HeaderSearch } from "@/components/icons";
 import HamburgerMenu from "@/components/icons/HamburgerMenu";
 import DropDown from "@/components/shared/dropDown";
 import { GENRES_COMICS, RANKING_COMICS } from "@/constants";
@@ -102,7 +102,6 @@ const Header = () => {
 
           <div className="z-30 flex gap-3 whitespace-nowrap">
             <HeaderSearch />
-            <HeaderUser />
           </div>
         </WideContainer>
       </header>
@@ -167,7 +166,7 @@ const Header = () => {
           </nav>
           <div className="flex justify-center gap-4 pb-6">
             <HeaderSearch />
-            <HeaderUser />
+            {/* <HeaderUser /> */}
           </div>
         </div>
       )}
