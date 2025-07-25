@@ -3,7 +3,7 @@ import Select from "@/components/browse/ClientOnlySelect";
 import WideContainer from "@/components/layout/wideLayout";
 // import type { MediaFormat, MediaSort } from "@/types/anilist";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useMemo } from "react";
+import { Suspense, useMemo } from "react";
 import BaseLayout from "../baseLayout";
 // const components = {
 //     anime: AnimeBrowseList,
@@ -105,23 +105,25 @@ export default function BrowsePage() {
     );
 
     return (
-        <WideContainer classNames="mt-20">
-            <BaseLayout showHeader={true} showFooter={true}>
-                <div className="mb-8 flex items-center space-x-2">
-                    <h1 className="text-center font-semibold text-2xl md:text-left">
-                        Tìm kiếm theo
-                    </h1>
-                    <Select
-                        value={{ value: type, label: chosenType.label }}
-                        options={TYPES}
-                        isClearable={false}
-                        isSearchable={false}
-                        components={{ IndicatorSeparator: () => null }}
-                        onChange={handleTypeChange as any}
-                        styles={typeSelectStyles}
-                    />
-                </div>
-            </BaseLayout>
-        </WideContainer>
+        <Suspense>
+            <WideContainer classNames="mt-20">
+                <BaseLayout showHeader={true} showFooter={true}>
+                    <div className="mb-8 flex items-center space-x-2">
+                        <h1 className="text-center font-semibold text-2xl md:text-left">
+                            Tìm kiếm theo
+                        </h1>
+                        <Select
+                            value={{ value: type, label: chosenType.label }}
+                            options={TYPES}
+                            isClearable={false}
+                            isSearchable={false}
+                            components={{ IndicatorSeparator: () => null }}
+                            onChange={handleTypeChange as any}
+                            styles={typeSelectStyles}
+                        />
+                    </div>
+                </BaseLayout>
+            </WideContainer>
+        </Suspense>
     );
 }
