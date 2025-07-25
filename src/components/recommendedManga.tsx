@@ -1,26 +1,31 @@
+import CarouselCardSwiper from "@/components/shared/CarouselCardSwiper";
+import CarouselSwiperCard from "@/components/shared/CarouselSwiperCard";
 import useMedia from "@/hooks/Anilist/useMedia";
 import { MediaSort, MediaType } from "@/types/anilist";
-import CardSwiper from "./shared/cardSwiper";
-import Section from "./shared/section";
 
 const RecommendedManga = () => {
-    const {
-        data: mangas,
-        // isLoading,
-        // error,
-    } = useMedia({
-        type: MediaType.Manga,
-        sort: [MediaSort.Trending_desc, MediaSort.Popularity_desc],
-        countryOfOrigin: "JP",
-        perPage: 20,
-    });
+  const {
+    data: mangas,
+    // isLoading,
+    // error,
+  } = useMedia({
+    type: MediaType.Manga,
+    sort: [MediaSort.Trending_desc, MediaSort.Popularity_desc],
+    countryOfOrigin: "JP",
+    perPage: 20,
+  });
+  return (
+    <CarouselCardSwiper
+      data={mangas || []}
+      onEachCard={(item, isHover) => (
+        <CarouselSwiperCard
+          data={item}
+          isHovered={isHover}
+          onHover={() => {}}
+        />
+      )}
+    />
+  );
+};
 
-
-    return (
-        <Section title="Truyện đề xuất cho bạn">
-            <CardSwiper data={mangas || []} onCardClick={() => { }} className="mb-12" />
-        </Section>
-    )
-}
-
-export default RecommendedManga
+export default RecommendedManga;

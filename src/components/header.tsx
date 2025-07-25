@@ -6,6 +6,7 @@ import { GENRES_COMICS, RANKING_COMICS } from "@/constants";
 import Link from "next/link";
 import React, { useCallback, useState } from "react";
 import { BsCaretDownFill } from "react-icons/bs";
+import WideContainer from "./layout/wideLayout";
 
 type NavItemProps = {
   label: string;
@@ -37,7 +38,7 @@ const Header = () => {
   return (
     <React.Fragment>
       <header className="fixed top-0 left-0 z-[999] w-full bg-gradient-to-b from-black/60 via-black/40 to-transparent p-4 px-2 transition duration-500 ">
-        <div className="mx-auto flex h-full w-full items-center justify-between lg:max-w-[1200px]">
+        <WideContainer classNames="mx-auto flex h-full w-full items-center justify-between ">
           <div className="flex items-center ">
             <button
               className="mr-2 block md:hidden"
@@ -103,7 +104,7 @@ const Header = () => {
             <HeaderSearch />
             <HeaderUser />
           </div>
-        </div>
+        </WideContainer>
       </header>
 
       {isMobileMenuOpen && (

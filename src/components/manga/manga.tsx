@@ -1,5 +1,5 @@
 "use client";
-import { WideContainer } from "@/components/layout/wideLayout";
+import WideContainer from "@/components/layout/wideLayout";
 import { default as HorizontalChapterPagination } from "@/components/manga/chapterPagition";
 import InfoItem from "@/components/manga/infoItem";
 import Image from "@/components/shared/image";
