@@ -4,7 +4,7 @@ import HamburgerMenu from "@/components/icons/HamburgerMenu";
 import DropDown from "@/components/shared/dropDown";
 import { GENRES_COMICS, RANKING_COMICS } from "@/constants";
 import Link from "next/link";
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import { BsCaretDownFill } from "react-icons/bs";
 import WideContainer from "./layout/wideLayout";
 
@@ -14,26 +14,26 @@ type NavItemProps = {
 
 const NavItem = ({ label }: NavItemProps) => (
   <li className="">
-    <div className="flex items-center whitespace-nowrap font-bold opacity-80 transition-all duration-300 hover:text-highlight">
+    <div className="flex cursor-pointer items-center whitespace-nowrap font-bold opacity-80 transition-all duration-300 hover:text-highlight">
       {label}
     </div>
   </li>
 );
 
 const Header = () => {
-  const [dropdown, setDropdown] = useState<{
-    genre: boolean;
-    ranking: boolean;
-  }>({ genre: false, ranking: false });
+  // const [dropdown, setDropdown] = useState<{
+  //   genre: boolean;
+  //   ranking: boolean;
+  // }>({ genre: false, ranking: false });
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const handleDropdown = useCallback((key: "genre" | "ranking") => {
-    setDropdown((prev) => ({ ...prev, [key]: !prev[key] }));
-  }, []);
+  // const handleDropdown = useCallback((key: "genre" | "ranking") => {
+  //   setDropdown((prev) => ({ ...prev, [key]: !prev[key] }));
+  // }, []);
 
-  const closeDropdown = useCallback((key: "genre" | "ranking") => {
-    setDropdown((prev) => ({ ...prev, [key]: false }));
-  }, []);
+  // const closeDropdown = useCallback((key: "genre" | "ranking") => {
+  //   setDropdown((prev) => ({ ...prev, [key]: false }));
+  // }, []);
 
   return (
     <React.Fragment>
@@ -58,9 +58,9 @@ const Header = () => {
           </div>
 
           <nav className="hidden md:block">
-            <ul className=" flex flex-row items-center gap-4 space-x-4 px-2 md:space-x-8">
+            <ul className=" flex flex-row items-center gap-2 space-x-2 md:space-x-2">
               <NavItem label="Light Novel" />
-              <li
+              {/* <li
                 onClick={(e) => {
                   e.stopPropagation();
                   handleDropdown("genre");
@@ -78,8 +78,8 @@ const Header = () => {
                   isMore={false}
                   onClose={() => closeDropdown("genre")}
                 />
-              </li>
-              <li
+              </li> */}
+              {/* <li
                 onClick={() => handleDropdown("ranking")}
                 className="relative transform cursor-pointer transition duration-300 "
               >
@@ -94,9 +94,9 @@ const Header = () => {
                   isMore={false}
                   onClose={() => closeDropdown("ranking")}
                 />
-              </li>
+              </li> */}
               <NavItem label="Đăng truyện" />
-              {/* <NavItem label="Discord" /> */}
+              <NavItem label="Discord" />
             </ul>
           </nav>
 
@@ -135,7 +135,7 @@ const Header = () => {
                 options={GENRES_COMICS}
                 show={true}
                 isMore={false}
-                onClose={() => {}}
+                onClose={() => { }}
               />
             </div>
             <div className="py-2">
@@ -146,7 +146,7 @@ const Header = () => {
                 options={RANKING_COMICS}
                 show={true}
                 isMore={false}
-                onClose={() => {}}
+                onClose={() => { }}
               />
             </div>
             <button
