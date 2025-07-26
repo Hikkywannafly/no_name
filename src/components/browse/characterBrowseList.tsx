@@ -18,7 +18,7 @@ interface CharacterBrowseListProps {
 const CharacterBrowseList: React.FC<CharacterBrowseListProps> = ({
   defaultQuery,
 }) => {
-  const { data, isLoading, hasNextPage, fetchNextPage } = useBrowseCharacters(
+  const { data, isLoading, hasNextPage } = useBrowseCharacters(
     defaultQuery as UseCharacterBrowseOptions,
   );
 
@@ -45,27 +45,14 @@ const CharacterBrowseList: React.FC<CharacterBrowseListProps> = ({
   return (
     <div className="min-h-screen">
       <div className="mt-8">
-        {/* <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7"> */}
         <List data={allCharacters} >
           {(character) => <CharacterCard character={character} />}
         </List>
       </div>
 
-      {hasNextPage && (
-        <div className="mt-8 text-center">
-          <button
-            type="button"
-            onClick={() => fetchNextPage()}
-            className="rounded bg-blue-600 px-6 py-2 text-white hover:bg-blue-700"
-          >
-            Load More Characters
-          </button>
-        </div>
-      )}
-
       {!hasNextPage && allCharacters.length > 0 && (
         <p className="mt-8 text-center text-2xl">
-          No more characters to load...
+          Không còn nhân vật nào nữa đâu
         </p>
       )}
 

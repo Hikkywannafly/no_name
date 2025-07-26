@@ -28,7 +28,7 @@ const List = <T extends any[]>({
   return (
     <div
       className={classNames(
-        data.length ? "grid gap-4" : "text-center",
+        data.length ? "grid gap-3" : "text-center",
         validClassName,
       )}
       {...props}

@@ -22,7 +22,7 @@ const getKey = (
 };
 
 const useBrowseCharacters = (options: UseCharacterBrowseOptions) => {
-  const { keyword, sort, limit = 10, isAdult } = options;
+  const { keyword, sort, limit = 20, isAdult } = options;
 
   const fetcher = async (
     _key: any,

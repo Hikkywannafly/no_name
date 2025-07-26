@@ -6,6 +6,9 @@ import type {
   MediaStatus,
 } from "@/types/anilist";
 import { useMemo } from "react";
+import InView from "../shared/inView";
+import List from "../shared/list";
+import MediaCard from "../shared/mediaCard";
 
 export interface UseBrowseOptions {
   keyword?: string;
@@ -27,23 +30,28 @@ interface MangaBrowseListProps {
 }
 
 const MangaBrowseList: React.FC<MangaBrowseListProps> = ({ defaultQuery }) => {
-  const { data, isLoading, hasNextPage, fetchNextPage } = useBrowse(
+  const { data, isLoading, hasNextPage, fetchNextPage, isValidating } = useBrowse(
     defaultQuery as UseBrowseOptions,
   );
+
+  const handleFetch = () => {
+    if (!hasNextPage || isValidating) return;
+    fetchNextPage();
+  };
 
   // Flatten data from all pages - only manga data
   const allManga = useMemo(() => {
     return data?.flatMap((page: any) => page.media || []) || [];
   }, [data]);
 
-  if (isLoading) {
+  if (isLoading && !data?.length) {
     return (
       <div className="min-h-screen">
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7">
           {Array.from({ length: 20 }).map((_, i) => (
             <div key={i} className="animate-pulse">
-              <div className="h-64 rounded bg-gray-700" />
-              <div className="mt-2 h-4 rounded bg-gray-700" />
+              <div className="h-64 rounded bg-black/50" />
+              <div className="mt-2 h-4 rounded bg-black/50" />
             </div>
           ))}
         </div>
@@ -54,43 +62,41 @@ const MangaBrowseList: React.FC<MangaBrowseListProps> = ({ defaultQuery }) => {
   return (
     <div className="min-h-screen">
       <div className="mt-8">
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7">
-          {allManga.map((manga: any) => (
-            <div key={manga.id} className="rounded-lg bg-gray-800 p-4">
-              <h3 className="font-semibold text-white">
-                {manga.title?.userPreferred ||
-                  manga.title?.romaji ||
-                  "Unknown Manga"}
-              </h3>
-              <p className="mt-2 text-gray-400 text-sm">
-                {manga.description?.substring(0, 100)}...
-              </p>
-              <div className="mt-2 text-gray-500 text-xs">
-                <span>Chapters: {manga.chapters || "?"}</span>
-                <span className="ml-2">Volumes: {manga.volumes || "?"}</span>
-              </div>
-            </div>
-          ))}
-        </div>
+        <List data={allManga}>
+          {(manga) => <MediaCard data={manga} onHover={() => { }} isHovered={false} />}
+        </List>
 
-        {hasNextPage && (
-          <div className="mt-8 text-center">
-            <button
-              type="button"
-              onClick={() => fetchNextPage()}
-              className="rounded bg-blue-600 px-6 py-2 text-white hover:bg-blue-700"
-            >
-              Load More Manga
-            </button>
+        {/* Loading indicator for next page */}
+        {isValidating && (
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7">
+            {Array.from({ length: 12 }).map((_, i) => (
+              <div key={i} className="animate-pulse">
+                <div className="h-64 rounded bg-black/50" />
+                <div className="mt-2 h-4 rounded bg-black/50" />
+              </div>
+            ))}
           </div>
         )}
 
-        {!hasNextPage && allManga.length > 0 && (
-          <p className="mt-8 text-center text-2xl">No more manga to load...</p>
+        {/* Infinite scroll trigger */}
+        {hasNextPage && !isValidating && (
+          <InView onInView={handleFetch}>
+            <div className="h-4" />
+          </InView>
         )}
 
+        {/* End of results */}
+        {!hasNextPage && allManga.length > 0 && (
+          <p className="mt-8 text-center text-2xl text-gray-400">
+            No more manga to load...
+          </p>
+        )}
+
+        {/* No results */}
         {allManga.length === 0 && !isLoading && (
-          <p className="mt-8 text-center text-2xl">No manga found.</p>
+          <p className="mt-8 text-center text-2xl text-gray-400">
+            No manga found.
+          </p>
         )}
       </div>
     </div>

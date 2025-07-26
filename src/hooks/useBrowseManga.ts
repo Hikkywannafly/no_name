@@ -65,18 +65,19 @@ const useBrowse = (options: UseBrowseOptions) => {
 
       const result = await getPageMedia({
         type: MediaType.Manga,
-        // format,
-        // perPage: limit,
+        format,
+        perPage: limit,
         // countryOfOrigin: country,
         // sort: [sort || MediaSortEnum.Popularity],
-        // status,
-        // page,
+        status,
+        page,
         // ...(tags.length && { tag_in: tags }),
         // ...(genres.length && { genre_in: genres }),
         // ...(keyword && { search: keyword }),
         // isAdult: isAdult || genres.includes("Hentai") || genres.includes("Ecchi"),
       });
 
+      console.log("AniList API response:", result);
       return result;
     } catch (error) {
       console.error("Error fetching manga from AniList:", error);

@@ -47,7 +47,7 @@ const MediaCard: React.FC<CardProps> = ({
         onMouseLeave={() => onHover(false)}
         onClick={onClick}
         className={classNames(
-          "group relative cursor-pointer overflow-hidden bg-transparent transition-all duration-300 ease-out",
+          "group relative cursor-pointer gap-3 overflow-hidden bg-transparent transition-all duration-300 ease-out",
           className,
         )}
       >
@@ -114,7 +114,7 @@ const MediaCard: React.FC<CardProps> = ({
         </AspectRatio>
 
         <p
-          className="bg line-clamp-2 font-semibold text-base"
+          className=" line-clamp-2 font-semibold text-base"
           style={{ color: primaryColor }}
         >
           {data.title?.userPreferred}

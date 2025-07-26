@@ -51,7 +51,7 @@ const typeSelectStyles = {
   }),
 };
 
-function BrowsePageContent({ query: baseQuery }: { query: any }) {
+function BrowsePageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [mounted, setMounted] = useState(false);
@@ -73,16 +73,15 @@ function BrowsePageContent({ query: baseQuery }: { query: any }) {
     [type],
   );
 
-  const {
-    format = undefined,
-    keyword = "",
-    season = undefined,
-    seasonYear = undefined,
-    sort = "popularity",
-    genres = [],
-    tags = [],
-    countries = [],
-  } = baseQuery || {};
+  // Get query parameters from searchParams instead of props
+  const format = searchParams.get("format") || undefined;
+  const keyword = searchParams.get("keyword") || "";
+  const season = searchParams.get("season") || undefined;
+  const seasonYear = searchParams.get("seasonYear") || undefined;
+  const sort = searchParams.get("sort") || "popularity";
+  const genres = searchParams.getAll("genres");
+  const tags = searchParams.getAll("tags");
+  const countries = searchParams.getAll("countries");
 
   const query = {
     format: format as MediaFormat,
@@ -131,10 +130,10 @@ function BrowsePageContent({ query: baseQuery }: { query: any }) {
   );
 }
 
-export default function BrowsePage({ query }: { query: any }) {
+export default function BrowsePage() {
   return (
     <Suspense>
-      <BrowsePageContent query={query} />
+      <BrowsePageContent />
     </Suspense>
   );
 }

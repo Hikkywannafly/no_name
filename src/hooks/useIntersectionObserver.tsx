@@ -6,7 +6,7 @@ interface Args extends IntersectionObserverInit {
 
 // https://usehooks-ts.com/react-hook/use-intersection-observer
 function useIntersectionObserver(
-  elementRef: RefObject<Element>,
+  elementRef: RefObject<Element | null>,
   {
     threshold = 0,
     root = null,
