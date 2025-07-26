@@ -20,7 +20,6 @@ import { useEffect, useState } from "react";
 import WideContainer from "./layout/wideLayout";
 import { AspectRatio } from "./ui";
 
-
 interface MangaSlideProps {
   manga: Media;
   nextManga?: Media;
@@ -33,18 +32,16 @@ function MangaSlide({ manga, isFirst, isActive }: MangaSlideProps) {
     <div className="relative w-full">
       {/* Background Image Container */}
       <div className="relative h-[300px] w-full overflow-hidden sm:h-[350px]">
-        {
-          manga.bannerImage && (
-            <Image
-              fill
-              src={manga.bannerImage}
-              alt="Fallback Banner"
-              className="object-cover object-center"
-              priority={isFirst}
-              sizes="100vw"
-            />
-          )
-        }
+        {manga.bannerImage && (
+          <Image
+            fill
+            src={manga.bannerImage}
+            alt="Fallback Banner"
+            className="object-cover object-center"
+            priority={isFirst}
+            sizes="100vw"
+          />
+        )}
 
         {/* Gradient Overlays */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/20" />
@@ -59,10 +56,11 @@ function MangaSlide({ manga, isFirst, isActive }: MangaSlideProps) {
             >
               {/* Manga Cover */}
               <div
-                className={`w-32 shrink-0 transform transition-all duration-700 ease-out sm:w-40 md:w-48 lg:w-52 ${isActive
-                  ? "translate-y-0 opacity-100 sm:translate-x-0"
-                  : "translate-y-4 opacity-0 sm:translate-x-[-20px]"
-                  }`}
+                className={`w-32 shrink-0 transform transition-all duration-700 ease-out sm:w-40 md:w-48 lg:w-52 ${
+                  isActive
+                    ? "translate-y-0 opacity-100 sm:translate-x-0"
+                    : "translate-y-4 opacity-0 sm:translate-x-[-20px]"
+                }`}
               >
                 <div className="relative w-28 overflow-hidden rounded-md shadow-2xl sm:w-32 md:w-36 lg:w-40">
                   <AspectRatio ratio={2 / 3}>
@@ -82,10 +80,11 @@ function MangaSlide({ manga, isFirst, isActive }: MangaSlideProps) {
 
               {/* Text Content */}
               <div
-                className={`flex-1 transform text-center transition-all delay-200 duration-700 ease-out sm:text-left ${isActive
-                  ? "translate-y-0 opacity-100 sm:translate-x-0"
-                  : "translate-y-4 opacity-0 sm:translate-x-4"
-                  }`}
+                className={`flex-1 transform text-center transition-all delay-200 duration-700 ease-out sm:text-left ${
+                  isActive
+                    ? "translate-y-0 opacity-100 sm:translate-x-0"
+                    : "translate-y-4 opacity-0 sm:translate-x-4"
+                }`}
               >
                 <h2 className="mb-2 line-clamp-2 font-bold text-white text-xl leading-tight drop-shadow-lg sm:mb-4 lg:text-xl xl:text-2xl">
                   {getTitle(manga, "vi")}

@@ -1,7 +1,6 @@
 "use client";
 import Select from "@/components/browse/ClientOnlySelect";
-import CharacterBrowseList from "@/components/browse/characterBrowseList";
-import MangaBrowseList from "@/components/browse/mangaBrowseList";
+import UniversalBrowseList from "@/components/browse/universalBrowseList";
 import WideContainer from "@/components/layout/wideLayout";
 import type { MediaFormat, MediaSort } from "@/types/anilist";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -10,21 +9,14 @@ import BaseLayout from "../baseLayout";
 
 const TYPES = [
   { value: "manga", label: "Manga" },
-  { value: "manhua", label: "Manhua" },
   { value: "light_novel", label: "Light Novel" },
+  { value: "manhua", label: "Manhua" },
   { value: "characters", label: "Nhân vật" },
+  { value: "anime", label: "Anime" },
 ];
 
-const components = {
-  manga: MangaBrowseList,
-  characters: CharacterBrowseList,
-  light_novel: CharacterBrowseList,
-  manhua: CharacterBrowseList,
-};
-
-const convertQueryToArray = <T,>(query: T[]) => {
+const convertQueryToArray = <T,>(query: T[] | string) => {
   if (typeof query === "string") return [query];
-
   return query;
 };
 
@@ -83,7 +75,6 @@ function BrowsePageContent({ query: baseQuery }: { query: any }) {
     genres = [],
     tags = [],
     countries = [],
-    type1 = "manga",
   } = baseQuery || {};
 
   const query = {
@@ -95,18 +86,13 @@ function BrowsePageContent({ query: baseQuery }: { query: any }) {
     season: season as string,
     seasonYear: seasonYear as string,
     sort: sort as MediaSort,
-    type1,
+    type, // Pass the current type to the universal component
   };
-
-  const BrowseComponent = useMemo(
-    () => components[type as keyof typeof components],
-    [type],
-  );
 
   return (
     <BaseLayout showHeader={true} showFooter={true}>
       <WideContainer classNames="mt-20">
-        <div className="mb-8 flex items-center space-x-2 p-4">
+        <div className="mb-8 flex items-center space-x-3">
           <h1 className="text-center font-semibold text-2xl md:text-left">
             Tìm kiếm theo
           </h1>
@@ -126,7 +112,7 @@ function BrowsePageContent({ query: baseQuery }: { query: any }) {
             )}
           </div>
         </div>
-        <BrowseComponent defaultQuery={query as any} />
+        <UniversalBrowseList defaultQuery={query as any} />
       </WideContainer>
     </BaseLayout>
   );

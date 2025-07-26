@@ -1,9 +1,11 @@
+import useBrowse from "@/hooks/useBrowseManga";
 import type {
   MediaFormat,
   MediaSeason,
   MediaSort,
   MediaStatus,
 } from "@/types/anilist";
+import { useMemo } from "react";
 
 export interface UseBrowseOptions {
   keyword?: string;
@@ -19,119 +21,80 @@ export interface UseBrowseOptions {
   status?: MediaStatus;
   isAdult?: boolean;
 }
-interface BrowseListProps {
+
+interface MangaBrowseListProps {
   defaultQuery?: UseBrowseOptions;
 }
 
-const BrowseList: React.FC<BrowseListProps> = ({ defaultQuery }) => {
-  // const [keyword, setKeyword] = useState(defaultQuery.keyword || "");
-  // const { t } = useTranslation();
+const MangaBrowseList: React.FC<MangaBrowseListProps> = ({ defaultQuery }) => {
+  const { data, isLoading, hasNextPage, fetchNextPage } = useBrowse(
+    defaultQuery as UseBrowseOptions,
+  );
 
-  // const {
-  //     data: searchResult,
-  //     isLoading: searchIsLoading,
-  //     fetchNextPage,
-  //     isFetchingNextPage,
-  //     hasNextPage,
-  //     isError: searchIsError,
-  // } = useCharacterSearch(keyword);
+  // Flatten data from all pages - only manga data
+  const allManga = useMemo(() => {
+    return data?.flatMap((page: any) => page.media || []) || [];
+  }, [data]);
 
-  // const { data: birthdayCharacters, isLoading: birthdayIsLoading } =
-  //     useBirthdayCharacters();
-  // const { data: favouritesCharacters, isLoading: favouritesIsLoading } =
-  //     useFavouriteCharacters();
-
-  // const handleFetch = () => {
-  //     if (isFetchingNextPage || !hasNextPage) return;
-
-  //     fetchNextPage();
-  // };
-
-  // const handleInputChange = debounce(
-  //     (e: React.ChangeEvent<HTMLInputElement>) => setKeyword(e.target.value),
-  //     500
-  // );
-
-  // const totalData = useMemo(
-  //     () => searchResult?.pages.flatMap((el) => el.characters),
-  //     [searchResult?.pages]
-  // );
-  console.log(defaultQuery);
+  if (isLoading) {
+    return (
+      <div className="min-h-screen">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7">
+          {Array.from({ length: 20 }).map((_, i) => (
+            <div key={i} className="animate-pulse">
+              <div className="h-64 rounded bg-gray-700" />
+              <div className="mt-2 h-4 rounded bg-gray-700" />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen">
-      <form className="space-y-4">
-        {/* <Input
-                    containerInputClassName="border border-white/80"
-                    LeftIcon={AiOutlineSearch}
-                    onChange={handleInputChange}
-                    defaultValue={keyword}
-                    label={t("common:search")}
-                    containerClassName="w-full md:w-96"
-                    placeholder={t("common:character_name")}
-                /> */}
-      </form>
-
       <div className="mt-8">
-        <p> test 2</p>
-        {/* {keyword ? (
-                    !searchIsLoading ? (
-                        <React.Fragment>
-                            <List data={totalData}>
-                                {(character) => <CharacterCard character={character} />}
-                            </List>
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7">
+          {allManga.map((manga: any) => (
+            <div key={manga.id} className="rounded-lg bg-gray-800 p-4">
+              <h3 className="font-semibold text-white">
+                {manga.title?.userPreferred ||
+                  manga.title?.romaji ||
+                  "Unknown Manga"}
+              </h3>
+              <p className="mt-2 text-gray-400 text-sm">
+                {manga.description?.substring(0, 100)}...
+              </p>
+              <div className="mt-2 text-gray-500 text-xs">
+                <span>Chapters: {manga.chapters || "?"}</span>
+                <span className="ml-2">Volumes: {manga.volumes || "?"}</span>
+              </div>
+            </div>
+          ))}
+        </div>
 
-                            {isFetchingNextPage && !searchIsError && (
-                                <div className="mt-4">
-                                    <ListSkeleton />
-                                </div>
-                            )}
+        {hasNextPage && (
+          <div className="mt-8 text-center">
+            <button
+              type="button"
+              onClick={() => fetchNextPage()}
+              className="rounded bg-blue-600 px-6 py-2 text-white hover:bg-blue-700"
+            >
+              Load More Manga
+            </button>
+          </div>
+        )}
 
-                            {((totalData.length && !isFetchingNextPage) || hasNextPage) && (
-                                <InView onInView={handleFetch} />
-                            )}
+        {!hasNextPage && allManga.length > 0 && (
+          <p className="mt-8 text-center text-2xl">No more manga to load...</p>
+        )}
 
-                            {!hasNextPage && !!totalData.length && (
-                                <p className="mt-8 text-center text-2xl">
-                                    There is nothing left...
-                                </p>
-                            )}
-                        </React.Fragment>
-                    ) : (
-                        <ListSkeleton />
-                    )
-                ) : (
-                    <div className="space-y-8">
-                        <div className="space-y-4">
-                            <h2 className="font-semibold text-3xl">{t("common:birthday")}</h2>
-
-                            {birthdayIsLoading ? (
-                                <ListSkeleton />
-                            ) : (
-                                <List data={birthdayCharacters}>
-                                    {(character) => <CharacterCard character={character} />}
-                                </List>
-                            )}
-                        </div>
-
-                        <div className="space-y-4">
-                            <h2 className="font-semibold text-3xl">
-                                {t("common:most_favourite")}
-                            </h2>
-
-                            {favouritesIsLoading ? (
-                                <ListSkeleton />
-                            ) : (
-                                <List data={favouritesCharacters}>
-                                    {(character) => <CharacterCard character={character} />}
-                                </List>
-                            )}
-                        </div>
-                    </div>
-                )} */}
+        {allManga.length === 0 && !isLoading && (
+          <p className="mt-8 text-center text-2xl">No manga found.</p>
+        )}
       </div>
     </div>
   );
 };
 
-export default BrowseList;
+export default MangaBrowseList;
