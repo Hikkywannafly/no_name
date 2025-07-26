@@ -1,6 +1,8 @@
 "use client";
 import Select from "@/components/browse/ClientOnlySelect";
-import UniversalBrowseList from "@/components/browse/universalBrowseList";
+import CharacterBrowseList from "@/components/browse/characterBrowseList";
+import MangaBrowseList from "@/components/browse/mangaBrowseList";
+// import UniversalBrowseList from "@/components/browse/universalBrowseList";
 import WideContainer from "@/components/layout/wideLayout";
 import type { MediaFormat, MediaSort } from "@/types/anilist";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -9,11 +11,16 @@ import BaseLayout from "../baseLayout";
 
 const TYPES = [
   { value: "manga", label: "Manga" },
-  { value: "light_novel", label: "Light Novel" },
-  { value: "manhua", label: "Manhua" },
   { value: "characters", label: "Nhân vật" },
-  { value: "anime", label: "Anime" },
+  // { value: "light_novel", label: "Light Novel" },
+  // { value: "manhua", label: "Manhua" },
+  // { value: "anime", label: "Anime" },
 ];
+
+const components = {
+  manga: MangaBrowseList,
+  characters: CharacterBrowseList,
+};
 
 const convertQueryToArray = <T,>(query: T[] | string) => {
   if (typeof query === "string") return [query];
@@ -89,6 +96,11 @@ function BrowsePageContent({ query: baseQuery }: { query: any }) {
     type, // Pass the current type to the universal component
   };
 
+  const BrowseComponent = useMemo(
+    () => components[type as keyof typeof components],
+    [type],
+  );
+
   return (
     <BaseLayout showHeader={true} showFooter={true}>
       <WideContainer classNames="mt-20">
@@ -98,7 +110,7 @@ function BrowsePageContent({ query: baseQuery }: { query: any }) {
           </h1>
           <div className="relative h-12 min-w-[5rem] max-w-[14rem]">
             {!mounted ? (
-              <div className="absolute inset-0 h-full w-[8rem] animate-pulse rounded bg-gray-900" />
+              <div className="absolute inset-0 h-full w-[8rem] animate-pulse rounded bg-black/50" />
             ) : (
               <Select
                 value={{ value: type, label: chosenType.label || "manga" }}
@@ -112,7 +124,8 @@ function BrowsePageContent({ query: baseQuery }: { query: any }) {
             )}
           </div>
         </div>
-        <UniversalBrowseList defaultQuery={query as any} />
+        {/* <UniversalBrowseList defaultQuery={query as any} /> */}
+        <BrowseComponent defaultQuery={query as any} />
       </WideContainer>
     </BaseLayout>
   );

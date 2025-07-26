@@ -22,7 +22,7 @@ const getKey = (
 };
 
 const useBrowseCharacters = (options: UseCharacterBrowseOptions) => {
-  const { keyword, sort, limit = 30, isAdult } = options;
+  const { keyword, sort, limit = 10, isAdult } = options;
 
   const fetcher = async (
     _key: any,
@@ -40,10 +40,10 @@ const useBrowseCharacters = (options: UseCharacterBrowseOptions) => {
 
       const result = await getPageCharacters({
         perPage: limit,
-        sort: [sort || CharacterSortEnum.Favourites],
+        // sort: [sort || CharacterSortEnum.Favourites],
         page,
-        ...(keyword && { search: keyword }),
-        isAdult,
+        // ...(keyword && { search: keyword }),
+        // isAdult,
       });
 
       console.log("AniList Characters API response:", result);
