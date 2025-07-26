@@ -35,7 +35,7 @@ const useBrowse = (options: UseBrowseOptions) => {
     genres = [],
     keyword,
     sort,
-    limit = 30,
+    limit = 20,
     tags = [],
     country,
     status,

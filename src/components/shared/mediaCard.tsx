@@ -3,7 +3,9 @@ import Image from "@/components/shared/image";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 // import TextIcon from "@/components/shared/TextIcon";
 import { Card } from "@/components/ui/card";
+import { Constants } from "@/constants/index";
 import type { Media } from "@/types/anilist";
+import { getTitle } from "@/utils";
 // import { convert, getTitle } from "@/utils/data";
 import classNames from "classnames";
 import { Calendar, Users } from "lucide-react";
@@ -41,7 +43,7 @@ const MediaCard: React.FC<CardProps> = ({
   // const description = useMemo(() => getDescription(data, router.locale), [data, router.locale]);
 
   return (
-    <Link href={" "}>
+    <Link href={`${Constants.router.manga(data.id, getTitle(data, "vi-VN"))}`}>
       <Card
         onMouseEnter={() => onHover(true)}
         onMouseLeave={() => onHover(false)}

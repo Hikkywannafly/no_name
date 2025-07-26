@@ -162,13 +162,23 @@ export function convertMangaDex(
 export const getTitle = (data: Media, locale?: string) => {
   const translations = data?.translations || [];
 
-  const translation = translations.find((trans) => trans.locale === locale);
-
-  if (!translation) {
-    return data?.title?.userPreferred;
+  // Handle Vietnamese translations specifically
+  if (locale === 'vi' || locale === 'vi-VN') {
+    const viTitles = translations?.filter((t: any) => t.vi).map((t: any) => t.vi) ?? [];
+    if (viTitles.length > 0) {
+      return viTitles[0]; // Return first Vietnamese title
+    }
   }
 
-  return translation.title || data?.title?.userPreferred;
+  // Find translation by locale
+  const translation = translations.find((trans) => trans.locale === locale);
+
+  if (translation?.title) {
+    return translation.title;
+  }
+
+  // Fallback to userPreferred title
+  return data?.title?.userPreferred || data?.title?.romaji || data?.title?.english || 'Unknown Title';
 };
 
 export function numberWithCommas(x: any): any {

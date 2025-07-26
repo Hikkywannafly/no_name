@@ -50,16 +50,19 @@ export const getMedia = async (args: MediaArgs & PageArgs, fields?: string) => {
     mediaQuery(fields),
     args,
   );
-  console.log("Anilist Media Response:", response);
   const mediaList = response.Page.media || [];
 
   const updatedMediaList = await Promise.all(
     mediaList.map(async (media) => {
-      const title = media?.title?.userPreferred || "";
+      const userPreferredTitle = media?.title?.userPreferred || "";
+      const englishTitle = media?.title?.english || "";
+
       let mangaList: any[] = [];
+
       try {
-        const { data } = await MangadexApi.Manga.getSearchManga({
-          title,
+        // Try with userPreferred title first
+        const { data: userPreferredData } = await MangadexApi.Manga.getSearchManga({
+          title: userPreferredTitle,
           includes: [],
           order: {
             followedCount: Order.DESC,
@@ -67,10 +70,29 @@ export const getMedia = async (args: MediaArgs & PageArgs, fields?: string) => {
           },
           limit: 1,
         });
-        mangaList = data?.data ?? [];
+
+        mangaList = userPreferredData?.data ?? [];
+
+        // If no results with userPreferred, try with english title
+        if (mangaList.length === 0 && englishTitle && englishTitle !== userPreferredTitle) {
+          console.log(`No results for "${userPreferredTitle}", trying "${englishTitle}"`);
+
+          const { data: englishData } = await MangadexApi.Manga.getSearchManga({
+            title: englishTitle,
+            includes: [],
+            order: {
+              followedCount: Order.DESC,
+              relevance: Order.DESC,
+            },
+            limit: 1,
+          });
+
+          mangaList = englishData?.data ?? [];
+        }
       } catch (error) {
         console.error("Lỗi khi fetch MangaDex:", error);
       }
+
       const firstManga = mangaList?.[0];
       return {
         ...media,
@@ -80,8 +102,6 @@ export const getMedia = async (args: MediaArgs & PageArgs, fields?: string) => {
   );
 
   return updatedMediaList || [];
-
-  // return response.Page.media || [];
 };
 
 export const getMediaDetails = async (
@@ -94,12 +114,14 @@ export const getMediaDetails = async (
   );
   const media = response?.Media;
 
-  const title = media?.title?.userPreferred || "";
+  const userPreferredTitle = media?.title?.userPreferred || "";
+  const englishTitle = media?.title?.english || "";
 
   let mangaList: any[] = [];
   try {
-    const { data } = await MangadexApi.Manga.getSearchManga({
-      title,
+    // Try with userPreferred title first
+    const { data: userPreferredData } = await MangadexApi.Manga.getSearchManga({
+      title: userPreferredTitle,
       includes: [],
       order: {
         followedCount: Order.DESC,
@@ -107,11 +129,31 @@ export const getMediaDetails = async (
       },
       limit: 1,
     });
-    mangaList = data?.data ?? [];
-    console.log("MangaDex Manga List:", data);
+
+    mangaList = userPreferredData?.data ?? [];
+
+    // If no results with userPreferred, try with english title
+    if (mangaList.length === 0 && englishTitle && englishTitle !== userPreferredTitle) {
+      console.log(`No results for "${userPreferredTitle}", trying "${englishTitle}"`);
+
+      const { data: englishData } = await MangadexApi.Manga.getSearchManga({
+        title: englishTitle,
+        includes: [],
+        order: {
+          followedCount: Order.DESC,
+          relevance: Order.DESC,
+        },
+        limit: 1,
+      });
+
+      mangaList = englishData?.data ?? [];
+    }
+
+    console.log("MangaDex Manga List:", mangaList);
   } catch (error) {
     console.error("Lỗi khi fetch MangaDex:", error);
   }
+
   const firstManga = mangaList?.[0];
   media.translations = firstManga?.attributes?.altTitles ?? [];
 

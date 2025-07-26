@@ -51,7 +51,7 @@ const CharacterCard: React.FC<CharacterCardProps> = ({
                     className,
                 )}
             >
-                <AspectRatio ratio={2 / 3} className="relative w-full">
+                <AspectRatio ratio={2 / 3} className="relative h-full w-full">
                     <Image
                         src={
                             character.image?.large ||
@@ -59,7 +59,7 @@ const CharacterCard: React.FC<CharacterCardProps> = ({
                             "/images/default-avatar.png"
                         }
                         fill
-                        className="rounded-sm object-cover"
+                        className="relative rounded-sm object-cover"
                         alt={character.name?.userPreferred || character.name?.full || "Character"}
                     />
                     {imageEndSlot}

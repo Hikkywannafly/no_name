@@ -1,15 +1,18 @@
 import useBrowse from "@/hooks/useBrowseManga";
 import type {
+  Media,
   MediaFormat,
   MediaSeason,
   MediaSort,
   MediaStatus,
 } from "@/types/anilist";
+import { Search } from "lucide-react";
 import { useMemo } from "react";
 import InView from "../shared/inView";
 import List from "../shared/list";
 import MediaCard from "../shared/mediaCard";
-
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 export interface UseBrowseOptions {
   keyword?: string;
   genres?: string[];
@@ -41,7 +44,7 @@ const MangaBrowseList: React.FC<MangaBrowseListProps> = ({ defaultQuery }) => {
 
   // Flatten data from all pages - only manga data
   const allManga = useMemo(() => {
-    return data?.flatMap((page: any) => page.media || []) || [];
+    return data?.flatMap((page: any) => page.media as Media || []) || [];
   }, [data]);
 
   if (isLoading && !data?.length) {
@@ -61,7 +64,17 @@ const MangaBrowseList: React.FC<MangaBrowseListProps> = ({ defaultQuery }) => {
 
   return (
     <div className="min-h-screen">
-      <div className="mt-8">
+      <div className="mt-8 flex flex-col gap-4">
+        <div className="flex items-center gap-2">
+          <Input
+            className="border-none bg-black text-white"
+            placeholder="Tìm truyện manga" >
+
+          </Input>
+          <Button className="text-white dark:bg-input/30">
+            <Search />
+          </Button>
+        </div>
         <List data={allManga}>
           {(manga) => <MediaCard data={manga} onHover={() => { }} isHovered={false} />}
         </List>

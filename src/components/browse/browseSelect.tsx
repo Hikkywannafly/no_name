@@ -72,6 +72,7 @@ const Select = React.forwardRef<any, Props>(
     return (
       <ReactSelect
         ref={ref}
+        className="text-white"
         theme={(theme) => ({
           ...theme,
           colors: {
