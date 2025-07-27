@@ -35,7 +35,7 @@ const List = <T extends any[]>({
     >
       {data.length ? (
         data.map((item, index) => (
-          <div className="col-span-1" key={index}>
+          <div className="col-span-1" key={item?.id || index}>
             {children(item)}
           </div>
         ))

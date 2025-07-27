@@ -33,7 +33,7 @@ const getKey = (
   previousPageData: any,
 ) => {
   if (previousPageData && !previousPageData.media?.length) return null;
-  return ["browse-manga", options, pageIndex + 1];
+  return ["browse-manga", pageIndex + 1, options];
 };
 
 // Map frontend sort values to Anilist MediaSort
@@ -99,45 +99,33 @@ const mapCountryToMediaCountry = (country: string): string | undefined => {
 };
 
 const useBrowse = (options: UseBrowseOptions) => {
-  const {
-    format,
-    genres = [],
-    keyword,
-    sort,
-    limit = 20,
-    tags = [],
-    country,
-    status,
-    isAdult = true,
-    year,
-    // season,
-    // seasonYear,
-    type,
-  } = options;
 
-  const fetcher = async (
-    _key: any,
-    _options: UseBrowseOptions,
-    page: number,
-  ) => {
+
+  const fetcher = async (key: [string, number, UseBrowseOptions]) => {
+    const [_key, page, _options] = key;
+
+    const {
+      format,
+      genres = [],
+      keyword,
+      sort,
+      limit = 20,
+      tags = [],
+      country,
+      status,
+      isAdult,
+      year,
+      type,
+    } = _options;
+
+
     try {
       const mappedSort = sort
         ? mapSortToMediaSort(sort)
         : MediaSortEnum.Popularity;
       const mappedFormat = type ? mapTypeToMediaFormat(type) : format;
-      // const mappedStatus = status ? mapStatusToMediaStatus(status) : undefined;
       const mappedCountry = country ? mapCountryToMediaCountry(country) : undefined;
       const mappedStatus = status ? mapStatusToMediaStatus(status) : undefined;
-
-      // Map type to status
-      // let mappedStatus = status;
-      // if (type === "completed") {
-      //   mappedStatus = MediaStatusEnum.Finished;
-      // } else if (type === "releasing") {
-      //   mappedStatus = MediaStatusEnum.Releasing;
-      // } else if (type === "not_yet_released") {
-      //   mappedStatus = MediaStatusEnum.Not_yet_released; 
-      // }
 
       // console.log("Fetching manga with options:", {
       //   type: MediaType.Manga,
@@ -147,7 +135,6 @@ const useBrowse = (options: UseBrowseOptions) => {
       //   sort: [mappedSort],
       //   status: mappedStatus,
       //   // season: mappedSeason,
-      //   seasonYear: seasonYear,
       //   page,
       //   ...(tags.length && { tag_in: tags }),
       //   ...(genres.length && { genre_in: genres }),
@@ -164,15 +151,15 @@ const useBrowse = (options: UseBrowseOptions) => {
         sort: [mappedSort],
         status: mappedStatus,
         year: year,
+        // chổ page này tôi bị undefined fix kiểu gì đây?
         page,
         ...(tags.length && { tag_in: tags }),
         ...(genres.length && { genre_in: genres }),
         ...(keyword && { search: keyword }),
         isAdult:
           isAdult || genres.includes("Hentai") || genres.includes("Ecchi"),
-      });
-
-      console.log("AniList API response:", result);
+      }
+      );
       return result;
     } catch (error) {
       console.error("Error fetching manga from AniList:", error);

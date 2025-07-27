@@ -2,7 +2,6 @@ import useBrowse from "@/hooks/useBrowseManga";
 import type {
   Media,
   MediaFormat,
-  MediaSeason,
   MediaSort,
   MediaStatus,
 } from "@/types/anilist";
@@ -19,7 +18,6 @@ export interface UseBrowseOptions {
   keyword?: string;
   genres?: string[];
   seasonYear?: number;
-  season?: MediaSeason;
   format?: MediaFormat;
   select?: string;
   limit?: number;
@@ -44,8 +42,9 @@ const MangaBrowseList: React.FC<MangaBrowseListProps> = ({ defaultQuery }) => {
   const [filters, setFilters] = useState<any>({
     genres: defaultQuery?.genres || [],
     sort: defaultQuery?.sort || "popularity",
-    type: defaultQuery?.format || "",
-    season: defaultQuery?.season || "",
+    format: defaultQuery?.format || "",
+    status: defaultQuery?.status || "",
+    country: defaultQuery?.country || "",
     year: defaultQuery?.seasonYear || null,
   });
 
@@ -64,9 +63,10 @@ const MangaBrowseList: React.FC<MangaBrowseListProps> = ({ defaultQuery }) => {
       keyword: debouncedKeyword, // Use debounced keyword instead
       genres: filters.genres,
       sort: filters.sort,
-      format: filters.type,
-      season: filters.season,
-      seasonYear: filters.year,
+      format: filters.format,
+      status: filters.status,
+      country: filters.country,
+      year: filters.year,
     }),
     [defaultQuery, debouncedKeyword, filters],
   );
@@ -75,9 +75,9 @@ const MangaBrowseList: React.FC<MangaBrowseListProps> = ({ defaultQuery }) => {
     useBrowse(queryOptions as UseBrowseOptions);
 
   const handleFetch = useCallback(() => {
-    if (!hasNextPage || isValidating) return;
+    if (!hasNextPage || isValidating || isLoading) return;
     fetchNextPage();
-  }, [hasNextPage, isValidating, fetchNextPage]);
+  }, [hasNextPage, isValidating, isLoading, fetchNextPage]);
 
   const handleFiltersChange = useCallback((newFilters: any) => {
     setFilters(newFilters);

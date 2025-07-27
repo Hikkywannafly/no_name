@@ -45,17 +45,17 @@ const SORT_OPTIONS = [
 //   { value: "not_yet_released", label: "Anime sắp chiếu" },
 // ];
 const STATUS_OPTIONS = [
-  { value: "RELEASING", label: "Đang phát hành" },
-  { value: "FINISHED", label: "Đã hoàn thành" },
-  { value: "NOT_YET_RELEASED", label: "Chưa phát hành" },
-  { value: "CANCELLED", label: "Đã hủy" },
-  { value: "HIATUS", label: "Tạm ngưng" },
+  { value: "releasing", label: "Đang phát hành" },
+  { value: "completed", label: "Đã hoàn thành" },
+  { value: "not_yet_released", label: "Chưa phát hành" },
+  { value: "cancelled", label: "Đã hủy" },
+  { value: "hiatus", label: "Tạm ngưng" },
 ];
 
 const FORMAT_OPTIONS = [
-  { value: "MANGA", label: "Manga" },
-  { value: "NOVEL", label: "Light Novel" },
-  { value: "ONE_SHOT", label: "One Shot" },
+  { value: "manga", label: "Manga" },
+  { value: "novel", label: "Light Novel" },
+  { value: "one_shot", label: "One Shot" },
 ];
 
 // Season options
@@ -68,10 +68,10 @@ const FORMAT_OPTIONS = [
 
 const COUNTRY_OPTIONS = [
   // { value: "All", label: "Tất cả quốc gia" },
-  { value: "JP", label: "Nhật Bản" },
-  { value: "KR", label: "Hàn Quốc" },
-  { value: "CN", label: "Trung Quốc" },
-  { value: "TW", label: "Đài Loan" },
+  { value: "jp", label: "Nhật Bản" },
+  { value: "kr", label: "Hàn Quốc" },
+  { value: "cn", label: "Trung Quốc" },
+  { value: "tw", label: "Đài Loan" },
 ];
 
 // Year options
@@ -152,12 +152,6 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
     setSelectedCountry(country);
     updateFilters({ country: country || undefined });
   };
-
-  // const handleYearChange = (year: number | null) => {
-  //   const newYear = selectedYear === year ? null : year;
-  //   setSelectedYear(newYear);
-  //   updateFilters({ year: newYear });
-  // };
 
   const handleYearChange = (year: string) => {
     const yearNum = year ? Number.parseInt(year) : null;
