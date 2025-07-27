@@ -1,11 +1,28 @@
 "use client";
+import {
+  Command,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronDown, ChevronUp, Filter } from "lucide-react";
+import { ChevronDown, ChevronUp, Filter, X } from "lucide-react";
 import { useState } from "react";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { ScrollArea } from "../ui/scroll-area";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 // Genre options
 
 const GENRES = [
@@ -37,13 +54,6 @@ const SORT_OPTIONS = [
   { value: "score", label: "Điểm cao nhất" },
 ];
 
-// Type options
-// const TYPE_OPTIONS = [
-//   { value: "movie", label: "Anime lẻ(Movie/OVA)" },
-//   { value: "tv", label: "Anime bộ (TV-Series)" },
-//   { value: "completed", label: "Anime trọn bộ" },
-//   { value: "releasing", label: "Anime đang chiếu" },
-//   { value: "not_yet_released", label: "Anime sắp chiếu" },
 // ];
 const STATUS_OPTIONS = [
   { value: "releasing", label: "Đang phát hành" },
@@ -59,14 +69,6 @@ const FORMAT_OPTIONS = [
   { value: "one_shot", label: "One Shot" },
 ];
 
-// Season options
-// const SEASON_OPTIONS = [
-//   { value: "winter", label: "Đông(Winter)" },
-//   { value: "spring", label: "Xuân(Spring)" },
-//   { value: "summer", label: "Hạ(Summer)" },
-//   { value: "fall", label: "Thu(Autumn)" },
-// ];
-
 const COUNTRY_OPTIONS = [
   // { value: "All", label: "Tất cả quốc gia" },
   { value: "jp", label: "Nhật Bản" },
@@ -76,9 +78,14 @@ const COUNTRY_OPTIONS = [
 ];
 
 // Year options
-const YEAR_OPTIONS = [
-  2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013,
-];
+// const YEAR_OPTIONS = [
+//   "2026", "2025", "2024", "2023", "2022", "2021", "2020", "2019", "2018", "2017", "2016", "2015", "2014", "2013",
+//   "2012", "2011", "2010", "2009",
+// ];
+
+const YEAR_OPTIONS = Array.from({ length: 2025 - 1950 + 1 }, (_, i) =>
+  (1950 + i).toString(),
+).reverse();
 
 interface SearchFiltersProps {
   onFiltersChange: (filters: any) => void;
@@ -190,7 +197,6 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
     onFiltersChange(allFilters);
   };
 
-
   const clearAllFilters = () => {
     setSelectedGenres([]);
     setSelectedSort("popularity");
@@ -213,6 +219,8 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
     selectedCountry ||
     selectedYear ||
     isAdult;
+
+  const [open, setOpen] = useState(false);
 
   return (
     <div className="w-full">
@@ -264,7 +272,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
               onClick={() => handleGenreToggle(genre)}
             >
               {genre}
-              <span className="ml-1 text-red-400">x</span>
+              <X className="ml-1 h-4 w-4" />
             </Badge>
           ))}
           {selectedFormat && (
@@ -294,7 +302,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
               onClick={handleIsAdultChange}
             >
               18+
-              <span className="ml-1 text-red-200">x</span>
+              <X className="ml-1 h-4 w-4" />
             </Badge>
           )}
           <Button
@@ -318,7 +326,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
             className="overflow-hidden "
           >
             <div className="rounded-sm bg-input/50 p-4">
-              <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 {/* Left Column */}
                 <div className="space-y-6">
                   {/* Genres */}
@@ -326,20 +334,23 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                     <h3 className="mb-3 font-medium text-lg text-white">
                       Thể loại
                     </h3>
-                    <ScrollArea className="h-48 w-full">
-                      <div className="grid grid-cols-4 gap-2">
+                    <ScrollArea className="h-48 w-full sm:h-auto">
+                      <div className="flex flex-wrap gap-2">
                         {GENRES.map((genre) => (
                           <Button
                             key={genre}
                             variant={
-                              selectedGenres.includes(genre) ? "default" : "outline"
+                              selectedGenres.includes(genre)
+                                ? "default"
+                                : "outline"
                             }
                             size="sm"
                             onClick={() => handleGenreToggle(genre)}
-                            className={`text-sm ${selectedGenres.includes(genre)
-                              ? " bg-black/60 text-white hover:bg-red-600"
-                              : " bg-transparent text-white "
-                              }`}
+                            className={`text-sm ${
+                              selectedGenres.includes(genre)
+                                ? " bg-black/60 text-white hover:bg-red-600"
+                                : " bg-transparent text-white "
+                            }`}
                           >
                             {genre}
                           </Button>
@@ -347,15 +358,18 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                       </div>
                     </ScrollArea>
                   </div>
-
                 </div>
 
                 {/* Right Column */}
                 <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-
                   <div>
-                    <h3 className="mb-3 font-medium text-lg text-white">Sắp xếp</h3>
-                    <Select value={selectedSort} onValueChange={handleSortChange}>
+                    <h3 className="mb-3 font-medium text-lg text-white">
+                      Sắp xếp
+                    </h3>
+                    <Select
+                      value={selectedSort}
+                      onValueChange={handleSortChange}
+                    >
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Chọn cách sắp xếp" />
                       </SelectTrigger>
@@ -371,8 +385,13 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
 
                   {/* Format */}
                   <div>
-                    <h3 className="mb-3 font-medium text-lg text-white">Định dạng</h3>
-                    <Select value={selectedFormat} onValueChange={handleFormatChange}>
+                    <h3 className="mb-3 font-medium text-lg text-white">
+                      Định dạng
+                    </h3>
+                    <Select
+                      value={selectedFormat}
+                      onValueChange={handleFormatChange}
+                    >
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Chọn định dạng" />
                       </SelectTrigger>
@@ -389,7 +408,10 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                     <h3 className="mb-3 font-medium text-lg text-white">
                       Trạng thái phát hành
                     </h3>
-                    <Select value={selectedStatus} onValueChange={handleStatusChange}>
+                    <Select
+                      value={selectedStatus}
+                      onValueChange={handleStatusChange}
+                    >
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Chọn trạng thái" />
                       </SelectTrigger>
@@ -404,11 +426,13 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                   </div>
 
                   <div>
-
                     <h3 className="mb-3 font-medium text-lg text-white">
                       Quốc gia
                     </h3>
-                    <Select value={selectedCountry} onValueChange={handleCountryChange}>
+                    <Select
+                      value={selectedCountry}
+                      onValueChange={handleCountryChange}
+                    >
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Chọn quốc gia" />
                       </SelectTrigger>
@@ -422,47 +446,70 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                     </Select>
                   </div>
                   <div>
-                    <h3 className="mb-3 font-medium text-lg text-white">Năm phát hành</h3>
-                    <Select
-                      value={selectedYear?.toString() || ""}
-                      onValueChange={handleYearChange}
-                    >
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Chọn năm" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {YEAR_OPTIONS.map((year) => (
-                          <SelectItem key={year} value={year.toString()}>
-                            {year}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <h3 className="mb-3 font-medium text-lg text-white">
+                      Năm phát hành
+                    </h3>
+
+                    <Popover open={open} onOpenChange={setOpen}>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className="w-full justify-between bg-input/30 px-3 py-2 font-light text-white/50"
+                        >
+                          {selectedYear || "Chọn năm"}
+                          <ChevronDown className="ml-2 h-4 w-4 opacity-50" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-full border border-white/10 bg-input/50 p-0">
+                        <Command>
+                          <CommandInput
+                            placeholder="Nhập năm..."
+                            className="px-3 py-2 text-white placeholder-white/50 [&_svg]:hidden"
+                          />
+                          <CommandList className="max-h-[200px] overflow-y-auto text-white">
+                            {YEAR_OPTIONS.map((year) => (
+                              <CommandItem
+                                key={year}
+                                value={year}
+                                onSelect={() => {
+                                  handleYearChange(year);
+                                  setOpen(false);
+                                }}
+                                className="cursor-pointer px-3 py-2"
+                              >
+                                {year}
+                              </CommandItem>
+                            ))}
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
                   </div>
 
                   {/* 18+ Toggle */}
                   <div>
-                    <h3 className="mb-3 font-medium text-lg text-white">Nội dung 18+</h3>
+                    <h3 className="mb-3 font-medium text-lg text-white">
+                      Nội dung 18+
+                    </h3>
                     <Button
                       variant={isAdult ? "default" : "outline"}
                       onClick={handleIsAdultChange}
-                      className={`w-full text-sm ${isAdult
-                        ? "bg-red-600 text-white hover:bg-red-700"
-                        : " bg-transparent text-white hover:bg-red-600/20"
-                        }`}
+                      className={`w-full text-sm ${
+                        isAdult
+                          ? "bg-red-600/20 text-white hover:bg-red-600/40"
+                          : " bg-transparent text-white hover:bg-red-600/20"
+                      }`}
                     >
-                      {isAdult ? "✓ Bao gồm nội dung 18+" : "Bao gồm nội dung 18+"}
+                      {isAdult ? "Có" : "Không "}
                     </Button>
                   </div>
                 </div>
-
               </div>
             </div>
           </motion.div>
-        )
-        }
+        )}
       </AnimatePresence>
-    </div >
+    </div>
   );
 };
 

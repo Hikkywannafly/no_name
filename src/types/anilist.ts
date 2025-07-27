@@ -349,7 +349,7 @@ export interface MediaArgs {
   /** The order the results will be returned in*/
   sort?: MediaSort[];
 
-  year?: number;
+  year?: string;
 }
 
 /** The official titles of the media in various languages */

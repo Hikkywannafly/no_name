@@ -15,14 +15,14 @@ import useSWRInfinite from "swr/infinite";
 export interface UseBrowseOptions {
   keyword?: string;
   genres?: string[];
-  format?: MediaFormat | string;
+  format?: MediaFormat;
   limit?: number;
   tags?: string[];
   sort?: MediaSort;
   country?: string;
-  status?: MediaStatus | string;
+  status?: MediaStatus;
   isAdult?: boolean;
-  year?: number;
+  year?: string;
   seasonYear?: number;
   type?: string;
 }
@@ -99,8 +99,6 @@ const mapCountryToMediaCountry = (country: string): string | undefined => {
 };
 
 const useBrowse = (options: UseBrowseOptions) => {
-
-
   const fetcher = async (key: [string, number, UseBrowseOptions]) => {
     const [_key, page, _options] = key;
 
@@ -115,34 +113,16 @@ const useBrowse = (options: UseBrowseOptions) => {
       status,
       isAdult,
       year,
-      type,
     } = _options;
-
-
     try {
       const mappedSort = sort
         ? mapSortToMediaSort(sort)
         : MediaSortEnum.Popularity;
-
-      // Handle format mapping - prioritize format if it's a string, otherwise use type
-      let mappedFormat: MediaFormat | undefined;
-      if (format && typeof format === 'string') {
-        mappedFormat = mapTypeToMediaFormat(format);
-      } else if (type) {
-        mappedFormat = mapTypeToMediaFormat(type);
-      } else {
-        mappedFormat = format as MediaFormat | undefined;
-      }
-
-      const mappedCountry = country ? mapCountryToMediaCountry(country) : undefined;
-
-      // Handle status mapping - convert string to enum if needed
-      let mappedStatus: MediaStatus | undefined;
-      if (status && typeof status === 'string') {
-        mappedStatus = mapStatusToMediaStatus(status);
-      } else {
-        mappedStatus = status as MediaStatus | undefined;
-      }
+      const mappedFormat = format ? mapTypeToMediaFormat(format) : format;
+      const mappedCountry = country
+        ? mapCountryToMediaCountry(country)
+        : undefined;
+      const mappedStatus = status ? mapStatusToMediaStatus(status) : undefined;
 
       console.log("Fetching manga with options:", {
         type: MediaType.Manga,
@@ -156,25 +136,25 @@ const useBrowse = (options: UseBrowseOptions) => {
         ...(tags.length && { tag_in: tags }),
         ...(genres.length && { genre_in: genres }),
         ...(keyword && { search: keyword }),
-        isAdult: isAdult || genres.includes("Hentai") || genres.includes("Ecchi"),
+        isAdult:
+          isAdult || genres.includes("Hentai") || genres.includes("Ecchi"),
       });
 
       const result = await getPageMedia({
         type: MediaType.Manga,
-        format: mappedFormat,
+        format: mappedFormat || MediaFormatEnum.Manga,
         perPage: limit,
         countryOfOrigin: mappedCountry,
         sort: [mappedSort],
         status: mappedStatus,
-        year: year,
+        year: `${year || ""}%`,
         page: page,
         ...(tags.length && { tag_in: tags }),
-        ...(genres.length && { genre_in: genres }),
+        ...(genres.length && { genres: genres }),
         ...(keyword && { search: keyword }),
         isAdult:
           isAdult || genres.includes("Hentai") || genres.includes("Ecchi"),
-      }
-      );
+      });
       return result;
     } catch (error) {
       console.error("Error fetching manga from AniList:", error);

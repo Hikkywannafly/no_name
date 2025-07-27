@@ -25,7 +25,8 @@ export interface UseBrowseOptions {
   sort?: MediaSort;
   country?: string;
   status?: MediaStatus;
-  isAdult?: true;
+  year?: string;
+  isAdult?: boolean;
 }
 
 interface MangaBrowseListProps {
@@ -46,6 +47,8 @@ const MangaBrowseList: React.FC<MangaBrowseListProps> = ({ defaultQuery }) => {
     status: defaultQuery?.status || "",
     country: defaultQuery?.country || "",
     year: defaultQuery?.seasonYear || null,
+    isAdult: defaultQuery?.isAdult || false,
+    tags: defaultQuery?.tags || [],
   });
 
   // Debounce search keyword
@@ -67,6 +70,8 @@ const MangaBrowseList: React.FC<MangaBrowseListProps> = ({ defaultQuery }) => {
       status: filters.status,
       country: filters.country,
       year: filters.year,
+      isAdult: filters.isAdult,
+      tags: filters.tags,
     }),
     [defaultQuery, debouncedKeyword, filters],
   );
@@ -137,7 +142,7 @@ const MangaBrowseList: React.FC<MangaBrowseListProps> = ({ defaultQuery }) => {
           {!isLoading && (
             <List data={allManga}>
               {(manga) => (
-                <MediaCard data={manga} onHover={() => { }} isHovered={false} />
+                <MediaCard data={manga} onHover={() => {}} isHovered={false} />
               )}
             </List>
           )}

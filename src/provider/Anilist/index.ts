@@ -6,6 +6,7 @@ import { Order } from "../MangaDex/static";
 import {
   type MediaDetailsQueryResponse,
   type PageQueryResponse,
+  browseMangaQuery,
   charactersQuery,
   mediaDetailsQuery,
   mediaQuery,
@@ -127,8 +128,6 @@ export const getMediaDetails = async (
 
   let mangaList: any[] = [];
   try {
-
-
     if (isAdult) {
       return {
         ...media,
@@ -147,7 +146,6 @@ export const getMediaDetails = async (
     });
 
     mangaList = userPreferredData?.data ?? [];
-
 
     if (
       mangaList.length === 0 &&
@@ -183,13 +181,26 @@ export const getPageMedia = async (
   fields?: string,
 ) => {
   const response = await anilistFetcher<PageQueryResponse>(
-    mediaQuery(fields),
+    browseMangaQuery(fields),
     args,
   );
   console.log("Anilist Page Media Response:", response);
 
   return response?.Page;
 };
+
+// export const getPageMedia = async (
+//   args: MediaArgs & PageArgs,
+//   fields?: string,
+// ) => {
+//   const response = await anilistFetcher<PageQueryResponse>(
+//     mediaQuery(fields),
+//     args,
+//   );
+//   console.log("Anilist Page Media Response:", response);
+
+//   return response?.Page;
+// };
 
 export const getPageCharacters = async (args: any, fields?: string) => {
   const response = await anilistFetcher<any>(charactersQuery(fields), args);
