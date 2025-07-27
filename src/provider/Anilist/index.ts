@@ -61,21 +61,28 @@ export const getMedia = async (args: MediaArgs & PageArgs, fields?: string) => {
 
       try {
         // Try with userPreferred title first
-        const { data: userPreferredData } = await MangadexApi.Manga.getSearchManga({
-          title: userPreferredTitle,
-          includes: [],
-          order: {
-            followedCount: Order.DESC,
-            relevance: Order.DESC,
-          },
-          limit: 1,
-        });
+        const { data: userPreferredData } =
+          await MangadexApi.Manga.getSearchManga({
+            title: userPreferredTitle,
+            includes: [],
+            order: {
+              followedCount: Order.DESC,
+              relevance: Order.DESC,
+            },
+            limit: 1,
+          });
 
         mangaList = userPreferredData?.data ?? [];
 
         // If no results with userPreferred, try with english title
-        if (mangaList.length === 0 && englishTitle && englishTitle !== userPreferredTitle) {
-          console.log(`No results for "${userPreferredTitle}", trying "${englishTitle}"`);
+        if (
+          mangaList.length === 0 &&
+          englishTitle &&
+          englishTitle !== userPreferredTitle
+        ) {
+          console.log(
+            `No results for "${userPreferredTitle}", trying "${englishTitle}"`,
+          );
 
           const { data: englishData } = await MangadexApi.Manga.getSearchManga({
             title: englishTitle,
@@ -116,10 +123,19 @@ export const getMediaDetails = async (
 
   const userPreferredTitle = media?.title?.userPreferred || "";
   const englishTitle = media?.title?.english || "";
+  const isAdult = media?.isAdult || "";
 
   let mangaList: any[] = [];
   try {
-    // Try with userPreferred title first
+
+
+    if (isAdult) {
+      return {
+        ...media,
+        translations: [],
+      };
+    }
+
     const { data: userPreferredData } = await MangadexApi.Manga.getSearchManga({
       title: userPreferredTitle,
       includes: [],
@@ -132,10 +148,12 @@ export const getMediaDetails = async (
 
     mangaList = userPreferredData?.data ?? [];
 
-    // If no results with userPreferred, try with english title
-    if (mangaList.length === 0 && englishTitle && englishTitle !== userPreferredTitle) {
-      console.log(`No results for "${userPreferredTitle}", trying "${englishTitle}"`);
 
+    if (
+      mangaList.length === 0 &&
+      englishTitle &&
+      englishTitle !== userPreferredTitle
+    ) {
       const { data: englishData } = await MangadexApi.Manga.getSearchManga({
         title: englishTitle,
         includes: [],

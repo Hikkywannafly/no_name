@@ -27,7 +27,7 @@ export interface UseBrowseOptions {
   sort?: MediaSort;
   country?: string;
   status?: MediaStatus;
-  isAdult?: boolean;
+  isAdult?: true;
 }
 
 interface MangaBrowseListProps {
@@ -103,7 +103,7 @@ const MangaBrowseList: React.FC<MangaBrowseListProps> = ({ defaultQuery }) => {
             placeholder="Tìm truyện manga"
             value={searchKeyword}
             onChange={(e) => setSearchKeyword(e.target.value)}
-            onKeyPress={(e) => e.key === "Enter" && handleSearch()}
+            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
           />
           <Button
             className="text-white dark:bg-input/30"
@@ -137,7 +137,7 @@ const MangaBrowseList: React.FC<MangaBrowseListProps> = ({ defaultQuery }) => {
           {!isLoading && (
             <List data={allManga}>
               {(manga) => (
-                <MediaCard data={manga} onHover={() => {}} isHovered={false} />
+                <MediaCard data={manga} onHover={() => { }} isHovered={false} />
               )}
             </List>
           )}
@@ -164,14 +164,13 @@ const MangaBrowseList: React.FC<MangaBrowseListProps> = ({ defaultQuery }) => {
           {/* End of results */}
           {!hasNextPage && allManga.length > 0 && (
             <p className="mt-8 text-center text-2xl text-gray-400">
-              No more manga to load...
+              Đã hiển thị tất cả manga.
             </p>
           )}
 
-          {/* No results */}
           {allManga.length === 0 && !isLoading && (
             <p className="mt-8 text-center text-2xl text-gray-400">
-              No manga found.
+              Không tìm thấy manga nào.
             </p>
           )}
         </div>

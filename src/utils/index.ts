@@ -163,8 +163,9 @@ export const getTitle = (data: Media, locale?: string) => {
   const translations = data?.translations || [];
 
   // Handle Vietnamese translations specifically
-  if (locale === 'vi' || locale === 'vi-VN') {
-    const viTitles = translations?.filter((t: any) => t.vi).map((t: any) => t.vi) ?? [];
+  if (locale === "vi" || locale === "vi-VN") {
+    const viTitles =
+      translations?.filter((t: any) => t.vi).map((t: any) => t.vi) ?? [];
     if (viTitles.length > 0) {
       return viTitles[0]; // Return first Vietnamese title
     }
@@ -178,7 +179,12 @@ export const getTitle = (data: Media, locale?: string) => {
   }
 
   // Fallback to userPreferred title
-  return data?.title?.userPreferred || data?.title?.romaji || data?.title?.english || 'Unknown Title';
+  return (
+    data?.title?.userPreferred ||
+    data?.title?.romaji ||
+    data?.title?.english ||
+    "Unknown Title"
+  );
 };
 
 export function numberWithCommas(x: any): any {

@@ -2,8 +2,8 @@ import { getPageMedia } from "@/provider/Anilist/index";
 import {
   type MediaFormat,
   MediaFormat as MediaFormatEnum,
-  type MediaSeason,
-  MediaSeason as MediaSeasonEnum,
+  // type MediaSeason,
+  // MediaSeason as MediaSeasonEnum,
   type MediaSort,
   MediaSort as MediaSortEnum,
   type MediaStatus,
@@ -22,7 +22,7 @@ export interface UseBrowseOptions {
   country?: string;
   status?: MediaStatus;
   isAdult?: boolean;
-  season?: MediaSeason;
+  year?: number;
   seasonYear?: number;
   type?: string;
 }
@@ -57,32 +57,45 @@ const mapSortToMediaSort = (sort: string): MediaSort => {
 // Map frontend type values to Anilist MediaFormat
 const mapTypeToMediaFormat = (type: string): MediaFormat | undefined => {
   switch (type) {
-    case "movie":
-      return MediaFormatEnum.Movie;
-    case "tv":
-    case "completed":
-    case "releasing":
-    case "not_yet_released":
-      return MediaFormatEnum.Tv;
+    case "manga":
+      return MediaFormatEnum.Manga;
+    case "novel":
+      return MediaFormatEnum.Novel;
+    case "one_shot":
+      return MediaFormatEnum.One_shot;
     default:
       return undefined;
   }
 };
 
-// Map frontend season values to Anilist MediaSeason
-const mapSeasonToMediaSeason = (season: string): MediaSeason | undefined => {
-  switch (season) {
-    case "winter":
-      return MediaSeasonEnum.Winter;
-    case "spring":
-      return MediaSeasonEnum.Spring;
-    case "summer":
-      return MediaSeasonEnum.Summer;
-    case "fall":
-      return MediaSeasonEnum.Fall;
-    default:
-      return undefined;
+const mapStatusToMediaStatus = (status: string): MediaStatus | undefined => {
+  switch (status) {
+    case "completed":
+      return MediaStatusEnum.Finished;
+    case "releasing":
+      return MediaStatusEnum.Releasing;
+    case "cancelled":
+      return MediaStatusEnum.Cancelled;
+    case "hiatus":
+      return MediaStatusEnum.Hiatus;
+    case "not_yet_released":
+      return MediaStatusEnum.Not_yet_released;
   }
+  return undefined;
+};
+
+const mapCountryToMediaCountry = (country: string): string | undefined => {
+  switch (country) {
+    case "jp":
+      return "JP";
+    case "kr":
+      return "KR";
+    case "cn":
+      return "CN";
+    case "tw":
+      return "TW";
+  }
+  return undefined;
 };
 
 const useBrowse = (options: UseBrowseOptions) => {
@@ -95,9 +108,10 @@ const useBrowse = (options: UseBrowseOptions) => {
     tags = [],
     country,
     status,
-    isAdult,
-    season,
-    seasonYear,
+    isAdult = true,
+    year,
+    // season,
+    // seasonYear,
     type,
   } = options;
 
@@ -111,44 +125,45 @@ const useBrowse = (options: UseBrowseOptions) => {
         ? mapSortToMediaSort(sort)
         : MediaSortEnum.Popularity;
       const mappedFormat = type ? mapTypeToMediaFormat(type) : format;
-      const mappedSeason = season ? mapSeasonToMediaSeason(season) : undefined;
+      // const mappedStatus = status ? mapStatusToMediaStatus(status) : undefined;
+      const mappedCountry = country ? mapCountryToMediaCountry(country) : undefined;
+      const mappedStatus = status ? mapStatusToMediaStatus(status) : undefined;
 
       // Map type to status
-      let mappedStatus = status;
-      if (type === "completed") {
-        mappedStatus = MediaStatusEnum.Finished;
-      } else if (type === "releasing") {
-        mappedStatus = MediaStatusEnum.Releasing;
-      } else if (type === "not_yet_released") {
-        mappedStatus = MediaStatusEnum.Not_yet_released;
-      }
+      // let mappedStatus = status;
+      // if (type === "completed") {
+      //   mappedStatus = MediaStatusEnum.Finished;
+      // } else if (type === "releasing") {
+      //   mappedStatus = MediaStatusEnum.Releasing;
+      // } else if (type === "not_yet_released") {
+      //   mappedStatus = MediaStatusEnum.Not_yet_released; 
+      // }
 
-      console.log("Fetching manga with options:", {
-        type: MediaType.Manga,
-        format: mappedFormat,
-        perPage: limit,
-        countryOfOrigin: country,
-        sort: [mappedSort],
-        status: mappedStatus,
-        season: mappedSeason,
-        seasonYear: seasonYear,
-        page,
-        ...(tags.length && { tag_in: tags }),
-        ...(genres.length && { genre_in: genres }),
-        ...(keyword && { search: keyword }),
-        isAdult:
-          isAdult || genres.includes("Hentai") || genres.includes("Ecchi"),
-      });
+      // console.log("Fetching manga with options:", {
+      //   type: MediaType.Manga,
+      //   format: mappedFormat,
+      //   perPage: limit,
+      //   countryOfOrigin: country,
+      //   sort: [mappedSort],
+      //   status: mappedStatus,
+      //   // season: mappedSeason,
+      //   seasonYear: seasonYear,
+      //   page,
+      //   ...(tags.length && { tag_in: tags }),
+      //   ...(genres.length && { genre_in: genres }),
+      //   ...(keyword && { search: keyword }),
+      //   // isAdult:
+      //   //   isAdult || genres.includes("Hentai") || genres.includes("Ecchi"),
+      // });
 
       const result = await getPageMedia({
         type: MediaType.Manga,
         format: mappedFormat,
         perPage: limit,
-        countryOfOrigin: country,
+        countryOfOrigin: mappedCountry,
         sort: [mappedSort],
         status: mappedStatus,
-        season: mappedSeason,
-        seasonYear: seasonYear,
+        year: year,
         page,
         ...(tags.length && { tag_in: tags }),
         ...(genres.length && { genre_in: genres }),

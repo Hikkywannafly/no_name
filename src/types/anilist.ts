@@ -348,6 +348,8 @@ export interface MediaArgs {
   source_in?: MediaSource[];
   /** The order the results will be returned in*/
   sort?: MediaSort[];
+
+  year?: number;
 }
 
 /** The official titles of the media in various languages */

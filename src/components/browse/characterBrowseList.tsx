@@ -45,7 +45,7 @@ const CharacterBrowseList: React.FC<CharacterBrowseListProps> = ({
   return (
     <div className="min-h-screen">
       <div className="mt-8">
-        <List data={allCharacters} >
+        <List data={allCharacters}>
           {(character) => <CharacterCard character={character} />}
         </List>
       </div>
@@ -60,7 +60,6 @@ const CharacterBrowseList: React.FC<CharacterBrowseListProps> = ({
         <p className="mt-8 text-center text-2xl">No characters found.</p>
       )}
     </div>
-
   );
 };
 

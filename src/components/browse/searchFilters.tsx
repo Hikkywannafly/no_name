@@ -4,80 +4,74 @@ import { useState } from "react";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { ScrollArea } from "../ui/scroll-area";
-
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 // Genre options
+
 const GENRES = [
   "Action",
   "Adventure",
-  "Cartoon",
   "Comedy",
-  "Dementia",
-  "Demons",
   "Drama",
   "Ecchi",
   "Fantasy",
-  "Game",
-  "Harem",
-  "Historical",
   "Horror",
-  "Josei",
-  "Kids",
-  "Live Action",
-  "Magic",
-  "Martial Arts",
+  "Mahou Shoujo",
   "Mecha",
-  "Military",
   "Music",
   "Mystery",
-  "Parody",
-  "Police",
   "Psychological",
   "Romance",
-  "Samurai",
-  "School",
   "Sci-Fi",
-  "Seinen",
-  "Shoujo",
-  "Shoujo Ai",
-  "Shounen",
-  "Shounen Ai",
   "Slice of Life",
-  "Space",
   "Sports",
-  "Super Power",
   "Supernatural",
-  "Suspense",
   "Thriller",
-  "Tokusatsu",
-  "Vampire",
-  "Yaoi",
-  "Yuri",
 ];
-
 // Sort options
 const SORT_OPTIONS = [
+  { value: "popularity", label: "Phổ biến nhất" },
   { value: "latest", label: "Mới nhất" },
   { value: "name_asc", label: "Tên: A-Z" },
   { value: "name_desc", label: "Tên: Z-A" },
-  { value: "popularity", label: "Xem nhiều nhất" },
-  { value: "score", label: "Nhiều lượt bình chọn" },
+  { value: "score", label: "Điểm cao nhất" },
 ];
 
 // Type options
-const TYPE_OPTIONS = [
-  { value: "movie", label: "Anime lẻ(Movie/OVA)" },
-  { value: "tv", label: "Anime bộ (TV-Series)" },
-  { value: "completed", label: "Anime trọn bộ" },
-  { value: "releasing", label: "Anime đang chiếu" },
-  { value: "not_yet_released", label: "Anime sắp chiếu" },
+// const TYPE_OPTIONS = [
+//   { value: "movie", label: "Anime lẻ(Movie/OVA)" },
+//   { value: "tv", label: "Anime bộ (TV-Series)" },
+//   { value: "completed", label: "Anime trọn bộ" },
+//   { value: "releasing", label: "Anime đang chiếu" },
+//   { value: "not_yet_released", label: "Anime sắp chiếu" },
+// ];
+const STATUS_OPTIONS = [
+  { value: "RELEASING", label: "Đang phát hành" },
+  { value: "FINISHED", label: "Đã hoàn thành" },
+  { value: "NOT_YET_RELEASED", label: "Chưa phát hành" },
+  { value: "CANCELLED", label: "Đã hủy" },
+  { value: "HIATUS", label: "Tạm ngưng" },
+];
+
+const FORMAT_OPTIONS = [
+  { value: "MANGA", label: "Manga" },
+  { value: "NOVEL", label: "Light Novel" },
+  { value: "ONE_SHOT", label: "One Shot" },
 ];
 
 // Season options
-const SEASON_OPTIONS = [
-  { value: "winter", label: "Đông(Winter)" },
-  { value: "spring", label: "Xuân(Spring)" },
-  { value: "summer", label: "Hạ(Summer)" },
-  { value: "fall", label: "Thu(Autumn)" },
+// const SEASON_OPTIONS = [
+//   { value: "winter", label: "Đông(Winter)" },
+//   { value: "spring", label: "Xuân(Spring)" },
+//   { value: "summer", label: "Hạ(Summer)" },
+//   { value: "fall", label: "Thu(Autumn)" },
+// ];
+
+const COUNTRY_OPTIONS = [
+  // { value: "All", label: "Tất cả quốc gia" },
+  { value: "JP", label: "Nhật Bản" },
+  { value: "KR", label: "Hàn Quốc" },
+  { value: "CN", label: "Trung Quốc" },
+  { value: "TW", label: "Đài Loan" },
 ];
 
 // Year options
@@ -101,12 +95,21 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
   const [selectedSort, setSelectedSort] = useState<string>(
     currentFilters.sort || "popularity",
   );
-  const [selectedType, setSelectedType] = useState<string>(
-    currentFilters.type || "",
+  // const [selectedType, setSelectedType] = useState<string>(
+  //   currentFilters.type || "",
+  // );
+  const [selectedFormat, setSelectedFormat] = useState<string>(
+    currentFilters.format || "",
   );
-  const [selectedSeason, setSelectedSeason] = useState<string>(
-    currentFilters.season || "",
+  const [selectedStatus, setSelectedStatus] = useState<string>(
+    currentFilters.status || "",
   );
+  const [selectedCountry, setSelectedCountry] = useState<string>(
+    currentFilters.country || "",
+  );
+  // const [selectedSeason, setSelectedSeason] = useState<string>(
+  //   currentFilters.season || "",
+  // );
   const [selectedYear, setSelectedYear] = useState<number | null>(
     currentFilters.year || null,
   );
@@ -125,30 +128,50 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
     updateFilters({ sort });
   };
 
-  const handleTypeChange = (type: string) => {
-    const newType = selectedType === type ? "" : type;
-    setSelectedType(newType);
-    updateFilters({ type: newType });
+  // const handleTypeChange = (type: string) => {
+  //   const newType = selectedType === type ? "" : type;
+  //   setSelectedType(newType);
+  //   updateFilters({ type: newType });
+  // };
+  const handleFormatChange = (format: string) => {
+    setSelectedFormat(format);
+    updateFilters({ format: format || undefined });
   };
 
-  const handleSeasonChange = (season: string) => {
-    const newSeason = selectedSeason === season ? "" : season;
-    setSelectedSeason(newSeason);
-    updateFilters({ season: newSeason });
+  // const handleSeasonChange = (season: string) => {
+  //   const newSeason = selectedSeason === season ? "" : season;
+  //   setSelectedSeason(newSeason);
+  //   updateFilters({ season: newSeason });
+  // };
+  const handleStatusChange = (status: string) => {
+    setSelectedStatus(status);
+    updateFilters({ status: status || undefined });
   };
 
-  const handleYearChange = (year: number | null) => {
-    const newYear = selectedYear === year ? null : year;
-    setSelectedYear(newYear);
-    updateFilters({ year: newYear });
+  const handleCountryChange = (country: string) => {
+    setSelectedCountry(country);
+    updateFilters({ country: country || undefined });
+  };
+
+  // const handleYearChange = (year: number | null) => {
+  //   const newYear = selectedYear === year ? null : year;
+  //   setSelectedYear(newYear);
+  //   updateFilters({ year: newYear });
+  // };
+
+  const handleYearChange = (year: string) => {
+    const yearNum = year ? Number.parseInt(year) : null;
+    setSelectedYear(yearNum);
+    updateFilters({ year: yearNum });
   };
 
   const updateFilters = (newFilters: any) => {
     const allFilters = {
       genres: selectedGenres,
       sort: selectedSort,
-      type: selectedType,
-      season: selectedSeason,
+      format: selectedFormat || undefined,
+      status: selectedStatus || undefined,
+      country: selectedCountry || undefined,
       year: selectedYear,
       ...newFilters,
     };
@@ -158,17 +181,22 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
   const clearAllFilters = () => {
     setSelectedGenres([]);
     setSelectedSort("popularity");
-    setSelectedType("");
-    setSelectedSeason("");
+    setSelectedFormat("");
+    setSelectedStatus("");
+    setSelectedCountry("");
     setSelectedYear(null);
-    onFiltersChange({});
+    onFiltersChange({
+      genres: [],
+      sort: "popularity",
+    });
   };
 
   const hasActiveFilters =
     selectedGenres.length > 0 ||
     selectedSort !== "popularity" ||
-    selectedType ||
-    selectedSeason ||
+    selectedFormat ||
+    selectedStatus ||
+    selectedCountry ||
     selectedYear;
 
   return (
@@ -179,11 +207,12 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
           <Filter className="h-5 w-5 text-gray-400" />
           <h2 className="font-semibold text-lg text-white">Bộ lọc tìm kiếm</h2>
           {hasActiveFilters && (
-            <Badge variant="secondary" className="bg-green-600 text-white">
+            <Badge variant="secondary" className="bg-black/60 text-white">
               {selectedGenres.length +
                 (selectedSort !== "popularity" ? 1 : 0) +
-                (selectedType ? 1 : 0) +
-                (selectedSeason ? 1 : 0) +
+                (selectedFormat ? 1 : 0) +
+                (selectedStatus ? 1 : 0) +
+                (selectedCountry ? 1 : 0) +
                 (selectedYear ? 1 : 0)}
             </Badge>
           )}
@@ -192,7 +221,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
           variant="outline"
           size="sm"
           onClick={() => setIsExpanded(!isExpanded)}
-          className="flex items-center gap-2 text-white "
+          className="flex items-center gap-2 text-white"
         >
           {isExpanded ? (
             <>
@@ -215,18 +244,30 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
             <Badge
               key={genre}
               variant="secondary"
-              className="bg-green-600 text-white hover:bg-green-700"
+              className=" cursor-pointer bg-black/60 text-white"
+              onClick={() => handleGenreToggle(genre)}
             >
               {genre}
+              <span className="ml-1 text-red-400">x</span>
             </Badge>
           ))}
-          {selectedSeason && (
-            <Badge variant="secondary" className="bg-green-600 text-white">
-              {SEASON_OPTIONS.find((s) => s.value === selectedSeason)?.label}
+          {selectedFormat && (
+            <Badge variant="secondary" className="bg-black/60 text-white">
+              {FORMAT_OPTIONS.find((f) => f.value === selectedFormat)?.label}
+            </Badge>
+          )}
+          {selectedStatus && (
+            <Badge variant="secondary" className="bg-black/60 text-white">
+              {STATUS_OPTIONS.find((s) => s.value === selectedStatus)?.label}
+            </Badge>
+          )}
+          {selectedCountry && (
+            <Badge variant="secondary" className="bg-black/60 text-white">
+              {COUNTRY_OPTIONS.find((c) => c.value === selectedCountry)?.label}
             </Badge>
           )}
           {selectedYear && (
-            <Badge variant="secondary" className="bg-green-600 text-white">
+            <Badge variant="secondary" className="bg-black/60 text-white">
               {selectedYear}
             </Badge>
           )}
@@ -236,7 +277,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
             onClick={clearAllFilters}
             className="border-red-400 text-red-400 hover:bg-red-400 hover:text-white"
           >
-            Clear All
+            xóa tất cả
           </Button>
         </div>
       )}
@@ -253,7 +294,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                   Thể loại
                 </h3>
                 <ScrollArea className="h-48 w-full">
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-4 gap-2">
                     {GENRES.map((genre) => (
                       <Button
                         key={genre}
@@ -262,11 +303,10 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                         }
                         size="sm"
                         onClick={() => handleGenreToggle(genre)}
-                        className={`text-sm ${
-                          selectedGenres.includes(genre)
-                            ? "bg-green-600 hover:bg-green-700"
-                            : "border-gray-600 bg-transparent text-gray-300 hover:bg-gray-800"
-                        }`}
+                        className={`text-sm ${selectedGenres.includes(genre)
+                          ? " bg-black/60 text-white hover:bg-red-600"
+                          : " bg-transparent text-white "
+                          }`}
                       >
                         {genre}
                       </Button>
@@ -276,120 +316,106 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
               </div>
 
               {/* Sort */}
-              <div>
-                <h3 className="mb-3 font-medium text-lg text-white">Sắp xếp</h3>
-                <div className="space-y-2">
-                  {SORT_OPTIONS.map((option) => (
-                    <Button
-                      key={option.value}
-                      variant={
-                        selectedSort === option.value ? "default" : "outline"
-                      }
-                      size="sm"
-                      onClick={() => handleSortChange(option.value)}
-                      className={`w-full justify-start ${
-                        selectedSort === option.value
-                          ? "bg-green-600 hover:bg-green-700"
-                          : "border-gray-600 bg-transparent text-gray-300 hover:bg-gray-800"
-                      }`}
-                    >
-                      {option.label}
-                    </Button>
-                  ))}
-                </div>
-              </div>
+
             </div>
 
             {/* Right Column */}
-            <div className="space-y-6">
-              {/* Type */}
-              <div>
-                <h3 className="mb-3 font-medium text-lg text-white">Loại</h3>
-                <div className="space-y-2">
-                  {TYPE_OPTIONS.map((option) => (
-                    <Button
-                      key={option.value}
-                      variant={
-                        selectedType === option.value ? "default" : "outline"
-                      }
-                      size="sm"
-                      onClick={() => handleTypeChange(option.value)}
-                      className={`w-full justify-start ${
-                        selectedType === option.value
-                          ? "bg-green-600 hover:bg-green-700"
-                          : "border-gray-600 bg-transparent text-gray-300 hover:bg-gray-800"
-                      }`}
-                    >
-                      {option.label}
-                    </Button>
-                  ))}
-                </div>
-              </div>
+            <div className="grid grid-flow-col grid-cols-1 gap-4 lg:grid-rows-3">
 
-              {/* Season */}
               <div>
-                <h3 className="mb-3 font-medium text-lg text-white">Mùa</h3>
-                <div className="grid grid-cols-2 gap-2">
-                  {SEASON_OPTIONS.map((option) => (
-                    <Button
-                      key={option.value}
-                      variant={
-                        selectedSeason === option.value ? "default" : "outline"
-                      }
-                      size="sm"
-                      onClick={() => handleSeasonChange(option.value)}
-                      className={`${
-                        selectedSeason === option.value
-                          ? "bg-green-600 hover:bg-green-700"
-                          : "border-gray-600 bg-transparent text-gray-300 hover:bg-gray-800"
-                      }`}
-                    >
-                      {option.label}
-                    </Button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Year */}
-              <div>
-                <h3 className="mb-3 font-medium text-lg text-white">Năm</h3>
-                <ScrollArea className="h-32 w-full">
-                  <div className="grid grid-cols-3 gap-2">
-                    {YEAR_OPTIONS.map((year) => (
-                      <Button
-                        key={year}
-                        variant={selectedYear === year ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => handleYearChange(year)}
-                        className={`${
-                          selectedYear === year
-                            ? "bg-green-600 hover:bg-green-700"
-                            : "border-gray-600 bg-transparent text-gray-300 hover:bg-gray-800"
-                        }`}
-                      >
-                        {year}
-                      </Button>
+                <h3 className="mb-3 font-medium text-lg text-white">Sắp xếp</h3>
+                <Select value={selectedSort} onValueChange={handleSortChange}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Chọn cách sắp xếp" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {SORT_OPTIONS.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
                     ))}
-                    <Button
-                      variant={selectedYear === 0 ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => handleYearChange(0)}
-                      className={`${
-                        selectedYear === 0
-                          ? "bg-green-600 hover:bg-green-700"
-                          : "border-gray-600 bg-transparent text-gray-300 hover:bg-gray-800"
-                      }`}
-                    >
-                      Cũ hơn
-                    </Button>
-                  </div>
-                </ScrollArea>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Format */}
+              <div>
+                <h3 className="mb-3 font-medium text-lg text-white">Định dạng</h3>
+                <Select value={selectedFormat} onValueChange={handleFormatChange}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Chọn định dạng" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {FORMAT_OPTIONS.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <h3 className="mb-3 font-medium text-lg text-white">
+                  Trạng thái phát hành
+                </h3>
+                <Select value={selectedStatus} onValueChange={handleStatusChange}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Chọn trạng thái" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {STATUS_OPTIONS.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+
+                <h3 className="mb-3 font-medium text-lg text-white">
+                  Quốc gia
+                </h3>
+                <Select value={selectedCountry} onValueChange={handleCountryChange}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Chọn quốc gia" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {COUNTRY_OPTIONS.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <h3 className="mb-3 font-medium text-lg text-white">Năm phát hành</h3>
+                <Select
+                  value={selectedYear?.toString() || ""}
+                  onValueChange={handleYearChange}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Chọn năm" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {YEAR_OPTIONS.map((year) => (
+                      <SelectItem key={year} value={year.toString()}>
+                        {year}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
+
           </div>
         </div>
-      )}
-    </div>
+
+      )
+      }
+    </div >
   );
 };
 

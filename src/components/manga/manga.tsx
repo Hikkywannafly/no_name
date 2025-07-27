@@ -261,20 +261,20 @@ export const Manga = memo(function Manga(props: MangaProps) {
                   )}
                   <div className="">
                     <Select
-                      value={selectedDescriptionSource}
+                      value={"reading"}
                       onValueChange={handleDescriptionChange}
                     >
                       <SelectTrigger className="w-full text-white">
                         <SelectValue placeholder="Add to reading list" />
                       </SelectTrigger>
-                      <SelectContent className="">
+                      {/* <SelectContent className="">
                         <SelectItem value="reading" className="text-white">
                           Currently Reading
                         </SelectItem>
-                        <SelectItem value="completed" className="text-white">
+                        <SelectItem value="reading" className="text-white">
                           Completed
                         </SelectItem>
-                        <SelectItem value="plan-to-read" className="text-white">
+                        <SelectItem value="reading" className="text-white">
                           Plan to Read
                         </SelectItem>
                         <SelectItem
@@ -283,7 +283,7 @@ export const Manga = memo(function Manga(props: MangaProps) {
                         >
                           Dropped
                         </SelectItem>
-                      </SelectContent>
+                      </SelectContent> */}
                     </Select>
                   </div>
                 </div>
