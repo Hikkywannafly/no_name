@@ -17,7 +17,7 @@ const List = <T extends any[]>({
   data,
   children,
   className = "",
-  noListMessage = "No data.",
+  // noListMessage = "No data.",
   ...props
 }: ListProps<T>) => {
   const validClassName = useMemo(
@@ -40,7 +40,15 @@ const List = <T extends any[]>({
           </div>
         ))
       ) : (
-        <p className="text-2xl">{noListMessage}</p>
+        <div className="flex items-center justify-center">
+          <img
+            className="flex w-22 animate-pulse items-center justify-center"
+            src="/images/nazuna2.gif"
+            alt="nazuna2"
+          />
+
+        </div>
+
       )}
     </div>
   );
