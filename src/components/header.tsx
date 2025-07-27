@@ -13,8 +13,6 @@ type NavItemProps = {
 };
 
 const NavItem = ({ label }: NavItemProps) => (
-
-
   <li className="">
     <div className="flex cursor-pointer items-center whitespace-nowrap font-bold opacity-80 transition-all duration-300 hover:text-highlight">
       {label}
@@ -47,7 +45,9 @@ const Header = () => {
 
   return (
     <React.Fragment>
-      <header className={`fixed top-0 left-0 z-[999] w-full bg-gradient-to-b from-black/60 via-black/40 to-transparent p-4 px-2 transition duration-500 ${isTop ? "bg-transparent" : "bg-gray-00/50 backdrop-blur-sm"}`}>
+      <header
+        className={`fixed top-0 left-0 z-[999] w-full bg-gradient-to-b from-black/60 via-black/40 to-transparent p-1 px-2 transition duration-500 ${isTop ? "bg-transparent" : "bg-[#5a0035]/20 backdrop-blur-sm"}`}
+      >
         <WideContainer classNames="mx-auto flex h-full items-center justify-between ">
           <div className="flex items-center ">
             <button
@@ -62,7 +62,11 @@ const Header = () => {
               href="/"
               className="flex cursor-pointer flex-row items-center justify-center gap-2 whitespace-nowrap font-semibold text-xl opacity-80"
             >
-              <img className="w-8" src="/icons/logo_nazuna.svg" alt="nazuna1" />
+              <img
+                className="w-10"
+                src="/icons/logo_nazuna.svg"
+                alt="nazuna1"
+              />
               nazuna
             </Link>
           </div>
@@ -145,7 +149,7 @@ const Header = () => {
                 options={GENRES_COMICS}
                 show={true}
                 isMore={false}
-                onClose={() => { }}
+                onClose={() => {}}
               />
             </div>
             <div className="py-2">
@@ -156,7 +160,7 @@ const Header = () => {
                 options={RANKING_COMICS}
                 show={true}
                 isMore={false}
-                onClose={() => { }}
+                onClose={() => {}}
               />
             </div>
             <button

@@ -46,9 +46,7 @@ const List = <T extends any[]>({
             src="/images/nazuna2.gif"
             alt="nazuna2"
           />
-
         </div>
-
       )}
     </div>
   );
