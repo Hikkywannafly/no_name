@@ -362,7 +362,7 @@ export const Manga = memo(function Manga(props: MangaProps) {
                     <TagItem
                       key={tag.id}
                       href="/"
-                      className="rounded-sm bg-black/50 px-3 py-1 text-gray-300 text-sm transition-colors hover:bg-gray-700"
+                      className="rounded-sm bg-black/50 px-3 py-1 text-sm transition-colors "
                     >
                       {tag.name}
                     </TagItem>

@@ -34,7 +34,7 @@ export const TagItem: React.FC<TagItemProps> = ({
           "relative flex items-center justify-center rounded-sm px-2 py-1 font-medium",
           active
             ? "text-primary-500"
-            : "text-gray-400 transition duration-300 hover:bg-gray-600/20",
+            : "text-white transition duration-300 hover:bg-black",
           className,
         )}
       >

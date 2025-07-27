@@ -123,7 +123,7 @@ const Header = () => {
       {isMobileMenuOpen && (
         <div className="fixed inset-0 z-[1000] flex flex-col bg-black/80 md:hidden">
           <div className="flex items-center justify-between border-white/10 border-b p-4">
-            <span className="font-semibold text-white text-xl">NONAME</span>
+            <span className="font-semibold text-white text-xl">Nazuna</span>
             <button
               className="text-2xl text-white"
               onClick={() => setIsMobileMenuOpen(false)}
@@ -149,7 +149,7 @@ const Header = () => {
                 options={GENRES_COMICS}
                 show={true}
                 isMore={false}
-                onClose={() => {}}
+                onClose={() => { }}
               />
             </div>
             <div className="py-2">
@@ -160,7 +160,7 @@ const Header = () => {
                 options={RANKING_COMICS}
                 show={true}
                 isMore={false}
-                onClose={() => {}}
+                onClose={() => { }}
               />
             </div>
             <button
