@@ -1,183 +1,55 @@
-import { getPageMedia } from "@/provider/Anilist/index";
+import { getPageCharacters } from "@/provider/Anilist/index";
 import {
-  type MediaFormat,
-  MediaFormat as MediaFormatEnum,
-  // type MediaSeason,
-  // MediaSeason as MediaSeasonEnum,
-  type MediaSort,
-  MediaSort as MediaSortEnum,
-  type MediaStatus,
-  MediaStatus as MediaStatusEnum,
-  MediaType,
+  type CharacterSort,
+  CharacterSort as CharacterSortEnum,
 } from "@/types/anilist";
 import useSWRInfinite from "swr/infinite";
 
-export interface UseBrowseOptions {
+export interface UseCharacterBrowseOptions {
   keyword?: string;
-  genres?: string[];
-  format?: MediaFormat | string;
   limit?: number;
-  tags?: string[];
-  sort?: MediaSort;
-  country?: string;
-  status?: MediaStatus | string;
+  sort?: CharacterSort;
   isAdult?: boolean;
-  year?: number;
-  seasonYear?: number;
-  type?: string;
 }
 
 const getKey = (
-  options: UseBrowseOptions,
+  options: UseCharacterBrowseOptions,
   pageIndex: number,
   previousPageData: any,
 ) => {
-  if (previousPageData && !previousPageData.media?.length) return null;
-  return ["browse-manga", pageIndex + 1, options];
+  if (previousPageData && !previousPageData.characters?.length) return null;
+  return ["browse-characters", options, pageIndex + 1];
 };
 
-// Map frontend sort values to Anilist MediaSort
-const mapSortToMediaSort = (sort: string): MediaSort => {
-  switch (sort) {
-    case "latest":
-      return MediaSortEnum.Updated_at_desc;
-    case "name_asc":
-      return MediaSortEnum.Title_romaji;
-    case "name_desc":
-      return MediaSortEnum.Title_romaji_desc;
-    case "score":
-      return MediaSortEnum.Score_desc;
-    case "popularity":
-      return MediaSortEnum.Popularity_desc;
-    default:
-      return MediaSortEnum.Popularity;
-  }
-};
+const useBrowseCharacters = (options: UseCharacterBrowseOptions) => {
+  const { keyword, sort, limit = 20, isAdult } = options;
 
-// Map frontend type values to Anilist MediaFormat
-const mapTypeToMediaFormat = (type: string): MediaFormat | undefined => {
-  switch (type) {
-    case "manga":
-      return MediaFormatEnum.Manga;
-    case "novel":
-      return MediaFormatEnum.Novel;
-    case "one_shot":
-      return MediaFormatEnum.One_shot;
-    default:
-      return undefined;
-  }
-};
-
-const mapStatusToMediaStatus = (status: string): MediaStatus | undefined => {
-  switch (status) {
-    case "completed":
-      return MediaStatusEnum.Finished;
-    case "releasing":
-      return MediaStatusEnum.Releasing;
-    case "cancelled":
-      return MediaStatusEnum.Cancelled;
-    case "hiatus":
-      return MediaStatusEnum.Hiatus;
-    case "not_yet_released":
-      return MediaStatusEnum.Not_yet_released;
-  }
-  return undefined;
-};
-
-const mapCountryToMediaCountry = (country: string): string | undefined => {
-  switch (country) {
-    case "jp":
-      return "JP";
-    case "kr":
-      return "KR";
-    case "cn":
-      return "CN";
-    case "tw":
-      return "TW";
-  }
-  return undefined;
-};
-
-const useBrowse = (options: UseBrowseOptions) => {
-
-
-  const fetcher = async (key: [string, number, UseBrowseOptions]) => {
-    const [_key, page, _options] = key;
-
-    const {
-      format,
-      genres = [],
-      keyword,
-      sort,
-      limit = 20,
-      tags = [],
-      country,
-      status,
-      isAdult,
-      year,
-      type,
-    } = _options;
-
-
+  const fetcher = async (
+    _key: any,
+    _options: UseCharacterBrowseOptions,
+    page: number,
+  ) => {
     try {
-      const mappedSort = sort
-        ? mapSortToMediaSort(sort)
-        : MediaSortEnum.Popularity;
-
-
-      let mappedFormat: MediaFormat | undefined;
-      if (format && typeof format === 'string') {
-        mappedFormat = mapTypeToMediaFormat(format);
-      } else if (type) {
-        mappedFormat = mapTypeToMediaFormat(type);
-      } else {
-        mappedFormat = format as MediaFormat | undefined;
-      }
-
-      const mappedCountry = country ? mapCountryToMediaCountry(country) : undefined;
-
-      // Handle status mapping - convert string to enum if needed
-      let mappedStatus: MediaStatus | undefined;
-      if (status && typeof status === 'string') {
-        mappedStatus = mapStatusToMediaStatus(status);
-      } else {
-        mappedStatus = status as MediaStatus | undefined;
-      }
-
-      console.log("Fetching manga with options:", {
-        type: MediaType.Manga,
-        format: mappedFormat,
+      console.log("Fetching characters with options:", {
         perPage: limit,
-        countryOfOrigin: mappedCountry,
-        sort: [mappedSort],
-        status: mappedStatus,
-        year: year,
+        sort: [sort || CharacterSortEnum.Favourites],
         page,
-        ...(tags.length && { tag_in: tags }),
-        ...(genres.length && { genre_in: genres }),
         ...(keyword && { search: keyword }),
-        isAdult: isAdult || genres.includes("Hentai") || genres.includes("Ecchi"),
+        isAdult,
       });
 
-      const result = await getPageMedia({
-        type: MediaType.Manga,
-        format: mappedFormat,
+      const result = await getPageCharacters({
         perPage: limit,
-        countryOfOrigin: mappedCountry,
-        sort: [mappedSort],
-        status: mappedStatus,
-        year: year,
-        page: page,
-        ...(tags.length && { tag_in: tags }),
-        ...(genres.length && { genre_in: genres }),
-        ...(keyword && { search: keyword }),
-        isAdult:
-          isAdult || genres.includes("Hentai") || genres.includes("Ecchi"),
-      }
-      );
+        // sort: [sort || CharacterSortEnum.Favourites],
+        page,
+        // ...(keyword && { search: keyword }),
+        // isAdult,
+      });
+
+      console.log("AniList Characters API response:", result);
       return result;
     } catch (error) {
-      console.error("Error fetching manga from AniList:", error);
+      console.error("Error fetching characters from AniList:", error);
       throw error;
     }
   };
@@ -202,4 +74,4 @@ const useBrowse = (options: UseBrowseOptions) => {
   };
 };
 
-export default useBrowse;
+export default useBrowseCharacters;
