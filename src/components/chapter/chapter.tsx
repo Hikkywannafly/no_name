@@ -8,6 +8,7 @@ import Loading from "@/components/shared/loading";
 import { Button } from "@/components/ui/button";
 import { useChapter } from "@/context/useChapter";
 import { ChevronLeft, ChevronRight, Maximize, Settings } from "lucide-react";
+import Link from "next/link";
 import { memo, useCallback, useEffect, useRef } from "react";
 interface ChapterProps {
   mangaId: string;
@@ -260,11 +261,10 @@ export const Chapter = memo(function Chapter(props: ChapterProps) {
   return (
     <div
       ref={readerRef}
-      className={`relative min-h-screen text-white ${
-        settings.readingMode === "vertical"
-          ? "overflow-y-auto"
-          : "overflow-hidden"
-      }`}
+      className={`relative min-h-screen text-white ${settings.readingMode === "vertical"
+        ? "overflow-y-auto"
+        : "overflow-hidden"
+        }`}
     >
       {/* Image Preloader */}
       <ImagePreloader source={source} />
@@ -289,14 +289,17 @@ export const Chapter = memo(function Chapter(props: ChapterProps) {
           <div className="pointer-events-auto absolute top-0 right-0 left-0 bg-gradient-to-b from-black/80 to-transparent p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-white hover:bg-white/20"
-                >
-                  <ChevronLeft className="mr-1 h-4 w-4" />
-                  Quay về
-                </Button>
+                <Link href={`/manga/${anilistId}/${chapters[0]?.name}`}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-white hover:bg-white/20"
+                  >
+                    <ChevronLeft className="mr-1 h-4 w-4" />
+                    Quay về
+                  </Button>
+                </Link>
+
                 <span className="text-gray-300 text-sm">
                   {chapters[0]?.name} • {currentChapterInfo?.title}
                 </span>
@@ -329,8 +332,8 @@ export const Chapter = memo(function Chapter(props: ChapterProps) {
             mangaId={mangaId}
             sourceId={source}
             currentChapterId={chapterId}
-            // nextChapter={props.nextChapter}
-            // prevChapter={props.prevChapter}
+          // nextChapter={props.nextChapter}
+          // prevChapter={props.prevChapter}
           />
 
           {/* Reader Controls for non-vertical modes */}
@@ -354,7 +357,7 @@ export const Chapter = memo(function Chapter(props: ChapterProps) {
       {/* Settings Dialog */}
       <ReaderSettings
         settings={settings}
-        onSettingsChange={() => {}}
+        onSettingsChange={() => { }}
         onClose={() => setShowSettings(false)}
         isOpen={showSettings}
       />

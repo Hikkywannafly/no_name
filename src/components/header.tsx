@@ -4,7 +4,7 @@ import HamburgerMenu from "@/components/icons/HamburgerMenu";
 import DropDown from "@/components/shared/dropDown";
 import { GENRES_COMICS, RANKING_COMICS } from "@/constants";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BsCaretDownFill } from "react-icons/bs";
 import WideContainer from "./layout/wideLayout";
 
@@ -13,6 +13,8 @@ type NavItemProps = {
 };
 
 const NavItem = ({ label }: NavItemProps) => (
+
+
   <li className="">
     <div className="flex cursor-pointer items-center whitespace-nowrap font-bold opacity-80 transition-all duration-300 hover:text-highlight">
       {label}
@@ -26,6 +28,14 @@ const Header = () => {
   //   ranking: boolean;
   // }>({ genre: false, ranking: false });
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isTop, setIsTop] = useState(true);
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsTop(window.scrollY === 0);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // const handleDropdown = useCallback((key: "genre" | "ranking") => {
   //   setDropdown((prev) => ({ ...prev, [key]: !prev[key] }));
@@ -37,7 +47,7 @@ const Header = () => {
 
   return (
     <React.Fragment>
-      <header className="fixed top-0 left-0 z-[999] w-full bg-gradient-to-b from-black/60 via-black/40 to-transparent p-4 px-2 transition duration-500 ">
+      <header className={`fixed top-0 left-0 z-[999] w-full bg-gradient-to-b from-black/60 via-black/40 to-transparent p-4 px-2 transition duration-500 ${isTop ? "bg-transparent" : "bg-gray-00/50 backdrop-blur-sm"}`}>
         <WideContainer classNames="mx-auto flex h-full items-center justify-between ">
           <div className="flex items-center ">
             <button
@@ -135,7 +145,7 @@ const Header = () => {
                 options={GENRES_COMICS}
                 show={true}
                 isMore={false}
-                onClose={() => {}}
+                onClose={() => { }}
               />
             </div>
             <div className="py-2">
@@ -146,7 +156,7 @@ const Header = () => {
                 options={RANKING_COMICS}
                 show={true}
                 isMore={false}
-                onClose={() => {}}
+                onClose={() => { }}
               />
             </div>
             <button
