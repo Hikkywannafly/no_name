@@ -120,7 +120,7 @@ const MangaBrowseList: React.FC<MangaBrowseListProps> = ({ defaultQuery }) => {
         />
 
         {/* Results Section */}
-        <div className="mt-4">
+        <div className="">
           {/* Loading skeleton for initial load */}
           {isLoading && !data?.length && (
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7">

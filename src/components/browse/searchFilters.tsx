@@ -1,4 +1,5 @@
 "use client";
+import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, ChevronUp, Filter } from "lucide-react";
 import { useState } from "react";
 import { Badge } from "../ui/badge";
@@ -275,140 +276,146 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
           </Button>
         </div>
       )}
-
-      {/* Expandable Filter Content */}
-      {isExpanded && (
-        <div className="rounded-lg bg-input/50 p-6">
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-            {/* Left Column */}
-            <div className="space-y-6">
-              {/* Genres */}
-              <div>
-                <h3 className="mb-3 font-medium text-lg text-white">
-                  Thể loại
-                </h3>
-                <ScrollArea className="h-48 w-full">
-                  <div className="grid grid-cols-4 gap-2">
-                    {GENRES.map((genre) => (
-                      <Button
-                        key={genre}
-                        variant={
-                          selectedGenres.includes(genre) ? "default" : "outline"
-                        }
-                        size="sm"
-                        onClick={() => handleGenreToggle(genre)}
-                        className={`text-sm ${selectedGenres.includes(genre)
-                          ? " bg-black/60 text-white hover:bg-red-600"
-                          : " bg-transparent text-white "
-                          }`}
-                      >
-                        {genre}
-                      </Button>
-                    ))}
+      <AnimatePresence>
+        {isExpanded && (
+          <motion.div
+            key="filter-panel"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="overflow-hidden "
+          >
+            <div className="rounded-sm bg-input/50 p-4">
+              <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+                {/* Left Column */}
+                <div className="space-y-6">
+                  {/* Genres */}
+                  <div>
+                    <h3 className="mb-3 font-medium text-lg text-white">
+                      Thể loại
+                    </h3>
+                    <ScrollArea className="h-48 w-full">
+                      <div className="grid grid-cols-4 gap-2">
+                        {GENRES.map((genre) => (
+                          <Button
+                            key={genre}
+                            variant={
+                              selectedGenres.includes(genre) ? "default" : "outline"
+                            }
+                            size="sm"
+                            onClick={() => handleGenreToggle(genre)}
+                            className={`text-sm ${selectedGenres.includes(genre)
+                              ? " bg-black/60 text-white hover:bg-red-600"
+                              : " bg-transparent text-white "
+                              }`}
+                          >
+                            {genre}
+                          </Button>
+                        ))}
+                      </div>
+                    </ScrollArea>
                   </div>
-                </ScrollArea>
+
+                </div>
+
+                {/* Right Column */}
+                <div className="grid grid-flow-col grid-cols-1 gap-4 lg:grid-rows-3">
+
+                  <div>
+                    <h3 className="mb-3 font-medium text-lg text-white">Sắp xếp</h3>
+                    <Select value={selectedSort} onValueChange={handleSortChange}>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Chọn cách sắp xếp" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {SORT_OPTIONS.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Format */}
+                  <div>
+                    <h3 className="mb-3 font-medium text-lg text-white">Định dạng</h3>
+                    <Select value={selectedFormat} onValueChange={handleFormatChange}>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Chọn định dạng" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {FORMAT_OPTIONS.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <h3 className="mb-3 font-medium text-lg text-white">
+                      Trạng thái phát hành
+                    </h3>
+                    <Select value={selectedStatus} onValueChange={handleStatusChange}>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Chọn trạng thái" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {STATUS_OPTIONS.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
+
+                    <h3 className="mb-3 font-medium text-lg text-white">
+                      Quốc gia
+                    </h3>
+                    <Select value={selectedCountry} onValueChange={handleCountryChange}>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Chọn quốc gia" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {COUNTRY_OPTIONS.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <h3 className="mb-3 font-medium text-lg text-white">Năm phát hành</h3>
+                    <Select
+                      value={selectedYear?.toString() || ""}
+                      onValueChange={handleYearChange}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Chọn năm" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {YEAR_OPTIONS.map((year) => (
+                          <SelectItem key={year} value={year.toString()}>
+                            {year}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
               </div>
-
-              {/* Sort */}
-
             </div>
-
-            {/* Right Column */}
-            <div className="grid grid-flow-col grid-cols-1 gap-4 lg:grid-rows-3">
-
-              <div>
-                <h3 className="mb-3 font-medium text-lg text-white">Sắp xếp</h3>
-                <Select value={selectedSort} onValueChange={handleSortChange}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Chọn cách sắp xếp" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {SORT_OPTIONS.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Format */}
-              <div>
-                <h3 className="mb-3 font-medium text-lg text-white">Định dạng</h3>
-                <Select value={selectedFormat} onValueChange={handleFormatChange}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Chọn định dạng" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {FORMAT_OPTIONS.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <h3 className="mb-3 font-medium text-lg text-white">
-                  Trạng thái phát hành
-                </h3>
-                <Select value={selectedStatus} onValueChange={handleStatusChange}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Chọn trạng thái" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {STATUS_OPTIONS.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
-
-                <h3 className="mb-3 font-medium text-lg text-white">
-                  Quốc gia
-                </h3>
-                <Select value={selectedCountry} onValueChange={handleCountryChange}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Chọn quốc gia" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {COUNTRY_OPTIONS.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <h3 className="mb-3 font-medium text-lg text-white">Năm phát hành</h3>
-                <Select
-                  value={selectedYear?.toString() || ""}
-                  onValueChange={handleYearChange}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Chọn năm" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {YEAR_OPTIONS.map((year) => (
-                      <SelectItem key={year} value={year.toString()}>
-                        {year}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-      )
-      }
+          </motion.div>
+        )
+        }
+      </AnimatePresence>
     </div >
   );
 };
