@@ -2,12 +2,14 @@
 
 import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { Button } from "@/components/ui/button"
-import { FadeCarousel } from "@/components/ui/carousel"
+import { FadeCarousel, useCarousel } from "@/components/ui/carousel"
 import { Skeleton } from "@/components/ui/skeleton"
 import useMedia from "@/hooks/Anilist/useMedia"
+import { cn } from "@/lib/utils"
 import type { Media } from "@/types/anilist"
 import { MediaSort, MediaStatus, MediaType } from "@/types/anilist"
 import { getTitle } from "@/utils"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
@@ -21,6 +23,7 @@ interface MangaSlideProps {
 }
 
 function MangaSlide({ manga, isFirst, isActive }: MangaSlideProps) {
+  const { goToPrevious, goToNext, isTransitioning } = useCarousel()
   const status =
     manga.status === MediaStatus.Finished
       ? "Hoàn thành"
@@ -47,11 +50,11 @@ function MangaSlide({ manga, isFirst, isActive }: MangaSlideProps) {
         <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-transparent to-black/70" />
 
         {/* Content Container */}
-        <WideContainer classNames="absolute inset-0 mt-20 flex items-center mx-auto">
-          <div className="w-full">
+        <WideContainer classNames="mt-20 flex items-center mx-auto relative">
+          <div className="container w-full ">
             <Link
               href={`/manga/${manga.id}/${getTitle(manga, "vi")}`}
-              className="mx-auto flex max-w-[1200px] flex-row items-start"
+              className="item mx-auto flex max-w-[1400px] flex-row sm:items-start"
             >
               {/* Manga Cover */}
               <div
@@ -74,19 +77,19 @@ function MangaSlide({ manga, isFirst, isActive }: MangaSlideProps) {
               </div>
 
               <div
-                className={`ml-6 flex transform flex-col justify-between gap-4 text-center transition-all delay-200 duration-700 ease-out sm:text-left ${isActive ? "translate-y-0 opacity-100 sm:translate-x-0" : "translate-y-4 opacity-0 sm:translate-x-4"
+                className={`ml-6 flex transform flex-col gap-4 transition-all delay-200 duration-700 ease-out sm:justify-between sm:text-left ${isActive ? "translate-y-0 opacity-100 sm:translate-x-0" : "translate-y-4 opacity-0 sm:translate-x-4"
                   }`}
               >
-                <h2 className="line-clamp-2 font-bold text-white text-xl leading-tight drop-shadow-lg lg:text-xl xl:text-2xl">
+                <h2 className="font-bold text-white text-xl leading-tight drop-shadow-lg sm:line-clamp-2 lg:text-xl xl:text-2xl">
                   {getTitle(manga, "vi")}
                 </h2>
 
                 {/* Native Title Display */}
                 {manga.title?.userPreferred && (
-                  <p className="font-medium text-sm text-white/90">{manga.title.userPreferred}</p>
+                  <p className="hidden font-medium text-sm text-white/90 sm:block">{manga.title.userPreferred}</p>
                 )}
 
-                <div className="flex flex-wrap gap-2">
+                <div className="hidden flex-wrap gap-2 sm:flex">
                   {manga.genres?.map((genre, index) => (
                     <TagItem key={index} className="rounded-sm bg-black/50 px-3 py-1 text-sm transition-colors">
                       {genre}
@@ -94,7 +97,7 @@ function MangaSlide({ manga, isFirst, isActive }: MangaSlideProps) {
                   ))}
                 </div>
 
-                <div className="flex flex-wrap items-center gap-3 text-sm text-white/80">
+                <div className="hidden flex-wrap items-center gap-3 text-sm text-white/80 sm:flex">
                   {manga.status && (
                     <div className="flex items-center gap-1">
                       <span className="font-medium">{status}</span>
@@ -113,18 +116,40 @@ function MangaSlide({ manga, isFirst, isActive }: MangaSlideProps) {
                     </div>
                   )}
                 </div>
-                <div >
+
+                <div>
                   <Button className="border-1 border-black bg-[#18000e] px-6 py-2 font-bold text-sm text-white shadow-[3px_3px_0px_rgba(0,0,0,1)] transition-all duration-200 hover:bg-[#18000e]/80 hover:shadow-[5px_5px_0px_rgba(0,0,0,1)]">
                     <p className="tracking-wide">Xem thông tin</p>
                   </Button>
                 </div>
-
               </div>
             </Link>
           </div>
+          <div className=" right-0 bottom-4 z-20 flex flex-col gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={goToPrevious}
+              disabled={isTransitioning}
+              className="h-10 w-10 rounded-sm bg-black/30 text-white backdrop-blur-sm transition-all hover:bg-black/50"
+            >
+              <ChevronLeft className="h-6 w-6" />
+              <span className="sr-only">Previous slide</span>
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={goToNext}
+              disabled={isTransitioning}
+              className="h-10 w-10 rounded-sm bg-black/30 text-white backdrop-blur-sm transition-all hover:bg-black/50"
+            >
+              <ChevronRight className="h-6 w-6" />
+              <span className="sr-only">Next slide</span>
+            </Button>
+          </div>
         </WideContainer>
-      </div >
-    </div >
+      </div>
+    </div>
   )
 }
 
@@ -132,6 +157,33 @@ export function CarouselSkeleton() {
   return (
     <div className="h-[400px] overflow-hidden rounded-lg bg-black/50">
       <Skeleton className="h-full w-full" />
+    </div>
+  )
+}
+
+function SlideIndicators({
+  total,
+  current,
+  onSelect,
+}: {
+  total: number
+  current: number
+  onSelect: (index: number) => void
+}) {
+  return (
+    <div className="-translate-x-1/2 -bottom-5 absolute left-1/2 z-10 flex transform gap-2">
+      {Array.from({ length: total }).map((_, index) => (
+        <button
+          type="button"
+          key={index}
+          onClick={() => onSelect(index)}
+          className={cn(
+            "h-2 rounded-full transition-all duration-300 ease-out",
+            index === current ? "w-8 bg-white" : "w-2 bg-white/50 hover:bg-white/70",
+          )}
+          aria-label={`Go to slide ${index + 1}`}
+        />
+      ))}
     </div>
   )
 }
@@ -146,7 +198,7 @@ export default function MangaCarousel() {
   } = useMedia({
     type: MediaType.Manga,
     sort: [MediaSort.Trending_desc, MediaSort.Popularity_desc],
-    countryOfOrigin: "JP",
+    // countryOfOrigin: "JP",
     perPage: 10,
   })
 
@@ -177,7 +229,7 @@ export default function MangaCarousel() {
   return (
     <div className="-mx-[50vw] relative right-1/2 left-1/2 w-screen">
       <FadeCarousel
-        autoplay={true}
+        autoplay={false}
         autoplayDelay={6000}
         className="h-[300px] sm:h-[350px]"
         onSlideChange={setCurrentSlide}
@@ -186,6 +238,7 @@ export default function MangaCarousel() {
           <MangaSlide key={manga.id} manga={manga} isFirst={index === 0} isActive={index === currentSlide} />
         ))}
       </FadeCarousel>
+      <SlideIndicators total={mangas.length} current={currentSlide} onSelect={setCurrentSlide} />
     </div>
   )
 }
