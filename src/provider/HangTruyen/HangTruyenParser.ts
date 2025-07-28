@@ -258,7 +258,7 @@ export class HangTruyenParser {
             throw new Error("Failed to extract chapter pages");
         }
 
-        const mangaName = chapterDetail.manga?.name || "";
+        const mangaName = chapterDetail.manga.title || "";
         const chapterName = chapterDetail.name || "";
 
         return chapterDetail.images
@@ -273,6 +273,7 @@ export class HangTruyenParser {
                 drmData: null,
                 width: null,
                 height: null,
+                reference: `https://${this.config.domain[0]}`,
                 fileSize: null,
                 createdAt: new Date(),
                 extraData: {},
@@ -308,14 +309,14 @@ export class HangTruyenParser {
                 const chapterSlug = chapter.slug || "";
                 const chapterUrl = `${mangaSlug}/${chapterSlug}`;
                 return {
-                    id: chapterUrl,
+                    id: encodeURIComponent(chapterUrl),
                     title: chapter.name || null,
                     name: mangaDetail.title || "",
                     number: chapter.index || 0,
                     volume: 0,
                     language: "vi",
                     sourceName: this.config.source,
-                    sourceId: mangaSlug,
+                    sourceId: encodeURIComponent(mangaSlug),
                     scanlator: null,
                     createdAt: chapter.releasedAt ? new Date(chapter.releasedAt).toLocaleDateString("vi-VN") : undefined,
                     updatedAt: undefined,
@@ -386,4 +387,4 @@ export class HangTruyenParser {
             .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
             .join(" ");
     }
-} 
+}

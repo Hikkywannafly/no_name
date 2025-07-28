@@ -262,8 +262,8 @@ export const Chapter = memo(function Chapter(props: ChapterProps) {
     <div
       ref={readerRef}
       className={`relative min-h-screen text-white ${settings.readingMode === "vertical"
-          ? "overflow-y-auto"
-          : "overflow-hidden"
+        ? "overflow-y-auto"
+        : "overflow-hidden"
         }`}
     >
       {/* Image Preloader */}
@@ -289,7 +289,7 @@ export const Chapter = memo(function Chapter(props: ChapterProps) {
           <div className="pointer-events-auto absolute top-0 right-0 left-0 bg-gradient-to-b from-black/80 to-transparent p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Link href={`/manga/${anilistId}/${chapters[0]?.name}`}>
+                <Link href={`/manga/${anilistId}/${chapters[0].name ? chapters[0].name : chapters[0].title}`}>
                   <Button
                     variant="ghost"
                     size="sm"
@@ -301,7 +301,7 @@ export const Chapter = memo(function Chapter(props: ChapterProps) {
                 </Link>
 
                 <span className="text-gray-300 text-sm">
-                  {chapters[0]?.name} • {currentChapterInfo?.title}
+                  {chapters[0].name} • {currentChapterInfo?.title}
                 </span>
               </div>
 
