@@ -56,7 +56,7 @@
     "@radix-ui/react-slider": "^1.3.5",
     "@radix-ui/react-slot": "^1.2.2",
     "@radix-ui/react-switch": "^1.2.5",
-    "@serwist/next": "^9.0.13",
+    "@serwist/next": "^9.1.1",
     "@tiptap/extension-mention": "^2.25.1",
     "@tiptap/extension-placeholder": "^2.25.1",
     "@tiptap/extension-underline": "^2.25.0",
