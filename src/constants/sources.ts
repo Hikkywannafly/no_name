@@ -17,6 +17,22 @@ export const SOURCE_CONFIGS: SourceConfig[] = [
       supportsDRM: true,
     },
   },
+  {
+    name: "hangtruyen",
+    displayName: "Hang Truyện",
+    baseUrl: "https://hangtruyen.org",
+    isActive: true,
+    priority: 9,
+    supportedLanguages: ["vi"],
+    features: {
+      hasBanner: false,
+      hasLargeCover: true,
+      hasRating: true,
+      hasViewCount: false,
+      hasLikeCount: false,
+      supportsDRM: false,
+    },
+  },
 
   {
     name: "nettruyen",
@@ -98,6 +114,12 @@ export const sourceInfo = {
     baseUrl: "cuutruyen.net",
     logo: "/logos/cuutruyen.png",
     description: "Nơi lưu trữ và đọc truyện tranh miễn phí.",
+  },
+  hangtruyen: {
+    name: "source3",
+    baseUrl: "hangtruyen.org",
+    logo: "/logos/hangtruyen.png",
+    description: "Kho truyện tranh đa dạng với chất lượng cao.",
   },
   nettruyen: {
     name: "Net Truyện",

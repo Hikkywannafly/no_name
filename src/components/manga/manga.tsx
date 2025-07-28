@@ -20,6 +20,7 @@ import { useAnilist } from "@/context/useAnilist";
 // import useMediaDetails from "@/hooks/Anilist/useMediaDetail";
 // import { MediaType } from "@/types/anilist";
 import useCuuTruyenData from "@/hooks/CuuTruyen/useCuuTruyenData";
+import useHangTruyenData from "@/hooks/HangTruyen/useHangTruyenData";
 import useTruyenQQData from "@/hooks/TruyenQQ/useTruyenQQData";
 import type { Media } from "@/types/anilist";
 // import type { UPage } from "@/types/manga";
@@ -61,7 +62,9 @@ export const Manga = memo(function Manga(props: MangaProps) {
     manga?.title?.userPreferred || "",
     viTitles[1] ? viTitles[1] : viTitles[0],
   );
-
+  const { data: hangTruyenData, isLoading: hangTruyenLoading } = useHangTruyenData(
+    manga?.title?.userPreferred || ""
+  );
   // const [prefetchedChapters, setPrefetchedChapters] = useState<Record<string, UPage[]>>({});
 
   // const prefetchChapters = useCallback(async () => {
@@ -113,11 +116,19 @@ export const Manga = memo(function Manga(props: MangaProps) {
     () =>
       [
         {
+          label: "Hang Truyen",
+          value: "hangtruyen",
+          description: hangTruyenData?.description || "",
+          loading: hangTruyenLoading,
+          language: "vi",
+        },
+        {
           label: "Anilist (English)",
           value: "anilist-en",
           description: manga?.description || "",
           language: "en",
         },
+
         {
           label: "CuuTruyen",
           value: "cuutruyen",
@@ -139,6 +150,8 @@ export const Manga = memo(function Manga(props: MangaProps) {
       cuuTruyenLoading,
       truyenQQData?.description,
       truyenQQLoading,
+      hangTruyenData?.description,
+      hangTruyenLoading,
     ],
   );
   // console.log("truyen test", truyenQQData.chapters, cuuTruyenData.chapters);
@@ -160,6 +173,12 @@ export const Manga = memo(function Manga(props: MangaProps) {
   const chapterSources = useMemo(
     () => [
       {
+        label: "Hang Truyen",
+        value: "hangtruyen",
+        chapters: hangTruyenData.chapters || [],
+        loading: hangTruyenLoading,
+      },
+      {
         label: "CuuTruyen",
         value: "cuutruyen",
         chapters: cuuTruyenData.chapters || [],
@@ -171,12 +190,15 @@ export const Manga = memo(function Manga(props: MangaProps) {
         chapters: truyenQQData.chapters || [],
         loading: truyenQQLoading,
       },
+
     ],
     [
       cuuTruyenData.chapters,
       cuuTruyenLoading,
       truyenQQData.chapters,
       truyenQQLoading,
+      hangTruyenData.chapters,
+      hangTruyenLoading,
     ],
   );
   const defaultChapterSource = useMemo(

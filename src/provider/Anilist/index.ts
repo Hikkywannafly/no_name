@@ -165,7 +165,6 @@ export const getMediaDetails = async (
       mangaList = englishData?.data ?? [];
     }
 
-    console.log("MangaDex Manga List:", mangaList);
   } catch (error) {
     console.error("Lỗi khi fetch MangaDex:", error);
   }

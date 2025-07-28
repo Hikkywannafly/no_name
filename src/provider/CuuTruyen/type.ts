@@ -68,6 +68,7 @@ export interface MangaListFilter {
   query?: string | null;
   tags?: Set<MangaTag>;
   states?: Set<MangaState>;
+  types?: Set<string>;
 }
 
 export interface MangaListFilterOptions {
@@ -77,6 +78,8 @@ export interface MangaListFilterOptions {
 
 export interface MangaListFilterCapabilities {
   isSearchSupported: boolean;
+  isMultipleTagsSupported?: boolean;
+  isSearchWithFiltersSupported?: boolean;
 }
 
 export interface ParserConfig {
