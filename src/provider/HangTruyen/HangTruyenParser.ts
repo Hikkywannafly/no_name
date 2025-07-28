@@ -204,13 +204,13 @@ export class HangTruyenParser {
                     sourceName: this.config.source,
                     sourceId: encodeURIComponent(mangaSlug.trim()),
                     scanlator: null,
-                    createdAt: chapter.releasedAt,
+                    createdAt: chapter.releasedAt ? new Date(chapter.releasedAt).toLocaleDateString("vi-VN") : undefined,
                     updatedAt: undefined,
                     extraData: {},
                 };
             })
             .reverse();
-        console.log("chapters test", chapters);
+
         return {
             id: this.generateUid(mangaUrl),
             title,
@@ -283,7 +283,7 @@ export class HangTruyenParser {
         const url = `https://${this.config.domain[0]}${decodeURIComponent(mangaSlug).trim()}`;
         const res = await this.http.get(url);
         const $ = cheerio.load(res.data);
-        console.log("mangaDetail test", url);
+
         // Extract manga detail from script tag
         const script = $("script:contains('const mangaDetail')").html();
         let mangaDetail: any = null;
@@ -317,7 +317,7 @@ export class HangTruyenParser {
                     sourceName: this.config.source,
                     sourceId: mangaSlug,
                     scanlator: null,
-                    createdAt: chapter.releasedAt,
+                    createdAt: chapter.releasedAt ? new Date(chapter.releasedAt).toLocaleDateString("vi-VN") : undefined,
                     updatedAt: undefined,
                     extraData: {},
                 };
