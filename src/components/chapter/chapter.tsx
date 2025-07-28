@@ -301,7 +301,7 @@ export const Chapter = memo(function Chapter(props: ChapterProps) {
                 </Link>
 
                 <span className="text-gray-300 text-sm">
-                  {chapters[0].name} • {currentChapterInfo?.title}
+                  {chapters[0]?.name} • {currentChapterInfo?.title}
                 </span>
               </div>
 

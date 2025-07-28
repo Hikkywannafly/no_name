@@ -253,12 +253,11 @@ export class HangTruyenParser {
                 }
             }
         }
-
         if (!chapterDetail || !chapterDetail.images) {
             throw new Error("Failed to extract chapter pages");
         }
 
-        const mangaName = chapterDetail.manga.title || "";
+        const mangaName = $("h1.manga-name a").text().trim() || "";
         const chapterName = chapterDetail.name || "";
 
         return chapterDetail.images
