@@ -18,7 +18,6 @@ export async function GET(request: NextRequest) {
         source: sourceInfo.hangtruyen.name,
         locale: "vi",
     });
-
     try {
         const manga = await parser.getPages(name);
         return NextResponse.json({ data: manga || [] });

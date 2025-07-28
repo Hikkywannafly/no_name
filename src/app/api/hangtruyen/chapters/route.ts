@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
         source: sourceInfo.hangtruyen.name,
         locale: "vi",
     });
-
+    console.log("name test", name);
     try {
         const manga = await parser.getChapterListByMangaId(name);
         return NextResponse.json({ data: manga || [] });

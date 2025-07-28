@@ -196,15 +196,15 @@ export class HangTruyenParser {
                 const chapterSlug = chapter.slug || "";
                 const chapterUrl = `${mangaSlug}/${chapterSlug}`;
                 return {
-                    id: this.generateUid(chapterUrl),
+                    id: encodeURIComponent(chapterUrl),
                     title: chapter.name || null,
                     number: chapter.index || 0,
                     volume: 0,
                     language: "vi",
                     sourceName: this.config.source,
-                    sourceId: mangaSlug,
+                    sourceId: encodeURIComponent(mangaSlug.trim()),
                     scanlator: null,
-                    createdAt: chapter.releasedAt ? new Date(chapter.releasedAt).toISOString() : undefined,
+                    createdAt: chapter.releasedAt,
                     updatedAt: undefined,
                     extraData: {},
                 };
@@ -237,11 +237,9 @@ export class HangTruyenParser {
     }
 
     async getPages(chapterUrl: string): Promise<UPage[]> {
-        const url = `https://${this.config.domain[0]}/${chapterUrl}`;
+        const url = `https://${this.config.domain[0]}${chapterUrl}`;
         const res = await this.http.get(url);
         const $ = cheerio.load(res.data);
-        console.log("res test", url);
-        // Extract chapter detail from script tag
         const script = $("script:contains('const chapterDetail')").html();
         let chapterDetail: any = null;
 
@@ -282,10 +280,10 @@ export class HangTruyenParser {
     }
 
     async getChapterListByMangaId(mangaSlug: string): Promise<UChapter[]> {
-        const url = `https://${this.config.domain[0]}/${mangaSlug}`;
+        const url = `https://${this.config.domain[0]}${decodeURIComponent(mangaSlug).trim()}`;
         const res = await this.http.get(url);
         const $ = cheerio.load(res.data);
-
+        console.log("mangaDetail test", url);
         // Extract manga detail from script tag
         const script = $("script:contains('const mangaDetail')").html();
         let mangaDetail: any = null;
@@ -319,7 +317,7 @@ export class HangTruyenParser {
                     sourceName: this.config.source,
                     sourceId: mangaSlug,
                     scanlator: null,
-                    createdAt: chapter.releasedAt ? new Date(chapter.releasedAt).toISOString() : undefined,
+                    createdAt: chapter.releasedAt,
                     updatedAt: undefined,
                     extraData: {},
                 };

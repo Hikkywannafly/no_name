@@ -22,7 +22,10 @@ export async function fetchChapterPages(
       return await fetchApi<UPage[]>(
         `/api/truyenqq/chapter?name=${encodeURIComponent(chapterId)}`,
       );
-
+    case "source3": // HangTruyen
+      return await fetchApi<UPage[]>(
+        `/api/hangtruyen/chapter?name=${(chapterId)}`,
+      );
     default:
       return [];
   }
@@ -41,7 +44,10 @@ export async function fetchChapterList(
       return await fetchApi<UChapter[]>(
         `/api/truyenqq/chapters?name=${encodeURIComponent(mangaId)}`,
       );
-
+    case "source3": // HangTruyen
+      return await fetchApi<UChapter[]>(
+        `/api/hangtruyen/chapters?name=${mangaId}`,
+      );
     default:
       return [];
   }

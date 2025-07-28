@@ -22,7 +22,7 @@ interface ChapterProps {
 
 export const Chapter = memo(function Chapter(props: ChapterProps) {
   const { source, chapterId, anilistId, mangaId } = props;
-
+  console.log("source test", source, chapterId, anilistId, mangaId);
   const {
     chapters,
     chapterList,
@@ -261,11 +261,10 @@ export const Chapter = memo(function Chapter(props: ChapterProps) {
   return (
     <div
       ref={readerRef}
-      className={`relative min-h-screen text-white ${
-        settings.readingMode === "vertical"
+      className={`relative min-h-screen text-white ${settings.readingMode === "vertical"
           ? "overflow-y-auto"
           : "overflow-hidden"
-      }`}
+        }`}
     >
       {/* Image Preloader */}
       <ImagePreloader source={source} />
@@ -333,8 +332,8 @@ export const Chapter = memo(function Chapter(props: ChapterProps) {
             mangaId={mangaId}
             sourceId={source}
             currentChapterId={chapterId}
-            // nextChapter={props.nextChapter}
-            // prevChapter={props.prevChapter}
+          // nextChapter={props.nextChapter}
+          // prevChapter={props.prevChapter}
           />
 
           {/* Reader Controls for non-vertical modes */}
@@ -358,7 +357,7 @@ export const Chapter = memo(function Chapter(props: ChapterProps) {
       {/* Settings Dialog */}
       <ReaderSettings
         settings={settings}
-        onSettingsChange={() => {}}
+        onSettingsChange={() => { }}
         onClose={() => setShowSettings(false)}
         isOpen={showSettings}
       />

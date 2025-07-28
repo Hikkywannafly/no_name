@@ -18,9 +18,9 @@ export async function generateMetadata({
   try {
     const { "anilist-id": anilistIdParam } = await params;
     // const mangaIdParam = anilistIdParam.split("-")[1];
-    const mangaName = anilistIdParam.split("-")[0];
-
-    const mangaId = Number(mangaName);
+    const [anilistId, ...rest] = anilistIdParam.split("-");
+    const mangaName = rest.join("-");
+    const mangaId = Number(anilistId);
 
     const anilistData = await getMediaDetails({
       id: mangaId,
@@ -65,8 +65,8 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
   const chapterId = resolvedParams["chapter-id"];
   const source = resolvedParams["source-id"];
   const aniID = resolvedParams["anilist-id"];
-  const mangaId = aniID.split("-")[1];
-  const anilistId = aniID.split("-")[0];
+  const [anilistId, ...rest] = aniID.split("-");
+  const mangaId = rest.join("-");
   return (
     <SWRConfig
       value={{
