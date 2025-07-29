@@ -15,7 +15,7 @@ const WideContainer = React.forwardRef<HTMLDivElement, WideContainerProps>(
     return (
       <div
         ref={ref}
-        className={`mx-auto max-w-full px-2 sm:px-8 ${ultraWide ? "w-[1600px] sm:px-16" : "lg:max-w-[1200px] xl:max-w-[1400px] "} ${classNames || ""}`}
+        className={`mx-auto max-w-full px-2 sm:px-8 ${ultraWide ? "w-[1600px] sm:px-16" : "lg:max-w-[1200px] xl:max-w-[1200px] "} ${classNames || ""}`}
       >
         {title && (
           <Label className="mb-4 font-semibold text-xl ">{title}</Label>
