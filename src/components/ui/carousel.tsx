@@ -94,6 +94,73 @@ export function FadeCarousel({
     return () => window.removeEventListener("keydown", handleKeyDown)
   }, [goToPrevious, goToNext])
 
+  // --- Swipe/Drag logic ---
+  const dragState = React.useRef<{
+    startX: number | null
+    lastX: number | null
+    dragging: boolean
+    isTouch: boolean
+  }>({ startX: null, lastX: null, dragging: false, isTouch: false })
+
+  // Threshold (px) to trigger slide change
+  const SWIPE_THRESHOLD = 50
+
+  // Touch events
+  const onTouchStart = (e: React.TouchEvent) => {
+    if (isTransitioning) return
+    dragState.current = {
+      startX: e.touches[0].clientX,
+      lastX: e.touches[0].clientX,
+      dragging: true,
+      isTouch: true,
+    }
+  }
+  const onTouchMove = (e: React.TouchEvent) => {
+    if (!dragState.current.dragging) return
+    dragState.current.lastX = e.touches[0].clientX
+  }
+  const onTouchEnd = () => {
+    if (!dragState.current.dragging || dragState.current.startX === null || dragState.current.lastX === null) return
+    const deltaX = dragState.current.lastX - dragState.current.startX
+    if (Math.abs(deltaX) > SWIPE_THRESHOLD) {
+      if (deltaX < 0) goToNext()
+      else goToPrevious()
+    }
+    dragState.current = { startX: null, lastX: null, dragging: false, isTouch: false }
+  }
+
+  // Mouse events
+  const onMouseDown = (e: React.MouseEvent) => {
+    if (isTransitioning) return
+    dragState.current = {
+      startX: e.clientX,
+      lastX: e.clientX,
+      dragging: true,
+      isTouch: false,
+    }
+    // Prevent image drag
+    e.preventDefault()
+  }
+  const onMouseMove = (e: React.MouseEvent) => {
+    if (!dragState.current.dragging) return
+    dragState.current.lastX = e.clientX
+  }
+  const onMouseUp = () => {
+    if (!dragState.current.dragging || dragState.current.startX === null || dragState.current.lastX === null) return
+    const deltaX = dragState.current.lastX - dragState.current.startX
+    if (Math.abs(deltaX) > SWIPE_THRESHOLD) {
+      if (deltaX < 0) goToNext()
+      else goToPrevious()
+    }
+    dragState.current = { startX: null, lastX: null, dragging: false, isTouch: false }
+  }
+  const onMouseLeave = () => {
+    // If mouse leaves while dragging, reset
+    if (dragState.current.dragging) {
+      dragState.current = { startX: null, lastX: null, dragging: false, isTouch: false }
+    }
+  }
+
   const contextValue = React.useMemo(
     () => ({
       goToPrevious,
@@ -107,14 +174,21 @@ export function FadeCarousel({
     <CarouselContext.Provider value={contextValue}>
       <div
         className={cn("relative overflow-hidden", className)}
+        onMouseDown={onMouseDown}
+        onMouseMove={onMouseMove}
+        onMouseUp={onMouseUp}
+        onMouseLeave={() => {
+          onMouseLeave();
+          if (autoplay) {
+            autoplayRef.current = setInterval(goToNext, autoplayDelay)
+          }
+        }}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
         onMouseEnter={() => {
           if (autoplayRef.current) {
             clearInterval(autoplayRef.current)
-          }
-        }}
-        onMouseLeave={() => {
-          if (autoplay) {
-            autoplayRef.current = setInterval(goToNext, autoplayDelay)
           }
         }}
       >

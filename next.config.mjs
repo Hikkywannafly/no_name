@@ -43,7 +43,7 @@ export default withSerwist({
         hostname: "s4.anilist.co",
         port: "",
         pathname: "/file/anilistcdn/**",
-      },
+      }
     ],
   },
 });

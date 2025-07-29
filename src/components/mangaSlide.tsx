@@ -35,14 +35,21 @@ function MangaSlide({ manga, isFirst, isActive }: MangaSlideProps) {
     <div className="relative h-full w-full">
       {/* Background Image Container */}
       <div className="relative h-[300px] w-full overflow-hidden sm:h-[350px]">
-        {manga.bannerImage && (
+        {manga.bannerImage ? (
           <Image
             fill
-            src={manga.bannerImage || "/placeholder.svg"}
-            alt="Fallback Banner"
+            src={manga.bannerImage}
+            alt="Banner"
             className="object-cover object-center"
             priority={isFirst}
             sizes="100vw"
+          />
+        ) : (
+          <div
+            className="absolute inset-0 h-full w-full"
+            style={{
+              background: `linear-gradient(135deg, ${manga.coverImage?.color || "#5a0035"} 0%, #5a0035 100%)`,
+            }}
           />
         )}
         {/* Gradient Overlays */}
@@ -77,10 +84,10 @@ function MangaSlide({ manga, isFirst, isActive }: MangaSlideProps) {
               </div>
 
               <div
-                className={`ml-6 flex transform flex-col gap-4 transition-all delay-200 duration-700 ease-out sm:justify-between sm:text-left ${isActive ? "translate-y-0 opacity-100 sm:translate-x-0" : "translate-y-4 opacity-0 sm:translate-x-4"
+                className={`flex transform flex-col gap-4 transition-all delay-200 duration-700 ease-out sm:ml-6 sm:justify-between sm:text-left ${isActive ? "translate-y-0 opacity-100 sm:translate-x-0" : "translate-y-4 opacity-0 sm:translate-x-4"
                   }`}
               >
-                <h2 className="font-bold text-white text-xl leading-tight drop-shadow-lg sm:line-clamp-2 lg:text-xl xl:text-2xl">
+                <h2 className="line-clamp-4 font-bold text-white text-xl leading-tight drop-shadow-lg sm:line-clamp-2 lg:text-xl xl:text-2xl">
                   {getTitle(manga, "vi")}
                 </h2>
 
@@ -125,13 +132,13 @@ function MangaSlide({ manga, isFirst, isActive }: MangaSlideProps) {
               </div>
             </Link>
           </div>
-          <div className=" right-0 bottom-4 z-20 flex flex-col gap-2">
+          <div className="-bottom-9 absolute right-0 z-20 flex flex-row gap-2 px-2 sm:right-2 sm:bottom-2 sm:flex-col sm:px-4">
             <Button
               variant="ghost"
               size="icon"
               onClick={goToPrevious}
               disabled={isTransitioning}
-              className="h-10 w-10 rounded-sm bg-black/30 text-white backdrop-blur-sm transition-all hover:bg-black/50"
+              className="h-8 w-8 rounded-sm bg-black/30 text-white backdrop-blur-sm transition-all hover:bg-black/50 sm:h-10 sm:w-10"
             >
               <ChevronLeft className="h-6 w-6" />
               <span className="sr-only">Previous slide</span>
@@ -141,7 +148,7 @@ function MangaSlide({ manga, isFirst, isActive }: MangaSlideProps) {
               size="icon"
               onClick={goToNext}
               disabled={isTransitioning}
-              className="h-10 w-10 rounded-sm bg-black/30 text-white backdrop-blur-sm transition-all hover:bg-black/50"
+              className="h-8 w-8 rounded-sm bg-black/30 text-white backdrop-blur-sm transition-all hover:bg-black/50 sm:h-10 sm:w-10"
             >
               <ChevronRight className="h-6 w-6" />
               <span className="sr-only">Next slide</span>
