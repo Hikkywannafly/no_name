@@ -97,7 +97,7 @@
   "devDependencies": {
     "@commitlint/cli": "^19.7.1",
     "@commitlint/config-conventional": "^19.7.1",
-    "@tailwindcss/postcss": "^4.1.7",
+    "@tailwindcss/postcss": "^4.1.11",
     "@testing-library/jest-dom": "latest",
     "@testing-library/react": "^14.0.0",
     "@types/jest": "^29.5.0",
