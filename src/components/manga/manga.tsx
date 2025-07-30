@@ -245,13 +245,22 @@ export const Manga = memo(function Manga(props: MangaProps) {
     <div className="w-full">
       <div className="relative w-full">
         <div className="relative h-[350px] w-full">
-          <Image
-            fill
-            src={manga?.bannerImage || "/placeholder-banner.svg"}
-            alt="Manga Background"
-            unoptimized
-            className="object-cover"
-          />
+          {manga.bannerImage ? (
+            <Image
+              fill
+              src={manga?.bannerImage || "/placeholder-banner.svg"}
+              alt="Manga Background"
+              unoptimized
+              className="object-cover"
+            />
+          ) : (
+            <div
+              className="absolute inset-0 h-full w-full"
+              style={{
+                background: `linear-gradient(135deg, ${manga.coverImage?.color || "#5a0035"} 0%, #5a0035 100%)`,
+              }}
+            />
+          )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-black/60" />
         </div>
@@ -378,15 +387,15 @@ export const Manga = memo(function Manga(props: MangaProps) {
           <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-3">
             <div className="space-y-6 lg:col-span-2">
               <div className="space-y-3">
-                <h2 className="font-semibold text-xl">Tags</h2>
+                <h2 className="font-semibold text-xl">Thể loại</h2>
                 <div className="flex flex-wrap gap-2">
-                  {manga.tags?.map((tag) => (
+                  {manga.genres?.map((genre) => (
                     <TagItem
-                      key={tag.id}
+                      key={genre}
                       href="/"
                       className="rounded-sm bg-black/50 px-3 py-1 text-sm transition-colors "
                     >
-                      {tag.name}
+                      {genre}
                     </TagItem>
                   ))}
                 </div>

@@ -44,20 +44,13 @@ const Header = () => {
   // }, []);
 
   return (
+
     <React.Fragment>
       <header
-        className={`fixed top-0 left-0 z-[999] w-full bg-gradient-to-b from-black/60 via-black/40 to-transparent p-1 px-2 transition duration-500 ${isTop ? "bg-transparent" : "bg-[#5a0035]/20 backdrop-blur-sm"}`}
+        className={`fixed top-0 left-0 z-[999] w-full bg-gradient-to-b from-black/60 via-black/40 to-transparent py-2 transition duration-500 ${isTop ? "bg-transparent" : "bg-[#5a0035]/20 backdrop-blur-sm"}`}
       >
         <WideContainer classNames="mx-auto flex h-full items-center justify-between ">
           <div className="flex items-center ">
-            <button
-              className="mr-2 block md:hidden"
-              onClick={() => setIsMobileMenuOpen(true)}
-              aria-label="Open menu"
-              type="button"
-            >
-              <HamburgerMenu />
-            </button>
             <Link
               href="/"
               className="flex cursor-pointer flex-row items-center justify-center gap-2 whitespace-nowrap font-semibold text-xl opacity-80"
@@ -116,6 +109,14 @@ const Header = () => {
 
           <div className="z-30 flex gap-3 whitespace-nowrap">
             <HeaderSearch />
+            <button
+              className="mr-2 block md:hidden"
+              onClick={() => setIsMobileMenuOpen(true)}
+              aria-label="Open menu"
+              type="button"
+            >
+              <HamburgerMenu />
+            </button>
           </div>
         </WideContainer>
       </header>
@@ -179,6 +180,7 @@ const Header = () => {
             </button>
           </nav>
           <div className="flex justify-center gap-4 pb-6">
+
             <HeaderSearch />
             {/* <HeaderUser /> */}
           </div>

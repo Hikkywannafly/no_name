@@ -34,7 +34,8 @@ function MangaSlide({ manga, isFirst, isActive }: MangaSlideProps) {
   return (
     <div className="relative h-full w-full">
       {/* Background Image Container */}
-      <div className="relative h-[300px] w-full overflow-hidden sm:h-[350px]">
+      <div
+        className="relative h-[300px] w-full overflow-hidden sm:h-[350px]">
         {manga.bannerImage ? (
           <Image
             fill
@@ -59,8 +60,8 @@ function MangaSlide({ manga, isFirst, isActive }: MangaSlideProps) {
         {/* Content Container */}
         <WideContainer classNames="mt-20 flex items-center mx-auto relative">
           <div className="container w-full ">
-            <Link
-              href={`/manga/${manga.id}/${getTitle(manga, "vi")}`}
+            <div
+
               className="item mx-auto flex max-w-[1400px] flex-row sm:items-start"
             >
               {/* Manga Cover */}
@@ -70,15 +71,24 @@ function MangaSlide({ manga, isFirst, isActive }: MangaSlideProps) {
                   : "translate-y-4 opacity-0 sm:translate-x-[-20px]"
                   }`}
               >
-                <div className="relative w-28 overflow-hidden rounded-md shadow-2xl sm:w-32 md:w-36 lg:w-40">
+                <div
+
+
+
+                  className="relative w-28 overflow-hidden rounded-md shadow-2xl sm:w-32 md:w-36 lg:w-40">
+
                   <AspectRatio ratio={2 / 3}>
-                    <Image
-                      src={manga?.coverImage?.large || "/placeholder.svg?height=300&width=200"}
-                      alt="Manga Cover"
-                      fill
-                      priority={isFirst}
-                      className="object-cover"
-                    />
+                    <Link
+                      href={`/manga/${manga.id}/${getTitle(manga, "vi")}`}
+                    >
+                      <Image
+                        src={manga?.coverImage?.large || "/placeholder.svg?height=300&width=200"}
+                        alt="Manga Cover"
+                        fill
+                        priority={isFirst}
+                        className="object-cover"
+                      />
+                    </Link>
                   </AspectRatio>
                 </div>
               </div>
@@ -125,12 +135,18 @@ function MangaSlide({ manga, isFirst, isActive }: MangaSlideProps) {
                 </div>
 
                 <div>
-                  <Button className="border-1 border-black bg-[#18000e] px-6 py-2 font-bold text-sm text-white shadow-[3px_3px_0px_rgba(0,0,0,1)] transition-all duration-200 hover:bg-[#18000e]/80 hover:shadow-[5px_5px_0px_rgba(0,0,0,1)]">
-                    <p className="tracking-wide">Xem thông tin</p>
-                  </Button>
+                  <Link
+                    href={`/manga/${manga.id}/${getTitle(manga, "vi")}`}
+                  >
+                    <Button className="border-1 border-black bg-[#18000e] px-6 py-2 font-bold text-sm text-white shadow-[3px_3px_0px_rgba(0,0,0,1)] transition-all duration-200 hover:bg-[#18000e]/80 hover:shadow-[5px_5px_0px_rgba(0,0,0,1)]">
+                      <p className="tracking-wide">Xem thông tin</p>
+                    </Button>
+
+                  </Link>
+
                 </div>
               </div>
-            </Link>
+            </div>
           </div>
           <div className="-bottom-9 absolute right-0 z-20 flex flex-row gap-2 px-2 sm:right-2 sm:bottom-2 sm:flex-col sm:px-4">
             <Button
